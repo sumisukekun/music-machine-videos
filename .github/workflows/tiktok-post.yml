@@ -24,7 +24,9 @@ jobs:
           echo "item=$Q" >> $GITHUB_OUTPUT
           python3 -c "import json;d=json.load(open('$Q'));print(d['video']);open('cap.txt','w').write(d['caption'])" > vid.txt
           V=$(cat vid.txt)
-          if [ ! -f "$V" ]; then gh release download "$(dirname $V | xargs basename)" -p "$(basename $V)" -D "$(dirname $V)"; fi
+          case "$V" in
+            release:*) R=${V#release:}; mkdir -p dl; gh release download "${R%%/*}" -p "${R#*/}" -D dl; echo "dl/${R#*/}" > vid.txt ;;
+          esac
         env:
           GH_TOKEN: ${{ github.token }}
       - name: Upload and publish

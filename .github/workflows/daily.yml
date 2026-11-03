@@ -1,0 +1,144 @@
+name: daily videos
+# Every night (JST 03:07) build 4 new videos from public-domain scores, render them, put them in the
+# 'auto-videos' release and add them to the TikTok posting queue.
+on:
+  schedule:
+    - cron: "7 18 * * *"
+  workflow_dispatch:
+    inputs:
+      per_day:
+        description: "how many videos"
+        default: "4"
+permissions:
+  contents: write
+concurrency: daily-videos
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      items: ${{ steps.p.outputs.items }}
+      chunks: ${{ steps.p.outputs.chunks }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: p
+        env:
+          PER_DAY: ${{ github.event.inputs.per_day || '4' }}
+        run: |
+          I=$(python3 auto/plan_day.py)
+          echo "items=$I" >> $GITHUB_OUTPUT
+          python3 -c "import json,sys;it=json.loads(sys.argv[1]);print('chunks='+json.dumps([{'name':x['name'],'s':s} for x in it for s in range(0,1980,60)]))" "$I" >> $GITHUB_OUTPUT
+          git config user.name "auto-bot"; git config user.email "auto-bot@users.noreply.github.com"
+          git add auto/state.json; git commit -m "auto: plan $(date -u +%F)" || true
+          for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 5; done
+
+  build:
+    needs: plan
+    if: needs.plan.outputs.items != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        item: ${{ fromJson(needs.plan.outputs.items) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tools
+        run: |
+          sudo apt-get update -q && sudo apt-get install -y -q lilypond ffmpeg
+          pip install --quiet mido numpy scipy soundfile
+      - name: Score (Mutopia) and samples (VSCO-2 CE, CC0)
+        env:
+          LY: ${{ matrix.item.song }}
+        run: |
+          D=$(python3 -c "import json;print({c['id']:c for c in json.load(open('auto/catalog.json'))}['$LY']['ly'])")
+          git clone -q --depth 1 --filter=blob:none --no-checkout https://github.com/MutopiaProject/MutopiaProject mutopia
+          (cd mutopia && git sparse-checkout set --no-cone "ftp/$D/" && git checkout -q)
+          git clone -q --depth 1 --filter=blob:none --no-checkout https://github.com/sgossner/VSCO-2-CE vsco
+          (cd vsco && git sparse-checkout set --no-cone "Percussion/Xylo/" "Percussion/Glock/" "Percussion/Timpani/" "Percussion/BDrumNewhit*" \
+            "Percussion/Snare2-HitNS*" "Percussion/cymbal-crash1*" "Percussion/Tamb1-Hit*" "Percussion/Triangle3-Hit_*" "Percussion/Snare2-rollNS*" \
+            "Strings/Violin Section/Spic/" "Strings/Viola Section/spic/" "Strings/Cello Section/pizzT/" "Strings/Solo Contrabass/Pizz/" \
+            "Strings/Violin Section/susVib/" "Brass/F Horn/stac/" "Brass/F Horn/sus/" "Brass/Tenor Trombone/stac/" "Brass/Tenor Trombone/sus/" \
+            "Brass/Trumpet/stac/" "Brass/Trumpet/sus/" "Brass/Tuba/stac/" "Brass/Tuba/sus/" && git checkout -q)
+      - name: Arrange + audio + scene
+        env:
+          MUTOPIA: ${{ github.workspace }}/mutopia
+        run: |
+          python3 auto/build.py "${{ matrix.item.song }}" "${{ matrix.item.theme }}" "proj/${{ matrix.item.name }}" vsco
+          python3 auto/caption.py "proj/${{ matrix.item.name }}/meta.json" > "proj/${{ matrix.item.name }}/caption.txt"
+          cat "proj/${{ matrix.item.name }}/caption.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: proj-${{ matrix.item.name }}
+          path: proj/${{ matrix.item.name }}
+          retention-days: 3
+
+  render:
+    needs: [plan, build]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        c: ${{ fromJson(needs.plan.outputs.chunks) }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: proj-${{ matrix.c.name }}
+          path: proj
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Render
+        env:
+          S: ${{ matrix.c.s }}
+        run: |
+          pip install --quiet bpy==5.2.3 numpy
+          which ffmpeg || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
+          read N C SAMP PCT < <(python3 -c "import json;c=json.load(open('proj/config.json'));print(c['nframes'],c['chunk'],c['samp'],c['pct'])")
+          E=$((S + C - 1)); [ $E -ge $N ] && E=$((N - 1))
+          SAMP=$SAMP PCT=$PCT python3 proj/scene.py -- range $S $E > render.log 2>&1 || (tail -50 render.log; exit 1)
+          VF=$(python3 -c "import json;print(json.load(open('proj/config.json'))['vf'])")
+          mkdir -p out
+          ffmpeg -v error -y -framerate 30 -start_number $S -i proj/frames/f_%04d.png -frames:v $((E - S + 1)) \
+            -vf "$VF" -c:v libx264 -preset veryfast -crf 19 out/c_$(printf %04d $S).mp4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chunk-${{ matrix.c.name }}-${{ matrix.c.s }}
+          path: out/*.mp4
+          retention-days: 2
+
+  assemble:
+    needs: [plan, render]
+    if: always() && needs.plan.outputs.items != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        item: ${{ fromJson(needs.plan.outputs.items) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: chunk-${{ matrix.item.name }}-*
+          path: chunks
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: proj-${{ matrix.item.name }}
+          path: proj
+      - name: Join, add music, publish to the release, queue for TikTok
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NAME: ${{ matrix.item.name }}
+        run: |
+          which ffmpeg || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
+          test $(ls chunks | wc -l) -eq 33 || { echo "missing chunks"; exit 1; }
+          ls chunks | sort | sed "s#^#file '$PWD/chunks/#; s#\$#'#" > list.txt
+          ffmpeg -v error -y -f concat -safe 0 -i list.txt -c copy video.mp4
+          ffmpeg -v error -y -i video.mp4 -i proj/music.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 192k -shortest -movflags +faststart "$NAME.mp4"
+          ls -la "$NAME.mp4"
+          gh release view auto-videos >/dev/null 2>&1 || gh release create auto-videos --title "Auto videos" --notes "Daily generated videos (music: public domain; samples: VSCO-2 CE, CC0; scores: Mutopia Project)"
+          gh release upload auto-videos "$NAME.mp4" --clobber
+          python3 -c "import json,sys;json.dump({'video':'release:auto-videos/'+sys.argv[1]+'.mp4','caption':open('proj/caption.txt').read().strip(),'meta':json.load(open('proj/meta.json'))},open('queue/'+sys.argv[1]+'.json','w'),ensure_ascii=False,indent=1)" "$NAME"
+          git config user.name "auto-bot"; git config user.email "auto-bot@users.noreply.github.com"
+          git add queue; git commit -m "auto: queue $NAME"
+          for i in 1 2 3 4 5; do git pull --rebase -q && git push && break; sleep $((RANDOM % 10 + 3)); done
