@@ -21,7 +21,7 @@ sc.render.engine = 'CYCLES'; sc.cycles.device = 'CPU'
 sc.cycles.samples = int(os.environ.get('SAMP', 5))
 sc.cycles.use_adaptive_sampling = True; sc.cycles.adaptive_threshold = 0.08
 sc.cycles.use_denoising = True
-for k, v in (('denoiser', 'OPENIMAGEDENOISE'), ('denoising_quality', 'FAST'), ('denoising_prefilter', 'FAST'),
+for k, v in (('denoiser', 'OPENIMAGEDENOISE'), ('denoising_quality', 'HIGH'), ('denoising_prefilter', 'ACCURATE'),
              ('use_fast_gi', True), ('ao_bounces_render', 1)):
     try: setattr(sc.cycles, k, v)
     except Exception: pass
@@ -31,7 +31,7 @@ sc.cycles.sample_clamp_indirect = 4
 sc.render.resolution_x, sc.render.resolution_y = 720, 1280
 sc.render.resolution_percentage = int(os.environ.get('PCT', 66))
 sc.render.fps = FPS
-sc.render.use_motion_blur = True; sc.render.motion_blur_shutter = 0.45
+sc.render.use_motion_blur = True; sc.render.motion_blur_shutter = 0.25
 try: sc.render.motion_blur_position = 'START'   # shutter opens on the frame: hard camera cuts stay clean
 except Exception: pass
 sc.render.use_persistent_data = True; sc.render.use_overwrite = False
@@ -129,8 +129,8 @@ nt = w.node_tree; bgn = nt.nodes['Background']
 grad = nt.nodes.new('ShaderNodeTexGradient'); grad.gradient_type = 'LINEAR'
 tc = nt.nodes.new('ShaderNodeTexCoord'); mp = nt.nodes.new('ShaderNodeMapping'); mp.inputs['Rotation'].default_value = (0, -math.pi / 2, 0)
 ramp = nt.nodes.new('ShaderNodeValToRGB')
-ramp.color_ramp.elements[0].position = 0.35; ramp.color_ramp.elements[0].color = (0.62, 0.58, 0.66, 1)
-ramp.color_ramp.elements[1].position = 0.65; ramp.color_ramp.elements[1].color = (0.92, 0.86, 0.82, 1)
+ramp.color_ramp.elements[0].position = 0.35; ramp.color_ramp.elements[0].color = (0.30, 0.27, 0.34, 1)
+ramp.color_ramp.elements[1].position = 0.65; ramp.color_ramp.elements[1].color = (0.62, 0.55, 0.52, 1)
 nt.links.new(tc.outputs['Generated'], mp.inputs['Vector']); nt.links.new(mp.outputs['Vector'], grad.inputs['Vector'])
 nt.links.new(grad.outputs['Fac'], ramp.inputs['Fac']); nt.links.new(ramp.outputs['Color'], bgn.inputs['Color'])
 bgn.inputs['Strength'].default_value = 1.1
@@ -273,9 +273,9 @@ spine = rod((0, 0, Z0 + 1.0), (0, 0, Z0 - CZ * T_END - 1.0), 0.012, BRASS, 16)
 BALLS = []
 for b in range(NB):
     o = prim('uv_sphere', GLASS, radius=BR, segments=32, ring_count=16, location=(0, 0, -50)); bpy.ops.object.shade_smooth()
-    core_m = mat(f'core{b}', BCOL[b], 0.25, 0.0, **{'Emission Strength': 1.2}); core_m.node_tree.nodes['Principled BSDF'].inputs['Emission Color'].default_value = (*BCOL[b], 1)
-    c = prim('uv_sphere', core_m, radius=BR * 0.62, segments=16, ring_count=8, location=(0, 0, 0)); bpy.ops.object.shade_smooth()
-    c.parent = o; c.location = (0, 0, 0); c.scale = (1.0, 0.7, 0.85)
+    core_m = mat(f'core{b}', BCOL[b], 0.15, 0.0, **{'Emission Strength': 0.6}); core_m.node_tree.nodes['Principled BSDF'].inputs['Emission Color'].default_value = (*BCOL[b], 1)
+    c = prim('uv_sphere', core_m, radius=BR * 0.86, segments=24, ring_count=8, location=(0, 0, 0)); bpy.ops.object.shade_smooth()
+    c.parent = o; c.location = (0, 0, 0); c.scale = (1.0, 1.0, 1.0)
     o.rotation_mode = 'QUATERNION'
     BALLS.append(o)
 BPOS = np.zeros((NB, NF, 3)); BVIS = np.zeros((NB, NF), bool)
@@ -310,13 +310,13 @@ def gaussian_filter1d(x, sig, axis=0, mode='nearest'):
 SM = np.stack([gaussian_filter1d(BPOS[b], 6, axis=0, mode='nearest') for b in range(NB)])
 EN = E['entries']; FIN = E['final']
 cd = bpy.data.cameras.new('cam'); cd.sensor_fit = 'HORIZONTAL'; cd.sensor_width = 36; cd.clip_start = 0.02; cd.clip_end = 100
-cd.dof.use_dof = True; cd.dof.aperture_fstop = 2.2
+cd.dof.use_dof = True; cd.dof.aperture_fstop = 6.0
 cam = link(bpy.data.objects.new('cam', cd)); sc.camera = cam
 tgo = link(bpy.data.objects.new('tgt', None))
 trk = cam.constraints.new('TRACK_TO'); trk.target = tgo; trk.track_axis = 'TRACK_NEGATIVE_Z'; trk.up_axis = 'UP_Y'
 # (start, end, mode, ball, dist, height, az0, az1, lens)
 SH = [
-    (0.0, EN[1] - 0.2, 'follow', 0, 0.42, 0.12, -1.9, -1.4, 60),
+    (0.0, EN[1] - 0.2, 'follow', 0, 0.55, 0.14, -1.9, -1.4, 55),
     (EN[1] - 0.2, EN[2] - 0.2, 'follow', 1, 0.7, 0.2, -1.2, -0.7, 55),
     (EN[2] - 0.2, 17.0, 'follow', 2, 0.5, 0.15, -2.2, -1.7, 60),
     (17.0, EN[3] - 0.2, 'group', 0, 0.85, 0.3, -0.6, 0.2, 45),
