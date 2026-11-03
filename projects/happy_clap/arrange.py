@@ -49,7 +49,19 @@ for v in range(NV):
                     b = l0 + 0.5 * j; d = 0.5
                 else:
                     b = l0 + 0.5 * j if j < 8 else l0 + 4; d = 0.5 if j < 8 else 1.0
-                N(b, d, 'mel', p + tr, 100 if j in (0, nn - 1) else 88)
+                if v == 1 and d >= 1.0:          # verse 2: the long note becomes four 16ths
+                    for q, (off, vel) in enumerate(((0, 104), (0.3, 80), (0.6, 92), (0.8, 80))):
+                        N(b + off, 0.2, 'mel', p + tr, vel)
+                elif v == 1 and 2 <= j <= 5:     # verse 2: middle 8ths split into 16th pairs
+                    sub = (0, 0.3) if j % 2 == 0 else (0.1, 0.3)
+                    base_b = l0 + 0.5 * j
+                    N(base_b, 0.25, 'mel', p + tr, 90)
+                    N(base_b + (0.3 if j % 2 == 0 else 0.3), 0.2, 'mel', p + tr, 74)
+                else:
+                    N(b, d, 'mel', p + tr, 100 if j in (0, nn - 1) else 88)
+        if v == 1 and k != 2:                    # verse 2: chord-tone 8ths over the two stomps
+            fill = {0: (55, 59, 62, 59), 1: (60, 64, 67, 64), 3: (60, 64, 67, 64)}[k]
+            for q, p in enumerate(fill): N(l0 + 5 + 0.5 * q, 0.5, 'mel', p, 72)
         if GEST[k]:
             for g in (5, 6): gest.append({'t': round(bt(l0 + g), 4), 'kind': KINDS[v], 'v': v, 'n': g - 5, 'line': k})
         # accompaniment
