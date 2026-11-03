@@ -1,0 +1,112 @@
+name: render
+
+# Start a render by pushing a file requests/<anything>.json  {"project": "cancan"}
+# or from the Actions tab (Run workflow).
+on:
+  push:
+    paths: ['requests/*.json']
+  workflow_dispatch:
+    inputs:
+      project:
+        description: 'projects/<name>'
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: render-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      project: ${{ steps.p.outputs.project }}
+      starts: ${{ steps.p.outputs.starts }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - id: p
+        run: |
+          if [ -n "${{ github.event.inputs.project }}" ]; then
+            P="${{ github.event.inputs.project }}"
+          else
+            F=$(git diff --name-only HEAD~1 HEAD -- requests/ | grep '\.json$' | tail -1)
+            P=$(python3 -c "import json;print(json.load(open('$F'))['project'])")
+          fi
+          echo "project=$P" >> $GITHUB_OUTPUT
+          python3 - "$P" >> $GITHUB_OUTPUT <<'EOF'
+          import json, sys
+          c = json.load(open(f'projects/{sys.argv[1]}/config.json'))
+          print('starts=' + json.dumps(list(range(0, c['nframes'], c['chunk']))))
+          EOF
+
+  render:
+    needs: plan
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        start: ${{ fromJson(needs.plan.outputs.starts) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install Blender (bpy) and ffmpeg
+        run: |
+          pip install --quiet bpy==5.2.3 numpy
+          which ffmpeg || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
+      - name: Render frames
+        env:
+          P: ${{ needs.plan.outputs.project }}
+          S: ${{ matrix.start }}
+        run: |
+          D=projects/$P
+          read N C SAMP PCT < <(python3 -c "import json;c=json.load(open('$D/config.json'));print(c['nframes'],c['chunk'],c['samp'],c['pct'])")
+          E=$((S + C - 1)); [ $E -ge $N ] && E=$((N - 1))
+          SAMP=$SAMP PCT=$PCT python3 $D/scene.py -- range $S $E > render.log 2>&1 || (tail -50 render.log; exit 1)
+          tail -3 render.log
+          VF=$(python3 -c "import json;print(json.load(open('$D/config.json'))['vf'])")
+          mkdir -p out
+          ffmpeg -v error -y -framerate 30 -start_number $S -i $D/frames/f_%04d.png -frames:v $((E - S + 1)) \
+            -vf "$VF" -c:v libx264 -preset veryfast -crf 18 out/c_$(printf %04d $S).mp4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chunk-${{ matrix.start }}
+          path: out/*.mp4
+          retention-days: 3
+
+  assemble:
+    needs: [plan, render]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: chunk-*
+          path: chunks
+          merge-multiple: true
+      - name: Join chunks and add the music
+        env:
+          P: ${{ needs.plan.outputs.project }}
+        run: |
+          which ffmpeg || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
+          ls chunks | sort | sed "s#^#file '$PWD/chunks/#; s#\$#'#" > list.txt
+          ffmpeg -v error -y -f concat -safe 0 -i list.txt -c copy video.mp4
+          mkdir -p outputs
+          ffmpeg -v error -y -i video.mp4 -i projects/$P/music.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 192k \
+            -shortest -movflags +faststart outputs/$P.mp4
+          ffprobe -v error -show_entries format=duration -of csv=p=0 outputs/$P.mp4
+      - name: Commit the finished video
+        env:
+          P: ${{ needs.plan.outputs.project }}
+        run: |
+          git config user.name "render-bot"
+          git config user.email "render-bot@users.noreply.github.com"
+          git add outputs/$P.mp4
+          git commit -m "render: $P"
+          for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 5; done

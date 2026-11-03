@@ -1,0 +1,2 @@
+{"nframes": 1980, "chunk": 90, "samp": 5, "pct": 66,
+ "vf": "scale=1080:1920:flags=lanczos,format=yuv420p"}

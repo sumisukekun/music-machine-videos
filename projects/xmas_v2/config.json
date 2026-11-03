@@ -1,0 +1,2 @@
+{"nframes": 2100, "chunk": 100, "samp": 5, "pct": 66,
+ "vf": "scale=1080:1920:flags=lanczos,format=gbrp,split[a][b];[b]gblur=sigma=8[g];[a][g]blend=all_mode=screen:all_opacity=0.5,format=yuv420p"}
