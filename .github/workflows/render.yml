@@ -91,6 +91,7 @@ jobs:
       - name: Join chunks and add the music
         env:
           P: ${{ needs.plan.outputs.project }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           which ffmpeg || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
           ls chunks | sort | sed "s#^#file '$PWD/chunks/#; s#\$#'#" > list.txt
@@ -98,7 +99,10 @@ jobs:
           mkdir -p outputs
           ffmpeg -v error -y -i video.mp4 -i projects/$P/music.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 192k \
             -shortest -movflags +faststart outputs/$P.mp4
-          # GitHub rejects files over 100 MB: re-encode to fit when needed
+          # keep the full-quality file as a release asset (no size problem there)
+          gh release view renders >/dev/null 2>&1 || gh release create renders -t "Rendered videos" -n "Full-quality renders"
+          gh release upload renders outputs/$P.mp4 --clobber
+          # GitHub rejects files over 100 MB in git: re-encode to fit when needed
           if [ $(stat -c %s outputs/$P.mp4) -gt 95000000 ]; then
             D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 outputs/$P.mp4)
             VB=$(python3 -c "print(int(90e6*8/$D/1000) - 200)")
