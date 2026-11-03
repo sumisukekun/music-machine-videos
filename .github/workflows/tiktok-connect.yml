@@ -1,0 +1,24 @@
+name: "TikTok: connect account"
+on:
+  workflow_dispatch:
+    inputs:
+      code:
+        description: "Code shown on the callback page after authorizing"
+        required: true
+permissions:
+  contents: write
+jobs:
+  connect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exchange the code for tokens (stored encrypted)
+        env:
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+          TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
+        run: python3 tools/tiktok.py connect "${{ github.event.inputs.code }}"
+      - name: Commit encrypted tokens
+        run: |
+          git config user.name "post-bot"; git config user.email "post-bot@users.noreply.github.com"
+          git add tokens.enc; git commit -m "tiktok: connect account"; git push

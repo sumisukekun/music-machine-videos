@@ -1,0 +1,44 @@
+name: "TikTok: post next video"
+on:
+  schedule:
+    # JST 07:13, 12:13, 18:13, 21:13 (UTC 22,03,09,12)
+    - cron: "13 22 * * *"
+    - cron: "13 3 * * *"
+    - cron: "13 9 * * *"
+    - cron: "13 12 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: tiktok-post
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    if: ${{ vars.TIKTOK_ENABLED == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pick the next queued video
+        id: pick
+        run: |
+          Q=$(ls queue/*.json 2>/dev/null | sort | head -1)
+          if [ -z "$Q" ]; then echo "queue empty"; echo "none=1" >> $GITHUB_OUTPUT; exit 0; fi
+          echo "item=$Q" >> $GITHUB_OUTPUT
+          python3 -c "import json;d=json.load(open('$Q'));print(d['video']);open('cap.txt','w').write(d['caption'])" > vid.txt
+          V=$(cat vid.txt)
+          if [ ! -f "$V" ]; then gh release download "$(dirname $V | xargs basename)" -p "$(basename $V)" -D "$(dirname $V)"; fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Upload and publish
+        if: steps.pick.outputs.none != '1'
+        env:
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+          TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
+          TIKTOK_PRIVACY: ${{ vars.TIKTOK_PRIVACY }}
+        run: python3 tools/tiktok.py post "$(cat vid.txt)" "$(cat cap.txt)"
+      - name: Move the item to posted/ and save the refreshed token
+        if: always() && steps.pick.outputs.none != '1'
+        run: |
+          git config user.name "post-bot"; git config user.email "post-bot@users.noreply.github.com"
+          if [ "${{ job.status }}" = "success" ]; then mkdir -p posted; git mv "${{ steps.pick.outputs.item }}" posted/; fi
+          git add -A tokens.enc posted queue 2>/dev/null; git commit -m "tiktok: posted ${{ steps.pick.outputs.item }}" || true
+          for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 5; done
