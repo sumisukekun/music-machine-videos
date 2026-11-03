@@ -53,6 +53,7 @@ def best_chord(hist):
 
 
 def main(cid, out, theme):
+    out = os.path.abspath(out)
     e = CAT[cid]; os.makedirs(out, exist_ok=True)
     notes, ts = read_notes(score_to_midi(e, os.path.join(out, 'work')))
     num, den = ts; bar = num * 4 / den                          # bar length in quarter beats

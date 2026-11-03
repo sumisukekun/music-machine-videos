@@ -20,6 +20,7 @@ jobs:
         id: pick
         run: |
           Q=$(ls queue/*.json 2>/dev/null | sort | head -1)
+          if [ ! -f tokens.enc ]; then echo "not connected to TikTok yet"; echo "none=1" >> $GITHUB_OUTPUT; exit 0; fi
           if [ -z "$Q" ]; then echo "queue empty"; echo "none=1" >> $GITHUB_OUTPUT; exit 0; fi
           echo "item=$Q" >> $GITHUB_OUTPUT
           python3 -c "import json;d=json.load(open('$Q'));print(d['video']);open('cap.txt','w').write(d['caption'])" > vid.txt
