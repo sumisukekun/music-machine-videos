@@ -26,14 +26,12 @@ jobs:
       starts: ${{ steps.p.outputs.starts }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
       - id: p
         run: |
           if [ -n "${{ github.event.inputs.project }}" ]; then
             P="${{ github.event.inputs.project }}"
           else
-            F=$(git diff --name-only HEAD~1 HEAD -- requests/ | grep '\.json$' | tail -1)
+            F=$(ls requests/*.json | sort | tail -1)
             P=$(python3 -c "import json;print(json.load(open('$F'))['project'])")
           fi
           echo "project=$P" >> $GITHUB_OUTPUT
