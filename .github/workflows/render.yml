@@ -71,7 +71,7 @@ jobs:
           VF=$(python3 -c "import json;print(json.load(open('$D/config.json'))['vf'])")
           mkdir -p out
           ffmpeg -v error -y -framerate 30 -start_number $S -i $D/frames/f_%04d.png -frames:v $((E - S + 1)) \
-            -vf "$VF" -c:v libx264 -preset veryfast -crf 18 out/c_$(printf %04d $S).mp4
+            -vf "$VF" -c:v libx264 -preset veryfast -crf 18 out/c_$(printf %06d $S).mp4
       - uses: actions/upload-artifact@v4
         with:
           name: chunk-${{ matrix.start }}
@@ -94,7 +94,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           which ffmpeg || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
-          ls chunks | sort | sed "s#^#file '$PWD/chunks/#; s#\$#'#" > list.txt
+          ls chunks | sort -V | sed "s#^#file '$PWD/chunks/#; s#\$#'#" > list.txt
           ffmpeg -v error -y -f concat -safe 0 -i list.txt -c copy video.mp4
           mkdir -p outputs
           ffmpeg -v error -y -i video.mp4 -i projects/$P/music.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 192k \
