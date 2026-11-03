@@ -214,15 +214,15 @@ for i in range(15):
 # ---------------- marimba ----------------
 MEL = E['mel']
 PITCHES = sorted(set(p for _, p in MEL))
-NBAR = len(PITCHES); MY = -1.32; MZ = 0.1
-BW = 0.125; BX0 = -(NBAR - 1) * BW / 2
+NBAR = len(PITCHES); MY = -1.32; MZ = 0.16
+BW = 0.14; BX0 = -(NBAR - 1) * BW / 2
 BARS = {}
 box(WOODD, (NBAR * BW + 0.2, 0.05, 0.05), (0, MY - 0.17, MZ - 0.06))
 box(WOODD, (NBAR * BW + 0.2, 0.05, 0.05), (0, MY + 0.17, MZ - 0.06))
 for i, p in enumerate(PITCHES):
     x = BX0 + i * BW; L = 0.42 - 0.012 * i
     col = colorsys.hsv_to_rgb(i / NBAR * 0.85, 0.75, 1.0)
-    o = box(glowmat(f'bar{i}', col, 0.35, gain=5), (BW * 0.86, L, 0.035), (x, MY, MZ), bevel=0.008)
+    o = box(glowmat(f'bar{i}', col, 0.35, gain=10), (BW * 0.86, L, 0.035), (x, MY, MZ), bevel=0.008)
     rod((x, MY, MZ - 0.05), (x, MY, MZ - 0.35 - 0.01 * (NBAR - i)), 0.025, GOLD)      # resonator tubes
     BARS[p] = (o, col, x)
 # brass cannons (left/right) at the pit
@@ -548,7 +548,7 @@ NPOOL = 18
 balls = []
 BMS = {}
 for i in range(NPOOL):
-    o = prim('uv_sphere', None, radius=0.042, location=(0, 0, -3), segments=24, ring_count=12); smooth(o)
+    o = prim('uv_sphere', None, radius=0.052, location=(0, 0, -3), segments=24, ring_count=12); smooth(o)
     balls.append(o)
 pos = [np.tile(np.array([0, 0, -3.0]), (NF, 1)) for _ in range(NPOOL)]
 mcol = [None] * NPOOL
@@ -579,7 +579,7 @@ for k, (t, p) in enumerate(MEL):
     barflash[p] = np.maximum(barflash[p], np.exp(-np.clip(T - t, 0, None) / 0.15) * (T >= t - 0.5 / FPS))
     bardip[p] = np.maximum(bardip[p], pulse(T, t, 0.02, 0.15))
     canrec[s] = np.maximum(canrec[s], pulse(T, t0, 0.01, 0.2))
-    mcol[j] = mcol[j] or []; mcol[j].append((t0, col))
+    mcol[j] = mcol[j] or []; mcol[j].append((t0, tuple(c ** 2.2 for c in col)))
 # each ball keeps one colour per flight: colour via object colour keyed at launch (constant)
 BALLM = mat('ballm', (1, 1, 1), 0.08, **{'Coat Weight': 1.0})
 nn = BALLM.node_tree.nodes; oi = nn.new('ShaderNodeObjectInfo'); BALLM.node_tree.links.new(oi.outputs['Color'], nn['Principled BSDF'].inputs['Base Color'])
@@ -716,16 +716,16 @@ for f, e_ in ((0, 150), (int(1.6 * FPS), 450), (int(FINAL * FPS) - 2, 450), (int
 
 # ---------------- camera plan ----------------
 WIDE = ((0.0, -6.4, 1.9), (0, SY, 1.85), 30)
-MED = ((0.0, -5.0, 1.75), (0, SY, 1.75), 32)
-LOWC = ((0.35, -3.2, 0.75), (0, MY + 0.3, 0.55), 30)
+MED = ((0.0, -5.7, 1.15), (0, SY - 0.4, 1.3), 30)
+LOWC = ((0.35, -3.7, 0.95), (0, MY + 0.6, 0.75), 30)
 TOPC = ((0.0, -4.1, 3.2), (0, SY, 3.4), 28)
-PUPC = ((-0.15, -3.6, 1.55), (0, SY, 1.45), 34)
+PUPC = ((-0.55, -5.4, 1.0), (0, SY - 0.4, 1.25), 30)
 shots = [(0.0, WIDE, (0.0, -5.6, 1.95))]
 for v, ts in enumerate(VSTART):
     shots.append((ts - 1.1, TOPC, (0.0, -3.85, 3.2)))          # barrel shifts + sign flips
     shots.append((ts + 0.6, MED if v % 2 == 0 else PUPC, None))
     l3 = ts + (0.5 + 2 * E['line']) * BEAT                         # line 3: melody close-up on the marimba
-    shots.append((l3, LOWC, (-0.35, -3.1, 0.72)))
+    shots.append((l3, LOWC, (-0.35, -3.5, 0.9)))
     shots.append((l3 + 4 * BEAT + 0.3, PUPC if v % 2 == 0 else MED, None))
 shots.append((FINAL - 2.0, WIDE, (0.0, -6.6, 2.05)))
 shots.sort(key=lambda s_: s_[0])
