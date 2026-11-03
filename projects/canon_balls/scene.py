@@ -342,6 +342,15 @@ for f in range(NF):
         off = (rad * 0.8 + off * 0.6).normalized()
         pos = look + off * dist + Vector((0, 0, h)); foc = (pos - Vector(BPOS[b, f])).length if BVIS[b, f] else dist
     else:
+        if t >= FIN - 0.1:      # finale: hold on the last plates and pull back while the balls fly out
+            thF = OMG * FIN; look = Vector((0.6 * math.cos(thF), 0.6 * math.sin(thF), Z0 - CZ * FIN - 0.05 - 0.25 * ss(a)))
+            radial = Vector((math.cos(thF + 0.35 * az), math.sin(thF + 0.35 * az), 0))
+            pos = look + radial * (0.9 + 0.9 * ss(a)) + Vector((0, 0, 0.25 + 0.5 * ss(a)))
+            foc = (pos - look).length
+            cam.location = pos; tgo.location = look; cd.lens = lens; cd.dof.focus_distance = foc
+            cam.keyframe_insert('location', frame=f); tgo.keyframe_insert('location', frame=f)
+            cd.keyframe_insert('lens', frame=f); cd.keyframe_insert('dof.focus_distance', frame=f)
+            continue
         zc = Z0 - CZ * t; th = OMG * t
         vis = [Vector(SM[k, f]) for k in range(NB) if BVIS[k, f]]
         look = sum(vis, Vector()) / len(vis) if vis else Vector((0.6 * math.cos(th), 0.6 * math.sin(th), zc))
