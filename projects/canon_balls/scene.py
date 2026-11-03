@@ -303,7 +303,10 @@ for b, o in enumerate(BALLS):
         o.hide_render = True; o.keyframe_insert('hide_render', frame=0)
 
 # ---------------- camera: follow shots on the newest ball, group orbits ----------------
-from scipy.ndimage import gaussian_filter1d
+def gaussian_filter1d(x, sig, axis=0, mode='nearest'):
+    k = np.exp(-0.5 * (np.arange(-3 * sig, 3 * sig + 1) / sig) ** 2); k /= k.sum(); h = len(k) // 2
+    xp = np.concatenate([np.repeat(x[:1], h, 0), x, np.repeat(x[-1:], h, 0)], 0)
+    return np.stack([np.convolve(xp[:, c], k, mode='valid') for c in range(x.shape[1])], 1)
 SM = np.stack([gaussian_filter1d(BPOS[b], 6, axis=0, mode='nearest') for b in range(NB)])
 EN = E['entries']; FIN = E['final']
 cd = bpy.data.cameras.new('cam'); cd.sensor_fit = 'HORIZONTAL'; cd.sensor_width = 36; cd.clip_start = 0.02; cd.clip_end = 100
