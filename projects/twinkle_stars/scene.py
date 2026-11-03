@@ -305,7 +305,7 @@ for b, rf, T, t in RAILS:
     if CUS[k] is None:
         cu = bpy.data.curves.new(f'rails{k}', 'CURVE'); cu.dimensions = '3D'; cu.bevel_depth = 0.0018; cu.bevel_resolution = 2; CUS[k] = cu
     cu = CUS[k]
-    pts = [rf(T * j / 16) for j in range(17)]
+    nseg = max(16, int(T * 24)); pts = [rf(T * j / nseg) for j in range(nseg + 1)]   # dense enough that long rails follow the curve
     for side in (-1, 1):
         sp = cu.splines.new('POLY'); sp.points.add(len(pts) - 1)
         for j, q in enumerate(pts):

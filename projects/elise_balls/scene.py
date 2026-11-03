@@ -267,7 +267,7 @@ for name, bm_, mt in (('plates', bm_pl, BRASS), ('chimes', bm_tb, BRONZE), ('pin
 # twin-wire rails as one curve object
 cu = bpy.data.curves.new('rails', 'CURVE'); cu.dimensions = '3D'; cu.bevel_depth = 0.0018; cu.bevel_resolution = 2
 for b, rf, T in RAILS:
-    pts = [rf(T * k / 16) for k in range(17)]
+    nseg = max(16, int(T * 24)); pts = [rf(T * k / nseg) for k in range(nseg + 1)]   # dense enough that long rails follow the curve
     for side in (-1, 1):
         sp = cu.splines.new('POLY'); sp.points.add(len(pts) - 1)
         for k, q in enumerate(pts):
