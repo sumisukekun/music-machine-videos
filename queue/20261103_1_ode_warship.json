@@ -1,0 +1,32 @@
+{
+ "video": "release:auto-videos/20261103_1_ode_warship.mp4",
+ "caption": "戦艦の大砲が「歓喜の歌（第九）」を演奏⚓ 玉が当たるたびに音が鳴る！（ベートーヴェン） #歓喜の歌第九 #ベートーヴェン #クラシック #音楽 #戦艦 #大砲 #からくり #ピタゴラ #blender #3dアニメ #ballmachine #satisfying",
+ "meta": {
+  "id": "ode",
+  "ly": "BeethovenLv/ode",
+  "main": "ode.ly",
+  "bpm": 120,
+  "style": "march",
+  "title_ja": "歓喜の歌（第九）",
+  "title_en": "Ode to Joy",
+  "composer_ja": "ベートーヴェン",
+  "composer_en": "Beethoven",
+  "license": "Public Domain",
+  "theme": "warship",
+  "bars": 30,
+  "final": 61.6,
+  "mel_pitches": 6,
+  "counts": {
+   "mel": 116,
+   "harm": 102,
+   "chord": 61,
+   "bass": 61,
+   "kick": 61,
+   "snare": 60,
+   "tom": 12,
+   "crash": 5,
+   "hat": 240,
+   "gliss": 12
+  }
+ }
+}
