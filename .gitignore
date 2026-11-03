@@ -1,3 +1,4 @@
 projects/*/frames/
 *.blend1
 __pycache__/
+projects/*/src/
