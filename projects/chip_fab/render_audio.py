@@ -63,6 +63,7 @@ I = {
     'xylo': Inst('Percussion/Xylo'),
     'glock': Inst('Percussion/Glock'),
     'vln_sus': Inst('Strings/Violin Section/susVib'),
+    'vln': Inst('Strings/Violin Section/Spic'),
     'vla': Inst('Strings/Viola Section/spic'),
     'vc': Inst('Strings/Cello Section/pizzT'),
     'cb': Inst('Strings/Solo Contrabass/Pizz'),
@@ -83,8 +84,8 @@ TIMP = {k: Hit(vsort(glob.glob(P(V, f'Percussion/Timpani/Timpani{k}_Hit_*'))), p
 
 N = int(SR * DUR) + SR
 bus = {k: np.zeros((N, 2), 'float32') for k in ('str', 'mallet', 'perc', 'synth')}
-PAN = {'xylo': 0.15, 'glock': 0.1, 'vln_sus': -0.35, 'vla': 0.2, 'vc': 0.3, 'cb': 0.0, 'hn_sus': -0.2, 'tpt_sus': 0.1}
-BUS = {'xylo': 'mallet', 'glock': 'mallet', 'vln_sus': 'str', 'vla': 'str', 'vc': 'str', 'cb': 'str', 'hn_sus': 'str', 'tpt_sus': 'str'}
+PAN = {'vln': -0.3, 'xylo': 0.15, 'glock': 0.1, 'vln_sus': -0.35, 'vla': 0.2, 'vc': 0.3, 'cb': 0.0, 'hn_sus': -0.2, 'tpt_sus': 0.1}
+BUS = {'vln': 'str', 'xylo': 'mallet', 'glock': 'mallet', 'vln_sus': 'str', 'vla': 'str', 'vc': 'str', 'cb': 'str', 'hn_sus': 'str', 'tpt_sus': 'str'}
 from scipy.signal import lfilter
 
 
@@ -174,48 +175,49 @@ def gtr(t, p, d, v, g, pan=0.0, bright=0.45):
 
 
 notes = json.load(open('notes.json'))
+# all acoustic: mallets, strings, real drums (VSCO-2 CE, CC0) - no synthesised sounds
+TOMP = {'tom1': 53, 'tom2': 48, 'tom3': 43}
+hr = 0
 for t, d, role, p, v in notes:
-    if role == 'mel':      # bright lead: glockenspiel + bell-like pluck + violins on long notes
-        play('glock', t, p, v, 0.5); gtr(t, p, d, v, 0.42, -0.15, 0.65)
-        if d >= 0.45: play('vln_sus', t, p, 92, 0.22, dur=d, rel=0.25)
+    if role == 'mel':
+        play('glock', t, p, v, 0.5); play('xylo', t, p, v, 0.28)
+        if d >= 0.45: play('vln_sus', t, p, 96, 0.3, dur=d, rel=0.25)
+        else: play('vln', t, p, v, 0.32)
     elif role == 'xmel':
         play('xylo', t, p, v, 0.4)
     elif role == 'xlead':
         play('xylo', t, p, v, 0.6); play('glock', t, p + 12, v, 0.1)
         play('vln_sus', t, p, 90, 0.25, dur=d, rel=0.3)
     elif role == 'arp':
-        gtr(t, p, d, v, 0.38, 0.25, 0.35)
+        play('vln', t, p, v, 0.42)
     elif role == 'stab':
-        play('xylo', t, p, v, 0.32); gtr(t, p - 12, 0.2, v, 0.12, 0.3, 0.6)
+        play('xylo', t, p, v, 0.3); play('vla', t, p, v, 0.28)
     elif role == 'bass':
-        x = pluck(p, max(0.15, d * 0.9), 0.25, body=1.4); place('synth', x, 1, t, 0.75 * (0.6 + 0.4 * v / 127), 0.0)
-        play('cb', t, p, v, 0.5)
+        play('cb', t, p, v, 0.95); play('vc', t, p + 12, v, 0.35)
     elif role == 'final_bass':
-        x = pluck(p, 3.2, 0.25, body=1.4); place('synth', x, 1, t, 0.8, 0)
-        play('vc', t, p + 12, 120, 0.3)
+        play('cb', t, p, 124, 0.9); play('vc', t, p + 12, 120, 0.4)
     elif role == 'final_str':
-        gtr(t + 0.012 * (p - 62) / 3, p, 3.4, 120, 0.4, (p - 70) / 30, 0.5)
-        play('vln_sus', t, p, 110, 0.18, dur=3.0, rel=1.0)
+        play('vln_sus', t, p, 110, 0.28, dur=3.2, rel=1.2); play('glock', t, p, 120, 0.25)
     elif role == 'final_sun':
         play('xylo', t, p, 120, 0.4); play('glock', t, p + 12, 120, 0.2)
     elif role == 'kick':
-        hit(BD, t, v, 0.7); kick808(t, v)
+        hit(BD, t, v, 1.1)
     elif role == 'snare':
         hit(SN, t, v, 0.75, -0.05)
     elif role == 'hat':
-        synth_hat(t, v)
+        hit(TB, t, v * 0.85, 0.32, 0.3)
     elif role == 'ohat':
-        synth_hat(t, v, True)
-    elif role in ('tom1', 'tom2', 'tom3'):
-        tom(t, {'tom1': 150, 'tom2': 115, 'tom3': 85}[role], v)
+        hit(TR, t, v, 0.3, 0.35)
+    elif role in TOMP:
+        tp = TOMP[role]; k = min(TIMP, key=lambda k: abs(TIMP[k].pitch - tp)); hit(TIMP[k], t, v, 1.0, {'tom1': -0.3, 'tom2': 0.05, 'tom3': 0.35}[role], tp)
     elif role == 'crash':
-        hit(CR, t, v, 0.55, 0.3)
+        hit(CR, t, v, 0.6, 0.3)
 
 L = int(1.6 * SR); tt = np.arange(L) / SR
 ir = np.stack([rng.normal(0, 1, L), rng.normal(0, 1, L)], 1) * np.exp(-tt / 0.32)[:, None]
 for c in range(2): ir[:, c] = lfilter([0.3], [1, -0.7], ir[:, c])
 ir[: int(0.01 * SR)] = 0; ir /= np.sqrt((ir ** 2).sum(0))
-WET = {'str': 0.3, 'mallet': 0.2, 'perc': 0.1, 'synth': 0.16}
+WET = {'str': 0.3, 'mallet': 0.22, 'perc': 0.14, 'synth': 0.16}
 mix = np.zeros((N, 2), 'float32')
 for k, x in bus.items():
     wet = np.stack([fftconvolve(x[:, c], ir[:, c])[:N] for c in range(2)], 1)
