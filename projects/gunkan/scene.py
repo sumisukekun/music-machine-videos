@@ -167,7 +167,11 @@ PLATE = texmat('bulkhead', 'brick', (0.34, 0.37, 0.4), (0.31, 0.34, 0.37), (0.2,
 for sx in (-1, 1):
     h = prim('cube', GREYD, size=1, location=(sx * 6.6, 0, -0.6)); h.scale = (0.3, 12, 1.4)
 SEA = mat('sea', (0.01, 0.05, 0.1), 0.22, 0.0)
-_sn = SEA.node_tree.nodes; _nz = _sn.new('ShaderNodeTexNoise'); _nz.inputs['Scale'].default_value = 40; _bp = _sn.new('ShaderNodeBump'); _bp.inputs['Strength'].default_value = 0.25
+_sn = SEA.node_tree.nodes; _nz = _sn.new('ShaderNodeTexNoise'); _nz.inputs['Scale'].default_value = 40
+_stc = _sn.new('ShaderNodeTexCoord'); _smp = _sn.new('ShaderNodeMapping'); SEA.node_tree.links.new(_stc.outputs['Object'], _smp.inputs['Vector'])
+SEA.node_tree.links.new(_smp.outputs['Vector'], _nz.inputs['Vector'])
+_smp.inputs['Location'].default_value = (0, 0, 0); _smp.inputs['Location'].keyframe_insert('default_value', frame=0)
+_smp.inputs['Location'].default_value = (0.0, -0.012 * NF / 30, 0.004 * NF / 30); _smp.inputs['Location'].keyframe_insert('default_value', frame=NF - 1); _bp = _sn.new('ShaderNodeBump'); _bp.inputs['Strength'].default_value = 0.25
 SEA.node_tree.links.new(_nz.outputs['Fac'], _bp.inputs['Height']); SEA.node_tree.links.new(_bp.outputs['Normal'], _sn['Principled BSDF'].inputs['Normal'])
 sea = prim('plane', SEA, size=600, location=(0, 0, -1.4))
 for sx, dist, ln in ((-38, 95, 26), (44, 130, 30)):   # escort ships on the horizon
@@ -608,7 +612,15 @@ for k_, m_ in BALLM.items():
     me.materials.append(m_); sph[k_] = me
 
 nball = 0
-returns = []
+returns = []; drum_returns = []
+TROUGH_Y = -0.35
+_cr = CHUTE[1]; _a = (TROUGH_Y - _cr.y) / (FRONT_R.y - _cr.y)
+TJ = Vector((_cr.x + (FRONT_R.x - _cr.x) * _a, TROUGH_Y, 0.25))
+def tz(x): return 0.38 - 0.13 * (x - 0.9) / (TJ.x - 0.9)
+track((0.9, TROUGH_Y, tz(0.9)), (TJ.x, TROUGH_Y, tz(TJ.x)), wid=0.1)
+TR_M = mat('troughpan', (0.3, 0.32, 0.35), 0.4, 0.6)
+tr_ = prim('cube', TR_M, size=1, location=((0.9 + TJ.x) / 2, TROUGH_Y, 0.12)); tr_.scale = (TJ.x - 0.9, 0.36, 0.05)
+for x_ in np.linspace(1.0, TJ.x - 0.1, 4): rod((x_, TROUGH_Y, 0.0), (x_, TROUGH_Y, tz(x_) - 0.12), 0.02, STEEL, 6)
 for t, kind, key, tn in shots:
     tur = T[tn]; M, v0 = tur.add(t, key)
     o = link(bpy.data.objects.new(f'b{nball}', sph[kind])); o.color = (*TINT[kind], 1); nball += 1
@@ -649,6 +661,20 @@ for t, kind, key, tn in shots:
             vout = Vector((0.1, -2.1, 1.3)); dur = 2.0; zfloor = 0.2
         else:
             vout = Vector((rng.uniform(-0.3, 0.3), -1.25, 1.5)); dur = 2.0; zfloor = 0.2
+        if kind in ('kick', 'snare', 'tom'):
+            vz = {'kick': 1.5, 'snare': 2.0, 'tom': 1.3}[kind]
+            xl = min(max(P1.x + rng.uniform(-0.15, 0.15), 1.1), 3.75)
+            zl = tz(xl); a_land = (vz + math.sqrt(vz * vz + 2 * G * (P1.z - zl))) / G
+            vout = Vector(((xl - P1.x) / a_land, (TROUGH_Y - P1.y) / a_land, vz))
+            for f in range(int(math.floor(t * FPS)) + 1, int(math.ceil((t + a_land) * FPS))):
+                a = f / FPS - t; keys.append((f / FPS, P1 + vout * a + Vector((0, 0, -0.5 * G * a * a)), True))
+            tl = t + a_land; L = Vector((xl, TROUGH_Y, zl)); keys.append((tl, L, True))
+            tJ = tl + (TJ - L).length / 2.6; keys.append((tJ, TJ, True))
+            tA = tJ + (FRONT_R - TJ).length / 3.6; keys.append((tA, FRONT_R, True))
+            tB = tA + (FRONT_L - FRONT_R).length / 3.6; keys.append((tB, FRONT_L, True))
+            tC = tB + (LIFT0 - FRONT_L).length / 2.0; keys.append((tC, LIFT0, False))
+            drum_returns.append((tC, o, keys))
+            continue
         end = t
         for f in range(int(math.floor(t * FPS)) + 1, int((t + dur) * FPS)):
             a = f / FPS - t; p = P1 + vout * a + Vector((0, 0, -0.5 * G * a * a))
@@ -677,6 +703,7 @@ for arr, o, keys, side in returns:
         tB = dep + (FRONT_L - c).length / 3.6; keys.append((tB, FRONT_L, True))
     tC = tB + (LIFT0 - FRONT_L).length / 2.0; keys.append((tC, LIFT0, False))
     lift_q.append((tC, o, keys))
+lift_q += drum_returns
 lift_q.sort(key=lambda r: r[0])
 for tC, o, keys in lift_q:
     dep = max(tC + 0.05, lift_free); lift_free = dep + 0.13
@@ -761,30 +788,116 @@ for k in range(160):
             o.location = p0 + Vector((0.3 * math.sin(tt * 3 + delay * 5), 0, -spd * tt)); o.rotation_euler = (tt * 5 + delay, tt * 3, tt * 4)
         o.keyframe_insert('location', frame=f); o.keyframe_insert('rotation_euler', frame=f)
 
+# ---------------- main battery: two triple-gun turrets fire salvos out to sea ----------------
+SALVO = E.get('salvo', [])
+SPLASHM = bpy.data.materials.new('splash'); SPLASHM.use_nodes = True
+_b = SPLASHM.node_tree.nodes['Principled BSDF']; _b.inputs['Base Color'].default_value = (0.95, 0.97, 1.0, 1); _b.inputs['Roughness'].default_value = 0.6
+_b.inputs['Emission Color'].default_value = (0.9, 0.95, 1.0, 1); _b.inputs['Emission Strength'].default_value = 0.4
+_oi = SPLASHM.node_tree.nodes.new('ShaderNodeObjectInfo'); SPLASHM.node_tree.links.new(_oi.outputs['Alpha'], _b.inputs['Alpha'])
+BIGFLASH = glowmat('bigflash', (1, 0.65, 0.25), 0.5, 0.0, 40)
+MAIN = []
+for side, mx in ((-1, -2.9), (1, 2.9)):
+    my = 5.3
+    prim('cylinder', GREYD, radius=1.15, depth=0.5, vertices=48, location=(mx, my, 0.25))
+    yawo = link(bpy.data.objects.new(f'main{side}', None)); yawo.location = (mx, my, 0.5); yawo.rotation_mode = 'XYZ'
+    gh = prim('cube', GREY, size=1, location=(0, -0.15, 0.5)); gh.scale = (2.1, 2.5, 0.95); gh.parent = yawo
+    bv = gh.modifiers.new('b', 'BEVEL'); bv.width = 0.12; bv.segments = 2
+    rf = prim('cube', GREYD, size=1, location=(0, -0.3, 1.0)); rf.scale = (1.7, 1.8, 0.08); rf.parent = yawo
+    rgf = prim('cylinder', GREYD, radius=0.12, depth=1.9, location=(0, -1.0, 1.15), rotation=(0, math.pi / 2, 0)); rgf.parent = yawo
+    pit = link(bpy.data.objects.new(f'mainp{side}', None)); pit.parent = yawo; pit.location = (0, 1.0, 0.55); pit.rotation_mode = 'XYZ'
+    barrels = []
+    for bx in (-0.5, 0, 0.5):
+        sl = link(bpy.data.objects.new('msl', None)); sl.parent = pit; sl.location = (bx, 0, 0)
+        b_ = rod((0, -0.2, 0), (0, 3.4, 0), 0.11, GREYD, 16); b_.parent = sl
+        mz = prim('cylinder', GREYD, radius=0.14, depth=0.25, vertices=16, location=(0, 3.3, 0), rotation=(math.pi / 2, 0, 0)); mz.parent = sl
+        fl = prim('uv_sphere', BIGFLASH, radius=0.5, segments=16, ring_count=8, location=(0, 3.9, 0)); fl.parent = sl; fl.scale = (0, 0, 0); fl.color = (1, 0.6, 0.2, 1)
+        barrels.append((sl, fl))
+    puffs = []
+    for q in range(6):
+        pf = prim('uv_sphere', SMOKEM, radius=1.0, segments=14, ring_count=8, location=(0, 0, -30)); pf.color = (0.85, 0.85, 0.85, 0); puffs.append(pf)
+    splashes = []
+    for q in range(9):
+        sp = prim('cone', SPLASHM, radius1=1.0, radius2=0.35, depth=1.0, vertices=24, location=(0, 0, -30)); sp.color = (1, 1, 1, 0); splashes.append(sp)
+    MAIN.append((side, yawo, pit, barrels, puffs, splashes))
+
+
+def main_battery():
+    for side, yawo, pit, barrels, puffs, splashes in MAIN:
+        r_ = np.random.default_rng(100 + side)
+        yaw = np.zeros(NF); el = np.zeros(NF); flash = [np.zeros(NF) for _ in barrels]; rec = [np.zeros(NF) for _ in barrels]
+        aims = [(side * r_.uniform(0.05, 0.35), math.radians(r_.uniform(12, 24))) for _ in SALVO]
+        for f, t in enumerate(TT):
+            i = np.searchsorted(SALVO, t + 1e-9)          # next salvo index
+            prev = aims[i - 1] if i > 0 else (0.0, 0.05); nxt = aims[i] if i < len(SALVO) else prev
+            if i < len(SALVO):
+                t0_ = SALVO[i - 1] + 0.35 if i > 0 else 0; t1_ = SALVO[i] - 0.15
+                a = ss((t - t0_) / max(0.05, min(1.2, t1_ - t0_))) if t > t0_ else 0
+                if t1_ - t0_ > 1.2: a = ss((t - (t1_ - 1.2)) / 1.2)
+            else: a = 0
+            yaw[f] = prev[0] + (nxt[0] - prev[0]) * a; el[f] = prev[1] + (nxt[1] - prev[1]) * a
+            for j in range(len(barrels)):
+                tf = [s_ + 0.045 * j for s_ in SALVO if 0 <= t - (s_ + 0.045 * j) < 0.6]
+                if tf:
+                    dt = t - tf[-1]; rec[j][f] = 0.45 * math.exp(-dt / 0.12); flash[j][f] = max(0, 1 - dt / 0.14) * 1.6
+        key_series(yawo, 'rotation_euler', 2, -yaw, 1e-4); key_series(pit, 'rotation_euler', 0, el, 1e-4)
+        for j, (sl, fl) in enumerate(barrels):
+            key_series(sl, 'location', 1, -rec[j], 1e-4)
+            for ax in range(3): key_series(fl, 'scale', ax, flash[j] * (1.6 if ax == 1 else 0.7), 1e-3)
+        # smoke clouds from the muzzles and splashes out at sea (shell flight 1.9 s)
+        mpos = lambda k: Vector(yawo.location) + Vector((0, 1.0, 0.55)) + Vector((-math.sin(aims[k][0]) * 3.8 * math.cos(aims[k][1]), math.cos(aims[k][0]) * 3.8 * math.cos(aims[k][1]), 3.8 * math.sin(aims[k][1])))
+        for q, pf in enumerate(puffs):
+            px = np.zeros(NF); py = np.zeros(NF); pz = np.full(NF, -30.0); sc_ = np.full(NF, 0.01); al = np.zeros(NF)
+            for k in range(q, len(SALVO), len(puffs)):
+                M = mpos(k); m = (TT >= SALVO[k]) & (TT < SALVO[k] + 2.5); a = TT[m] - SALVO[k]
+                px[m] = M.x + 0.3 * a; py[m] = M.y + 1.2 * (1 - np.exp(-a / 0.3)) + 0.4 * a; pz[m] = M.z + 0.6 * a
+                sc_[m] = 0.3 + 1.6 * (1 - np.exp(-a / 0.4)); al[m] = 0.7 * np.exp(-a / 0.9)
+            for ax_, arr in enumerate((px, py, pz)): key_series(pf, 'location', ax_, arr, 1e-3)
+            for ax in range(3): key_series(pf, 'scale', ax, sc_, 1e-3)
+            key_series(pf, 'color', 3, al, 2e-3)
+        for q, sp in enumerate(splashes):
+            px = np.zeros(NF); py = np.zeros(NF); pz = np.full(NF, -30.0); sx_ = np.full(NF, 0.01); sz_ = np.full(NF, 0.01); al = np.zeros(NF)
+            for k in range(len(SALVO)):
+                if k % 3 != q % 3: continue
+                j = q // 3
+                tt0 = SALVO[k] + 1.9 + 0.08 * j
+                x0 = -math.sin(aims[k][0]) * 60 + (j - 1) * 4.0 + yawo.location.x; y0 = 60 + 4 * math.cos(k + j)
+                m = (TT >= tt0) & (TT < tt0 + 3.0); a = TT[m] - tt0
+                hgt = 22 * (1 - np.exp(-a / 0.35)) * np.exp(-np.maximum(0, a - 1.0) / 1.2)
+                px[m] = x0; py[m] = y0; pz[m] = -1.4 + hgt / 2; sz_[m] = np.maximum(0.01, hgt); sx_[m] = 1.6 + 2.0 * a
+                al[m] = np.clip(1.2 - a / 2.5, 0, 0.95)
+            for ax_, arr in enumerate((px, py, pz)): key_series(sp, 'location', ax_, arr, 1e-3)
+            key_series(sp, 'scale', 0, sx_, 1e-3); key_series(sp, 'scale', 1, sx_, 1e-3); key_series(sp, 'scale', 2, sz_, 1e-3)
+            key_series(sp, 'color', 3, al, 2e-3)
+main_battery()
+
 # ---------------- camera ----------------
 cd = bpy.data.cameras.new('cam'); cd.sensor_fit = 'HORIZONTAL'; cd.sensor_width = 36; cd.clip_end = 300
 cam = link(bpy.data.objects.new('cam', cd)); sc.camera = cam
 tgt = link(bpy.data.objects.new('tgt', None))
 trk = cam.constraints.new('TRACK_TO'); trk.target = tgt; trk.track_axis = 'TRACK_NEGATIVE_Z'; trk.up_axis = 'UP_Y'
 S = dict((n, t) for t, n in E['sections'])
-KEYS = [  # time, cam pos, look-at, lens
-    (0.0, (2.2, -5.6, 1.0), (0.0, -1.3, 1.1), 40),          # turret bank close-up as they aim
-    (1.2, (1.6, -6.4, 1.4), (0.0, -1.0, 1.6), 40),
-    (4.5, (0.0, -12.8, 5.0), (0.0, 2.0, 5.6), 50),          # whole machine
-    (8.0, (-1.8, -8.0, 7.6), (-1.0, 2.2, 7.9), 50),          # xylophone + harmony bells
-    (13.0, (1.8, -8.2, 7.9), (1.2, 2.2, 8.2), 50),
-    (S['B'], (0.0, -6.2, 11.0), (0.0, 2.8, 11.3), 45),      # clockwork + metronome
+KEYS = [  # time, cam pos, look-at, lens   (two keys 0.01 s apart = a cut)
+    (0.0, (4.4, 2.9, 3.4), (1.6, 40.0, 1.6), 26),           # behind the main battery, looking out to sea
+    (2.6, (4.1, 3.3, 3.0), (1.2, 40.0, 1.9), 26),
+    (2.61, (2.2, -5.6, 1.0), (0.0, -1.3, 1.1), 40),         # cut: secondary turrets aiming
+    (4.0, (1.6, -6.4, 1.4), (0.0, -1.0, 1.6), 40),
+    (6.6, (0.0, -12.8, 5.0), (0.0, 2.0, 5.6), 50),          # whole ship machine
+    (9.5, (-1.8, -8.0, 7.6), (-1.0, 2.2, 7.9), 50),         # bells + signal lamps
+    (13.5, (1.8, -8.2, 7.9), (1.2, 2.2, 8.2), 50),
+    (S['B'], (0.0, -6.2, 11.0), (0.0, 2.8, 11.3), 45),      # clockwork + ship's wheel
     (S['B'] + 3.5, (-0.6, -6.6, 10.6), (0.0, 2.5, 10.8), 45),
-    (S['B'] + 5.0, (0.0, -4.9, 1.1), (0.0, 2.2, 5.6), 30),  # behind the turrets: volley view
+    (S['B'] + 5.0, (0.0, -4.9, 1.1), (0.0, 2.2, 5.6), 30),  # behind the secondary guns: volley view
     (S['B'] + 10.5, (0.3, -5.2, 1.4), (0.0, 2.2, 6.2), 30),
-    (S['B'] + 12.0, (4.6, -5.6, 3.6), (3.3, 1.0, 2.6), 42),  # drums, toms, cam-driven hi-hat
-    (S['roll'] - 0.5, (4.1, -5.2, 3.2), (3.4, 1.0, 2.5), 42),
-    (S['roll'] + 0.4, (0.0, -9.5, 6.5), (0.0, 2.2, 7.0), 46),  # snare roll -> glissando
-    (S['A2'], (0.0, -12.8, 5.2), (0.0, 2.0, 5.8), 50),
-    (S['A2'] + 4.0, (-1.6, -9.0, 2.6), (-2.4, 1.6, 2.6), 46),  # bass marimba + chute
-    (S['A2'] + 8.5, (-0.7, -6.6, 1.2), (-3.0, -1.0, 2.7), 30),  # return rails, collector, lift
+    (S['B'] + 12.0, (4.6, -5.6, 3.6), (3.3, 1.0, 2.6), 42),  # drums, field drum, return trough
+    (S['roll'] - 0.5, (4.1, -5.2, 3.2), (3.4, 0.4, 2.2), 42),
+    (S['roll'] + 0.4, (0.0, -9.5, 6.5), (0.0, 2.2, 7.0), 46),
+    (S['A2'] - 0.12, (0.0, -12.0, 5.2), (0.0, 2.0, 5.8), 50),
+    (S['A2'] - 0.11, (-4.4, 2.9, 3.4), (-1.6, 40.0, 1.6), 26),  # cut: main battery salvo at the tutti
+    (S['A2'] + 3.6, (-4.0, 3.4, 3.0), (-1.2, 40.0, 1.9), 26),
+    (S['A2'] + 3.61, (-1.6, -9.0, 2.6), (-2.4, 1.6, 2.6), 46),  # cut: armour plates + chute
+    (S['A2'] + 8.5, (-0.7, -6.6, 1.2), (-3.0, -1.0, 2.7), 30),  # return rails, hoist
     (S['A2'] + 12.0, (0.0, -6.8, 1.3), (-2.4, -0.6, 2.9), 30),
-    (S['A2'] + 14.0, (-2.0, -9.6, 5.0), (0.0, 2.0, 5.2), 46),  # chord vibes + volley
+    (S['A2'] + 14.0, (-2.0, -9.6, 5.0), (0.0, 2.0, 5.2), 46),
     (S['A2'] + 18.0, (2.0, -9.6, 5.4), (0.0, 2.0, 5.4), 46),
     (S['finale'] - 1.0, (0.0, -12.6, 5.4), (0.0, 2.0, 5.9), 50),
     (FINAL, (0.0, -13.6, 5.8), (0.0, 2.0, 6.2), 50),
@@ -807,6 +920,7 @@ for f in range(NF):
     for c in crash_t:
         if 0 <= t - c < 0.4:
             kk = math.exp(-(t - c) / 0.1); p = p + Vector((0.06 * kk * math.sin(90 * t), 0, 0.05 * kk * math.sin(77 * t)))
+    p = p + Vector((0.03 * math.sin(2 * math.pi * t / 7.0), 0, 0.05 * math.sin(2 * math.pi * t / 5.0)))   # gentle swell
     cam.location = p; tgt.location = l; cd.lens = lens
     cam.keyframe_insert('location', frame=f); tgt.keyframe_insert('location', frame=f); cd.keyframe_insert('lens', frame=f)
 

@@ -123,9 +123,9 @@ def hit(h, t, vel, gain, pan=0.0, p=None):
 def cannon(t, gain):
     """synthesised naval-gun boom: low thump + filtered noise blast"""
     n = int(1.6 * SR); tt = np.arange(n) / SR
-    thump = np.sin(2 * np.pi * (48 * np.exp(-tt / 0.25) + 28) * tt) * np.exp(-tt / 0.35)
+    thump = np.sin(2 * np.pi * (55 * np.exp(-tt / 0.2) + 30) * tt) * np.exp(-tt / 0.5) * 1.3
     from scipy.signal import lfilter
-    nz = rng.normal(0, 1, n); nz = lfilter([0.05], [1, -0.95], nz) * np.exp(-tt / 0.18) * 3
+    nz = rng.normal(0, 1, n); nz = lfilter([0.05], [1, -0.95], nz) * np.exp(-tt / 0.3) * 3.5
     crack = rng.normal(0, 1, n) * np.exp(-tt / 0.012) * 0.4
     x = (thump + nz + crack)[:, None] * np.array([[1, 1]], 'float32')
     place('perc', x.astype('float32'), 1.0, t, gain, 0.0)
@@ -139,16 +139,17 @@ def brass(name_s, name_l, t, p, v, g, dur, rel=0.15):
 notes = json.load(open('notes.json'))
 for t, d, ins, p, v, role, b in notes:
     if role == 'mel':
-        brass('tpt', 'tpt_sus', t, p, v, 0.8, d)
+        brass('tpt', 'tpt_sus', t, p, v, 1.0, d)
         play('glock', t, p + 12, v, 0.22)
-        brass('hn', 'hn_sus', t, p - 12, v, 0.35, d)
-    elif role == 'mel_trio':        # 'Umi yukaba': solemn brass choir
-        play('hn_sus', t, p, v, 0.75, dur=d, rel=0.35); play('tbn_sus', t, p - 12, v, 0.5, dur=d, rel=0.35)
-        play('tpt_sus', t, p, v * 0.8, 0.25, dur=d, rel=0.35)
+        brass('hn', 'hn_sus', t, p - 12, v, 0.45, d)
+    elif role == 'mel_tutti':       # full band: trumpets + horns + trombones in octaves
+        brass('tpt', 'tpt_sus', t, p, v, 1.05, d); brass('tpt', 'tpt_sus', t, p, v, 0.5, d)
+        brass('hn', 'hn_sus', t, p - 12, v, 0.6, d); brass('tbn', 'tbn_sus', t, p - 12, v, 0.55, d)
+        play('glock', t, p + 12, v, 0.25)
     elif role == 'gliss':
         play('glock', t, p + 12, v, 0.4); play('xylo', t, p, v, 0.25)
     elif role == 'harm':
-        brass('hn', 'hn_sus', t, p, v, 0.45, d)
+        brass('hn', 'hn_sus', t, p, v, 0.55, d)
     elif role == 'harm_arp':
         play('glock', t, p, v, 0.3)
     elif role == 'chord':
@@ -160,16 +161,20 @@ for t, d, ins, p, v, role, b in notes:
         if p < 50: play('tba_sus', t, p, 120, 0.8, dur=2.6, rel=0.9); play('tbn_sus', t, p + 12, 120, 0.5, dur=2.6, rel=0.9)
         elif p < 75: play('hn_sus', t, p, 120, 0.6, dur=2.6, rel=0.9); play('tpt_sus', t, p, 115, 0.35, dur=2.6, rel=0.9)
         else: play('tpt_sus', t, p, 120, 0.7, dur=2.6, rel=0.9); play('glock', t, p + 12, 120, 0.3)
+    elif role == 'kick_cym':        # march: bass drum + clashed cymbals on the downbeat
+        hit(BD, t, v, 1.05); hit(CR, t, 70, 0.22, 0.25)
+    elif role == 'salvo':           # main battery: deep boom + low timpani
+        cannon(t, 0.95); k = min(TIMP, key=lambda k: abs(TIMP[k].pitch - 41)); hit(TIMP[k], t, 127, 0.9, 0.0, 41)
     elif role == 'drum':
-        if p == 36: hit(BD, t, v, 0.95)
+        if p == 36: hit(BD, t, v, 1.05)
         elif p == 38: hit(SN, t, v, 0.6)
         elif p in (49, 57):
-            hit(CR, t, 127, 0.8, -0.3 if p == 49 else 0.3); cannon(t, 0.55)
+            hit(CR, t, 127, 0.8, -0.3 if p == 49 else 0.3)
         elif p in (50, 47, 45):
             tp = {50: 53, 47: 48, 45: 41}[p]; k = min(TIMP, key=lambda k: abs(TIMP[k].pitch - tp))
             hit(TIMP[k], t, v, 1.15, 0.0, tp)
     elif role == 'hat':
-        hit(SN, t, v * 0.75, 0.3 if v > 80 else 0.16, 0.15)
+        hit(SN, t, v * 0.8, 0.36 if v > 90 else 0.2, 0.15)
 
 # reverb: synthetic hall IR (decorrelated stereo exponential noise, darker tail)
 L = int(2.0 * SR); tt = np.arange(L) / SR
@@ -178,7 +183,7 @@ from scipy.signal import lfilter
 for c in range(2):
     ir[:, c] = lfilter([0.25], [1, -0.75], ir[:, c])
 ir[: int(0.012 * SR)] = 0; ir /= np.sqrt((ir ** 2).sum(0))
-WET = {'str': 0.32, 'brass': 0.26, 'mallet': 0.22, 'perc': 0.2}
+WET = {'str': 0.3, 'brass': 0.2, 'mallet': 0.2, 'perc': 0.16}
 mix = np.zeros((N, 2), 'float32')
 for k, x in bus.items():
     wet = np.stack([fftconvolve(x[:, c], ir[:, c])[:N] for c in range(2)], 1)
