@@ -1,0 +1,10 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Authorized - Ball Music Studio</title><link rel="stylesheet" href="style.css"></head><body>
+<h1>TikTok authorization</h1><p id="msg">Reading the authorization result…</p>
+<p>Copy the code below and send it to the operator's GitHub workflow "TikTok: connect account". The code expires in a few minutes.</p>
+<p><code id="code"></code></p>
+<script>
+const q=new URLSearchParams(location.search);const c=q.get('code');const e=q.get('error');
+document.getElementById('msg').textContent=c?'Authorization succeeded.':('Authorization failed: '+(e||'no code'));
+document.getElementById('code').textContent=c||'';
+</script></body></html>
