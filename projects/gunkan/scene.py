@@ -870,6 +870,15 @@ def main_battery():
             key_series(sp, 'color', 3, al, 2e-3)
 main_battery()
 
+# ball paths are straight lines between keys (Bezier made balls drift off the return rails)
+from bpy_extras import anim_utils as _au
+for _o in bpy.data.objects:
+    if _o.name[:1] == 'b' and _o.name[1:].isdigit() and _o.animation_data and _o.animation_data.action:
+        _cb = _au.action_get_channelbag_for_slot(_o.animation_data.action, _o.animation_data.action_slot)
+        for _fc in _cb.fcurves:
+            if _fc.data_path == 'location':
+                for _kp in _fc.keyframe_points: _kp.interpolation = 'LINEAR'
+
 # ---------------- camera ----------------
 cd = bpy.data.cameras.new('cam'); cd.sensor_fit = 'HORIZONTAL'; cd.sensor_width = 36; cd.clip_end = 300
 cam = link(bpy.data.objects.new('cam', cd)); sc.camera = cam
