@@ -388,15 +388,14 @@ def gaussian_filter1d(x, sig, axis=0, mode='nearest'):
 SM = np.stack([gaussian_filter1d(BPOS[b], 6, axis=0, mode='nearest') for b in range(NB)])
 FIN = E['final']
 cd = bpy.data.cameras.new('cam'); cd.sensor_fit = 'HORIZONTAL'; cd.sensor_width = 36; cd.clip_start = 0.02; cd.clip_end = 100
-cd.dof.use_dof = True; cd.dof.aperture_fstop = 6.0
+cd.dof.use_dof = True; cd.dof.aperture_fstop = 10.0
 cam = link(bpy.data.objects.new('cam', cd)); sc.camera = cam
 tgo = link(bpy.data.objects.new('tgt', None))
 trk = cam.constraints.new('TRACK_TO'); trk.target = tgo; trk.track_axis = 'TRACK_NEGATIVE_Z'; trk.up_axis = 'UP_Y'
 # (start, end, mode, ball, dist, height, az0, az1, lens)
 # camera plan: each variation gets 3-4 shots cycling through close follows and group views
-STY = [('follow', 0, 0.6, 0.15, -1.9, -1.4, 52), ('group', 0, 0.85, 0.3, -0.6, 0.2, 45), ('follow', 1, 0.6, 0.18, -1.2, -0.7, 52),
-       ('group', 0, 0.6, 0.8, -0.4, 0.4, 35), ('follow', 0, 0.45, 0.1, 0.8, 1.3, 58), ('group', 0, 0.9, 0.08, 0.6, -0.2, 45),
-       ('follow', 2, 0.55, 0.15, -2.4, -2.0, 55)]
+STY = [('group', 0, 1.0, 0.3, -0.6, 0.2, 40), ('follow', 0, 0.8, 0.22, -1.9, -1.4, 42), ('group', 0, 1.15, 0.55, -0.4, 0.4, 38),
+       ('follow', 1, 0.8, 0.22, -1.2, -0.7, 42), ('group', 0, 0.95, 0.15, 0.6, -0.2, 40), ('follow', 2, 0.75, 0.2, -2.4, -2.0, 44)]
 SH = []; si = 0
 bounds = [0.0] + [sct[0] - 0.4 for sct in SECT[1:]] + [FIN - 0.1]
 for k in range(len(SECT)):
