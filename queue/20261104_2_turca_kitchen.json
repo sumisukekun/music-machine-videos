@@ -1,0 +1,32 @@
+{
+ "video": "release:auto-videos/20261104_2_turca_kitchen.mp4",
+ "caption": "台所の鍋やグラスが「トルコ行進曲」を演奏🍳 玉が当たるたびに音が鳴る！（モーツァルト） #トルコ行進曲 #モーツァルト #クラシック #音楽 #台所 #キッチン #からくり #ピタゴラ #blender #3dアニメ #ballmachine #satisfying",
+ "meta": {
+  "id": "turca",
+  "ly": "MozartWA/KV331/KV331_3_RondoAllaTurca",
+  "main": "KV331_3_RondoAllaTurca-lys/KV331_3_RondoAllaTurca.ly",
+  "bpm": 126,
+  "style": "march",
+  "title_ja": "トルコ行進曲",
+  "title_en": "Rondo alla Turca",
+  "composer_ja": "モーツァルト",
+  "composer_en": "Mozart",
+  "license": "Public Domain",
+  "theme": "kitchen",
+  "bars": 62,
+  "final": 60.6476,
+  "mel_pitches": 25,
+  "counts": {
+   "mel": 349,
+   "harm": 14,
+   "chord": 125,
+   "bass": 125,
+   "kick": 125,
+   "snare": 124,
+   "tom": 12,
+   "crash": 5,
+   "hat": 248,
+   "gliss": 20
+  }
+ }
+}
