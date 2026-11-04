@@ -663,16 +663,19 @@ if drum_land:
         for yy in (ty0 + 0.05, ty1 - 0.05): rod((xx, yy, 0.0), (xx, yy, TZb - 0.04), 0.03, STEEL)
     OUT = Vector((min(max(FRONT_R.x + 0.4, tx0 + 0.2), tx1 - 0.2), ty0 + 0.1, 0.42))
     track(OUT + Vector((0, 0, 0.02)), FRONT_R + Vector((0.05, 0.0, 0.0)))
-    tray_free = 0.0
+    tray_free = 0.0; WAITS = []
     for tl, Lp, o, keys in sorted(drum_land, key=lambda r: r[0]):
         tin = tl + 0.08 + (Lp - OUT).length / 1.6
-        dep = max(tin, tray_free); tray_free = dep + 0.14
+        dep = max(tin, tray_free); tray_free = dep + 0.14; WAITS.append(dep - tin)
         keys.append((tl + 0.08, Lp + Vector((0, 0, 0.02)), True))
-        keys.append((tin, OUT, True)); keys.append((dep, OUT, True))
+        k_q = int(round((dep - tin) / 0.14))          # balls already waiting: line up behind the outlet, then creep forward
+        slot = OUT + Vector((-0.3 * (k_q % 9), 0.3 * (k_q // 9), 0))
+        keys.append((tin, slot, True)); keys.append((dep, OUT, True))
         tA = dep + (FRONT_R - OUT).length / 2.6; keys.append((tA, FRONT_R, True))
         tB = tA + (FRONT_L - FRONT_R).length / 3.6; keys.append((tB, FRONT_L, True))
         tC = tB + (LIFT0 - FRONT_L).length / 2.0; keys.append((tC, LIFT0, False))
         lift_q.append((tC, o, keys))
+    print('waits max', round(max(WAITS), 2), 'mean', round(sum(WAITS) / len(WAITS), 2), 'n>0.3', sum(w > 0.3 for w in WAITS))
     print('drum tray', round(tx0, 2), round(tx1, 2), round(ty0, 2), round(ty1, 2), 'balls', len(drum_land))
 lift_q.sort(key=lambda r: r[0])
 for tC, o, keys in lift_q:
