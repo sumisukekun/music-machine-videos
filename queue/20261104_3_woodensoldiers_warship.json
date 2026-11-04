@@ -1,0 +1,32 @@
+{
+ "video": "release:auto-videos/20261104_3_woodensoldiers_warship.mp4",
+ "caption": "戦艦の大砲が「木の兵隊の行進」を演奏⚓ 玉が当たるたびに音が鳴る！（チャイコフスキー） #木の兵隊の行進 #チャイコフスキー #クラシック #音楽 #戦艦 #大砲 #からくり #ピタゴラ #blender #3dアニメ #ballmachine #satisfying",
+ "meta": {
+  "id": "woodensoldiers",
+  "ly": "TchaikovskyPI/O39/05MarchOfTheWoodenSoldiers",
+  "main": "05MarchOfTheWoodenSoldiers.ly",
+  "bpm": 120,
+  "style": "march",
+  "title_ja": "木の兵隊の行進",
+  "title_en": "March of the Wooden Soldiers",
+  "composer_ja": "チャイコフスキー",
+  "composer_en": "Tchaikovsky",
+  "license": "Public Domain",
+  "theme": "warship",
+  "bars": 60,
+  "final": 61.6,
+  "mel_pitches": 14,
+  "counts": {
+   "mel": 179,
+   "harm": 107,
+   "chord": 121,
+   "bass": 121,
+   "kick": 121,
+   "snare": 120,
+   "tom": 12,
+   "crash": 5,
+   "hat": 240,
+   "gliss": 20
+  }
+ }
+}
