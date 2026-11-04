@@ -573,6 +573,7 @@ for k_, m_ in BALLM.items():
 
 nball = 0
 returns = []
+drum_land = []
 for t, kind, key, tn in shots:
     tur = T[tn]; M, v0 = tur.add(t, key)
     o = link(bpy.data.objects.new(f'b{nball}', sph[kind])); o.color = (*BALLM[kind].node_tree.nodes['Principled BSDF'].inputs['Base Color'].default_value[:3], 1); nball += 1
@@ -613,6 +614,14 @@ for t, kind, key, tn in shots:
             vout = Vector((0.1, -2.1, 1.3)); dur = 2.0; zfloor = 0.2
         else:
             vout = Vector((rng.uniform(-0.3, 0.3), -1.25, 1.5)); dur = 2.0; zfloor = 0.2
+        if kind in ('snare', 'tom', 'kick'):
+            TZ = 0.42
+            dz = P1.z - TZ; a_l = (vout.z + math.sqrt(vout.z * vout.z + 2 * G * dz)) / G
+            for f in range(int(math.floor(t * FPS)) + 1, int(math.ceil((t + a_l) * FPS))):
+                a = f / FPS - t; keys.append((f / FPS, P1 + vout * a + Vector((0, 0, -0.5 * G * a * a)), True))
+            Lp = P1 + vout * a_l + Vector((0, 0, -0.5 * G * a_l * a_l)); keys.append((t + a_l, Lp, True))
+            drum_land.append((t + a_l, Lp, o, keys))
+            continue
         end = t
         for f in range(int(math.floor(t * FPS)) + 1, int((t + dur) * FPS)):
             a = f / FPS - t; p = P1 + vout * a + Vector((0, 0, -0.5 * G * a * a))
@@ -641,6 +650,30 @@ for arr, o, keys, side in returns:
         tB = dep + (FRONT_L - c).length / 3.6; keys.append((tB, FRONT_L, True))
     tC = tB + (LIFT0 - FRONT_L).length / 2.0; keys.append((tC, LIFT0, False))
     lift_q.append((tC, o, keys))
+# drum balls: a wooden catch tray under the drums, a rail from its outlet onto the front return rail
+if drum_land:
+    xs = [p.x for _, p, _, _ in drum_land]; ys = [p.y for _, p, _, _ in drum_land]
+    tx0, tx1 = min(xs) - 0.25, max(xs) + 0.25; ty0, ty1 = min(ys) - 0.25, max(ys) + 0.25
+    TZb = 0.42 - BR - 0.02
+    base = prim('cube', WOOD, size=1, location=((tx0 + tx1) / 2, (ty0 + ty1) / 2, TZb - 0.02)); base.scale = (tx1 - tx0, ty1 - ty0, 0.04)
+    for (cx, cy, sx, sy) in (((tx0 + tx1) / 2, ty0, tx1 - tx0, 0.04), ((tx0 + tx1) / 2, ty1, tx1 - tx0, 0.04),
+                             (tx0, (ty0 + ty1) / 2, 0.04, ty1 - ty0), (tx1, (ty0 + ty1) / 2, 0.04, ty1 - ty0)):
+        w_ = prim('cube', WOODL, size=1, location=(cx, cy, TZb + 0.08)); w_.scale = (sx, sy, 0.2)
+    for xx in (tx0 + 0.05, tx1 - 0.05):
+        for yy in (ty0 + 0.05, ty1 - 0.05): rod((xx, yy, 0.0), (xx, yy, TZb - 0.04), 0.03, STEEL)
+    OUT = Vector((min(max(FRONT_R.x + 0.4, tx0 + 0.2), tx1 - 0.2), ty0 + 0.1, 0.42))
+    track(OUT + Vector((0, 0, 0.02)), FRONT_R + Vector((0.05, 0.0, 0.0)))
+    tray_free = 0.0
+    for tl, Lp, o, keys in sorted(drum_land, key=lambda r: r[0]):
+        tin = tl + 0.08 + (Lp - OUT).length / 1.6
+        dep = max(tin, tray_free); tray_free = dep + 0.14
+        keys.append((tl + 0.08, Lp + Vector((0, 0, 0.02)), True))
+        keys.append((tin, OUT, True)); keys.append((dep, OUT, True))
+        tA = dep + (FRONT_R - OUT).length / 2.6; keys.append((tA, FRONT_R, True))
+        tB = tA + (FRONT_L - FRONT_R).length / 3.6; keys.append((tB, FRONT_L, True))
+        tC = tB + (LIFT0 - FRONT_L).length / 2.0; keys.append((tC, LIFT0, False))
+        lift_q.append((tC, o, keys))
+    print('drum tray', round(tx0, 2), round(tx1, 2), round(ty0, 2), round(ty1, 2), 'balls', len(drum_land))
 lift_q.sort(key=lambda r: r[0])
 for tC, o, keys in lift_q:
     dep = max(tC + 0.05, lift_free); lift_free = dep + 0.13
