@@ -5,7 +5,11 @@
   "elise|concert",
   "turca|kitchen",
   "woodensoldiers|warship",
-  "lullaby|concert"
+  "lullaby|concert",
+  "sakura|kitchen",
+  "minuet|warship",
+  "flambeaux|concert",
+  "elcapitan|kitchen"
  ],
- "theme_i": 0
+ "theme_i": 1
 }
