@@ -1,0 +1,32 @@
+{
+ "video": "release:auto-videos/20261104_1_elise_concert.mp4",
+ "caption": "16台の砲塔マシンが「エリーゼのために」を演奏🎯 玉が当たるたびに音が鳴る！（ベートーヴェン） #エリーゼのために #ベートーヴェン #クラシック #音楽 #精密 #機械 #からくり #ピタゴラ #blender #3dアニメ #ballmachine #satisfying",
+ "meta": {
+  "id": "elise",
+  "ly": "BeethovenLv/WoO59/fur_Elise_WoO59",
+  "main": "fur_Elise_WoO59.ly",
+  "bpm": 66,
+  "style": "lyrical",
+  "title_ja": "エリーゼのために",
+  "title_en": "Für Elise",
+  "composer_ja": "ベートーヴェン",
+  "composer_en": "Beethoven",
+  "license": "Public Domain",
+  "theme": "concert",
+  "bars": 44,
+  "final": 61.6,
+  "mel_pitches": 21,
+  "counts": {
+   "mel": 245,
+   "harm": 28,
+   "chord": 45,
+   "bass": 45,
+   "kick": 23,
+   "snare": 0,
+   "tom": 12,
+   "crash": 5,
+   "hat": 0,
+   "gliss": 20
+  }
+ }
+}
