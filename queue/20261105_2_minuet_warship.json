@@ -1,0 +1,32 @@
+{
+ "video": "release:auto-videos/20261105_2_minuet_warship.mp4",
+ "caption": "戦艦の大砲が「メヌエット ト長調」を演奏⚓ 玉が当たるたびに音が鳴る！（バッハ（ペツォールト）） #メヌエットト長調 #バッハ #クラシック #音楽 #戦艦 #大砲 #からくり #ピタゴラ #blender #3dアニメ #ballmachine #satisfying",
+ "meta": {
+  "id": "minuet",
+  "ly": "BachJS/BWVAnh114/Minuet-xpose",
+  "main": "Minuet-xpose.ly",
+  "bpm": 126,
+  "style": "waltz",
+  "title_ja": "メヌエット ト長調",
+  "title_en": "Minuet in G",
+  "composer_ja": "バッハ（ペツォールト）",
+  "composer_en": "Bach / Petzold",
+  "license": "Public Domain",
+  "theme": "warship",
+  "bars": 42,
+  "final": 61.6,
+  "mel_pitches": 14,
+  "counts": {
+   "mel": 170,
+   "harm": 155,
+   "chord": 85,
+   "bass": 43,
+   "kick": 43,
+   "snare": 84,
+   "tom": 12,
+   "crash": 5,
+   "hat": 252,
+   "gliss": 20
+  }
+ }
+}
