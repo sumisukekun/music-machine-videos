@@ -1,0 +1,32 @@
+{
+ "video": "release:auto-videos/20261105_3_flambeaux_concert.mp4",
+ "caption": "16台の砲塔マシンが「たいまつ行進曲」を演奏🎯 玉が当たるたびに音が鳴る！（スコットソン・クラーク） #たいまつ行進曲 #スコットソンクラーク #クラシック #音楽 #精密 #機械 #からくり #ピタゴラ #blender #3dアニメ #ballmachine #satisfying",
+ "meta": {
+  "id": "flambeaux",
+  "ly": "ClarkFS/Marche_aux_Flambeaux",
+  "main": "Marche_aux_Flambeaux.ly",
+  "bpm": 112,
+  "style": "march",
+  "title_ja": "たいまつ行進曲",
+  "title_en": "Marche aux Flambeaux",
+  "composer_ja": "スコットソン・クラーク",
+  "composer_en": "Scotson Clark",
+  "license": "Public Domain",
+  "theme": "concert",
+  "bars": 28,
+  "final": 61.6,
+  "mel_pitches": 13,
+  "counts": {
+   "mel": 100,
+   "harm": 63,
+   "chord": 57,
+   "bass": 57,
+   "kick": 57,
+   "snare": 56,
+   "tom": 12,
+   "crash": 5,
+   "hat": 224,
+   "gliss": 20
+  }
+ }
+}
