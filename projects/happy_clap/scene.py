@@ -118,7 +118,11 @@ def setp(o, parent):
 def rod(p0, p1, r, mt, verts=12):
     p0, p1 = Vector(p0), Vector(p1); d = p1 - p0
     o = prim('cylinder', mt, radius=r, depth=d.length, vertices=verts, location=(p0 + p1) / 2)
-    o.rotation_mode = 'QUATERNION'; o.rotation_quaternion = Vector((0, 0, 1)).rotation_difference(d.normalized())
+    q = Vector((0, 0, 1)).rotation_difference(d.normalized())
+    o.rotation_mode = 'QUATERNION'; o.rotation_quaternion = q
+    # keep matrix_world in sync right away so setp() (which copies matrix_world) keeps the rod's direction
+    from mathutils import Matrix
+    o.matrix_world = Matrix.Translation((p0 + p1) / 2) @ q.to_matrix().to_4x4()
     return o
 
 
