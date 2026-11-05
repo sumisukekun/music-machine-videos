@@ -320,6 +320,42 @@ g2 = gear(0.11, 11, 0.04, BRASS, CRANK.location, (0, math.pi / 2, 0)); setp(g2, 
 o = rod(CRANK.location, CRANK.location + Vector((-0.08, 0, 0.18)), 0.012, IRON); setp(o, CRANK)
 o = prim('uv_sphere', RED, radius=0.035, location=CRANK.location + Vector((-0.08, 0, 0.2))); setp(o, CRANK)
 CRANK.rotation_mode = 'XYZ'; BAR_ROT.rotation_mode = 'XYZ'
+# drive train down to the cannons: the crank pinion sits on a line shaft that runs across the top;
+# a pulley at each end carries a leather belt down to a pulley + cam wheel beside each cannon.
+LINE = empty('line_shaft', CRANK.location.copy()); LINE.rotation_mode = 'XYZ'
+LXE = 0.9
+o = rod(Vector((-1.42, BY, BZ + 0.33)), Vector((1.42, BY, BZ + 0.33)), 0.018, IRON); setp(o, LINE)
+BELT = mat('belt', (0.22, 0.1, 0.04), 0.6)
+DRIVE = []
+
+
+def pulley(loc, r, parent):
+    o = prim('cylinder', BRASS, radius=r, depth=0.05, location=loc, rotation=(0, math.pi / 2, 0), vertices=40); setp(o, parent)
+    o = prim('cylinder', WOODD, radius=r * 0.35, depth=0.07, location=loc, rotation=(0, math.pi / 2, 0), vertices=20); setp(o, parent)
+    for k in range(4):                                                   # spokes make the turning visible
+        a = k * math.pi / 2
+        d = Vector((0, math.cos(a), math.sin(a)))
+        o = rod(loc + d * r * 0.3, loc + d * r * 0.95, 0.012, GOLD, verts=8); setp(o, parent)
+
+
+for s in (-1, 1):
+    top = Vector((s * LXE, BY, BZ + 0.33))
+    pulley(top, 0.1, LINE)
+    box(WOODD, (0.06, 0.06, 0.4), (s * 1.38, BY, BZ + 0.15))           # hanger bearing
+    PB = empty(f'pb{s}', (s * LXE, MY - 0.22, 0.12)); PB.rotation_mode = 'XYZ'
+    bot = PB.location.copy()
+    pulley(bot, 0.1, PB)
+    # cam wheel on the same axle, next to the cannon; its lobe trips the firing lever
+    o = rod(bot, Vector((s * 1.06, bot.y, bot.z)), 0.015, IRON); setp(o, PB)
+    cam = prim('cylinder', GOLD, radius=0.07, depth=0.03, location=(s * 1.02, bot.y, bot.z), rotation=(0, math.pi / 2, 0), vertices=24); setp(cam, PB)
+    lobe = prim('uv_sphere', RED, radius=0.03, location=(s * 1.02, bot.y, bot.z + 0.08), segments=12, ring_count=8); setp(lobe, PB)
+    box(WOODD, (0.05, 0.05, 0.3), (s * (LXE - 0.06), bot.y, bot.z - 0.16))        # floor bearing post
+    # belt: two straight runs tangent to both pulleys
+    dv = (top - bot); n_ = Vector((0, -dv.z, dv.y)).normalized()
+    for sg in (-1, 1):
+        a_ = bot + n_ * 0.1 * sg; b_ = top + n_ * 0.1 * sg
+        o = rod(a_, b_, 0.012, BELT, verts=8)
+    DRIVE.append(PB)
 
 GEST = E['gest']; SECS = E['secs']
 VSTART = [s['t'] for s in SECS]
@@ -516,6 +552,8 @@ ang = np.cumsum(run) / FPS * OMG
 ang = ang - np.interp(E['gest'][0]['t'], T, ang) + phi(E['gest'][0]['t'])     # exact phase at gesture times
 key_series(BAR_ROT, 'rotation_euler', 0, ang)
 key_series(CRANK, 'rotation_euler', 0, -ang * 0.2 / 0.11)
+key_series(LINE, 'rotation_euler', 0, -ang * 0.2 / 0.11)
+for PB in DRIVE: key_series(PB, 'rotation_euler', 0, -ang * 0.2 / 0.11)
 key_series(FOL, 'rotation_euler', 0, 0.28 * fol)
 # the cross follows the follower tip + tilts with each gesture kind
 cz_ = 2.9 + 0.07 * fol - 0.04 * (1 - wake)
