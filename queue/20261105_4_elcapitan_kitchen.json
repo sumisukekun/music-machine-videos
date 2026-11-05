@@ -1,0 +1,32 @@
+{
+ "video": "release:auto-videos/20261105_4_elcapitan_kitchen.mp4",
+ "caption": "台所の鍋やグラスが「エル・キャピタン」を演奏🍳 玉が当たるたびに音が鳴る！（スーザ） #エル・キャピタン #スーザ #クラシック #音楽 #台所 #キッチン #からくり #ピタゴラ #blender #3dアニメ #ballmachine #satisfying",
+ "meta": {
+  "id": "elcapitan",
+  "ly": "SousaJP/ElCapitanMarch",
+  "main": "ElCapitanMarch.ly",
+  "bpm": 120,
+  "style": "march",
+  "title_ja": "エル・キャピタン",
+  "title_en": "El Capitan March",
+  "composer_ja": "スーザ",
+  "composer_en": "Sousa",
+  "license": "Public Domain",
+  "theme": "kitchen",
+  "bars": 40,
+  "final": 61.6,
+  "mel_pitches": 19,
+  "counts": {
+   "mel": 128,
+   "harm": 87,
+   "chord": 81,
+   "bass": 81,
+   "kick": 81,
+   "snare": 80,
+   "tom": 12,
+   "crash": 5,
+   "hat": 240,
+   "gliss": 20
+  }
+ }
+}
