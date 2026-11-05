@@ -1,0 +1,32 @@
+{
+ "video": "release:auto-videos/20261105_1_sakura_kitchen.mp4",
+ "caption": "台所の鍋やグラスが「さくらさくら」を演奏🍳 玉が当たるたびに音が鳴る！（日本古謡） #さくらさくら #日本古謡 #クラシック #音楽 #台所 #キッチン #からくり #ピタゴラ #blender #3dアニメ #ballmachine #satisfying",
+ "meta": {
+  "id": "sakura",
+  "ly": "Traditional/JPM037-Sakura-Miyotote",
+  "main": "JPM037-Sakura-Miyotote.ly",
+  "bpm": 76,
+  "style": "lyrical",
+  "title_ja": "さくらさくら",
+  "title_en": "Sakura Sakura",
+  "composer_ja": "日本古謡",
+  "composer_en": "Japanese traditional",
+  "license": "Public Domain",
+  "theme": "kitchen",
+  "bars": 18,
+  "final": 58.4421,
+  "mel_pitches": 11,
+  "counts": {
+   "mel": 81,
+   "harm": 65,
+   "chord": 19,
+   "bass": 37,
+   "kick": 10,
+   "snare": 0,
+   "tom": 12,
+   "crash": 5,
+   "hat": 0,
+   "gliss": 20
+  }
+ }
+}
