@@ -450,7 +450,7 @@ lo = link(bpy.data.objects.new('bl', ld)); lo.parent = BALL; lo.location = (0, -
 
 # ---------------- fireworks ----------------
 FW = fadeemis('fw', 60.0)
-bpy.ops.mesh.primitive_ico_sphere_add(radius=0.12, subdivisions=1, location=(0, 0, -50)); proto = bpy.context.object; proto.data.materials.append(FW)
+bpy.ops.mesh.primitive_uv_sphere_add(radius=0.075, segments=12, ring_count=8, location=(0, 0, -50)); proto = bpy.context.object; proto.data.materials.append(FW)
 COLS = [(1.0, 0.75, 0.3), (1.0, 0.2, 0.2), (0.9, 0.9, 1.0), (0.3, 0.6, 1.0), (1.0, 0.5, 0.9)]
 bursts = [(FINAL + 0.05, -3.2, 11.5), (FINAL + 0.5, 3.4, 12.5), (FINAL + 1.0, -0.5, 14.0), (FINAL + 1.5, -4.6, 13.2), (FINAL + 2.0, 4.6, 11.0), (FINAL + 2.6, 1.8, 13.6), (FINAL + 3.1, -2.2, 14.6)]
 for bi, (tb_, bx, bz) in enumerate(bursts):
@@ -461,7 +461,7 @@ for bi, (tb_, bx, bz) in enumerate(bursts):
     RP = np.stack([np.full(NF, c[0]), np.full(NF, c[1]), ZB + (c[2] - ZB) * (1 - (1 - np.clip(tau, 0, 1)) ** 2)], 1)
     for i in range(3): key_series(rk, 'location', i, RP[:, i])
     key_series(rk, 'color', 3, np.where((tau >= 0) & (tau <= 1), 0.6, 0.0), 1e-3)
-    for j in range(64):
+    for j in range(90):
         d = rng.normal(0, 1, 3); d /= np.linalg.norm(d); sp_ = rng.uniform(3.0, 3.8)
         o = proto.copy(); o.data = proto.data; link(o); o.color = (*col, 0)
         tt = np.clip(T - tb_, 0, None)
