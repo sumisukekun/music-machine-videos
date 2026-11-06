@@ -15,7 +15,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: render-${{ github.ref }}-${{ github.event.inputs.project || github.sha }}
+  group: render-${{ github.run_id }}
   cancel-in-progress: false
 
 jobs:
