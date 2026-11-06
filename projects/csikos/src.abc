@@ -1,0 +1,39 @@
+T: Csikos Post
+C: Hermann Necke
+%link: https://ja.musescore.com/user/29687444/scores/5339632
+K: Gmaj
+M: 2/4
+L: 1/8
+Q: 1/4=200
+%%staves {1 2}
+V:2 bass octave=-1
+[V:1] .[Bb].f L[Bb]2|.[Bb].f L[Bb]2|.b.B.^d.f|.bzz2|:!sfz!L{ega}e'z !p!.[Ee].[Ff]|.[Gg]z .[Bb]z|.[cc']z .[ee']z|
+[V:2] .[B,B].F L[B,B]2|.[B,B].F L[B,B]2|.B.B,.^D.F|.[B,B]z L[B,B,,]z|:E[GB]E[GB]|E[GB]E[GB]|E[Ac]E[Ac]|
+[V:1] L[Bb]4|L(a/A/e/f/c'2)|L(g/G/e/g/b2)|L(f/F/^d/f/b2)|.[Gg].[Ff] L[Ee]2|{egb}!sfz!Le'z !p!.[Ee].[Ff]|.[Gg]z .[Bb]z|
+[V:2] E[GB]E[GB]|A,[EF]A,[EF]|B,[EG]B,[EG]|B,[EG]B,[EG]|.[EG].[B,A] L[EG]2|E[GB]E[GB]|E[GB]E[GB]|
+[V:1] .[cc']z .[ee']z|L[Bb]4|!mf!.[Bb]!<(!.[^A^a].[Bb].[^c^c']|.[dd'].[^c^c'].[dd'].[ee']!<)!|!f!.[ff']z .[^c^c'].[ff']|.[Bb]z !arpeggio!L!sfz![bd'f'b']z:|
+[V:2] E[Ac]E[Ac]|E[Ac]E[Ac]|E[Ac]E[Ac]|E[Ac]E[Ac]|[F^Ae]z [F^ce]z|.[Bd]z [B,B]z:|
+[V:1]|:!ff!.[egb].[egb].[egb].[egb]|.[egb].[egb].[egb].[egb]|.[eac'].[eac'].[eac'].[eac']|.[eac'].[eac'].[eac'].[eac']|!p!.{c'}bz .b.^c'|.^d'b L[ff']2|.{f'}e'z .e'.f'|
+[V:2]|:[EE,]z [G,G]z|L[B,B]4|[A,A]z [Cc]z|L[Ee]4|^D[AB]D[AB]|F[AB]B,[AB]|E[GB]B,[GB]|
+[V:1] .g'.c'L[bb']z|!ff!.[egb].[egb].[egb].[egb]|.[egb].[egb].[egb].[egb]|.[eac'].[eac'].[eac'].[eac']|.[eac'].[eac'].[eac'].[eac']|
+[V:2] E[GB]B,[GB]|[E,E]z [G,G]z|L[B,B]4|[A,A]z [Cc]z|L[Ee]4|
+[V:1] .[Bb].[ee'] [Bb]2|.[Gg].[Bb].[ee'].[gg']|.[ff'].[bb'].[^d^d'].[ff']|.[ee']z L!arpeggio!.[e'g'b'e'']z:|
+[V:2] B,[EG]B,[EG]|B,[EG]B,[EG]|.[B,^DA]z .[B,^DA]z|.[EG]z .[E,E]z:|
+K: Cmaj
+[V:1] L[gg']2 L[^f^f']2|L[ff']2 L[ee']2|L[dd']2 L[cc']2|L[Bb]2 L[Aa]2|
+[V:2] L[Gg]2 L[^F^f]2|L[Ff]2 L[Ee]2|L[Dd]2 L[Cc]2|L[B,B]2 L[A,A]2|
+[V:1]|:!p!.[Gg]!<(!.[Aa].[Bb].[cc']|!<)!.[dd'].[^c^c'].[dd'].[Bb]|.[cc'].[dd'].[ee'].[ff']|.[gg'].[^f^f'].[gg'].[ee']|!mf!(.[af'].a')(.[fd'].f')|(.[db].d')(.[Bg].b)|
+[V:2]|:.G,.F.D.F|.G,.F.D.F|.G,.E.C.E|.G,.E.C.E|.G,.F.D.F|.G,.F.D.F|
+[V:1] (.[ec'].e')(.[cg].c')|(.[Ge].g)(.[Ec].e)|!p!.[Gg].[Aa].[Bb].[cc']|.[dd'].[^c^c'].[dd'].[Bb]|.[cc'].[dd'].[ee'].[ff']|.[gg'].[^f^f'].[gg'].[ee']|
+[V:2] .G,.E.C.E|.G,.E.C.E|.G,.F.D.F|.G,.F.D.F|.G,.E.C.E|.G,.E.C.E|
+[V:1] !mf!(.[bg'].[b'])(.[ge'].g')|(.[eb].e')(.[bg'].b')|(.[b^f'].b')(.[^f^d'].f')|.[ee']z !arpeggio!L.[e'g'b'e'']z:|!ff!(c'/g/e/g/) (c'/g/e/g/)|(c'/g/e/g/ .c')z|
+[V:2] .[B,EG]z .[B,EG]z|.[B,EG]z .[B,EG]z|.[B,^FA]z .[B,FA]z|.[EG]z L.[E,E]z:|L.[Cc]z L.[B,B]z|L.[A,A]z L.[G,G]z|
+[V:1] (d'/a/f/a/) (d'/a/f/a/)|(d'/a/f/a/ d')z|!sfz!.{f'}a'z !p!.[bd'].[c'e']|.[d'f']z .{f'}[a']z|!sfz!.{e'}[g']z !p!.c'.d'|.[c'e']z .{e'}[g']z|
+[V:2] L.[F,F]z L.[E,E]z|L[D,D]4|G,[DF]G,[DF]|G,[DF]G,[DF]|C[EGc]C[EGc]|C[EGc]C[EGc]|
+[V:1] !ff!(c'/g/)e/g/ (c'/g/)e/g/|(c'/g/)e/g/ c'z|(d'/a/)f/a/ (d'/a/)f/a/|(d'/a/)f/a/ d'z|.[cc'].[Bb].[cc'].[Aa]|
+[V:2] L.[Cc]z L.[B,B]z|L.[A,A]z L.[G,G]z|L.[F,F]z L.[E,E]z|[D,D]4|^F,[C_E]F,[CE]|
+[V:1] .[Gg].[cc'].[ee'].[gg']|.[aa']z Ta2|.{ab}c'z L.[c'e'g'c'']z!D.C.!||
+[V:2] G,[C=E]G[CE]|[G,B,F]z [G,DF]z|[CE]z [C,C]z||
+K: Gmaj
+[V:1] !coda! !ff!L.[cefc']z L.[B^dfb]z|L.[egbe']zz2|]
+[V:2] L.[A,A]z L.[B,B]z|L.[E,E]zz2|]
