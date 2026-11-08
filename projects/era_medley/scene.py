@@ -27,7 +27,7 @@ for k, v in (('denoiser', 'OPENIMAGEDENOISE'), ('use_fast_gi', True)):
 sc.cycles.max_bounces = 4; sc.cycles.diffuse_bounces = 1; sc.cycles.glossy_bounces = 2; sc.cycles.transmission_bounces = 2
 sc.render.resolution_x, sc.render.resolution_y = 1080, 1920
 sc.render.resolution_percentage = int(os.environ.get('PCT', 50)); sc.render.fps = FPS
-sc.render.use_motion_blur = True; sc.render.motion_blur_shutter = 0.3
+sc.render.use_motion_blur = True; sc.render.motion_blur_shutter = 0.5      # centred: the blur always reaches a hit <= 1/120 s away
 try: sc.view_settings.view_transform = 'AgX'; sc.view_settings.look = 'AgX - Medium High Contrast'
 except Exception: pass
 sc.frame_start, sc.frame_end = 0, NF - 1
@@ -210,29 +210,6 @@ for s in range(6):
         bpy.ops.mesh.primitive_cube_add(size=1, location=(XC, WALLY, z0)); d = bpy.context.object; d.scale = (WALLW, 0.05, 0.05)
         d.data.materials.append(emis(f'div{s}', PAL[s][2], 2.0))
 
-# year numbers on the wall (pop in as the era starts)
-YEARS = []
-for s, (year, name, ts, te) in enumerate(SECS):
-    idx = [i for i in range(NH) if hits[i][4] == s]
-    zy = ZTOP[idx[0]] + 0.55
-    cu = bpy.data.curves.new(f'y{s}', 'FONT'); cu.body = ('c.' if year == 1680 else '') + str(year); cu.size = 1.25; cu.extrude = 0.04
-    cu.align_x = 'CENTER'; cu.align_y = 'BOTTOM'
-    o = link(bpy.data.objects.new(f'year{s}', cu)); o.location = (float(np.mean(X[idx[:6]])), WALLY - 0.06, zy); o.rotation_euler = (math.pi / 2, 0, 0)
-    o.data.materials.append(emis(f'ym{s}', PAL[s][2], 4.0)); YEARS.append((o, ts))
-    a = np.clip((T - (ts - 0.45)) / 0.35, 0, 1); a = 1 - (1 - a) ** 3
-    sc_ = np.where(a > 0, 0.001 + a * (1 + 0.15 * np.sin(a * math.pi)), 0.001)
-    for k in range(3): key_series(o, 'scale', k, sc_)
-
-# candles for the 1680 era (decor on the wall edges)
-idx5 = [i for i in range(NH) if hits[i][4] == 5]
-FLAME = emis('flame', (1.0, 0.6, 0.2), 12.0); WAX = mat('wax', (0.95, 0.92, 0.85), 0.5)
-for k in range(8):
-    zc = ZTOP[idx5[0]] - k * (ZTOP[idx5[0]] - ZTOP[idx5[-1]]) / 7
-    j = idx5[int(np.argmin(np.abs(ZTOP[idx5] - zc)))]; xc = X[j] + (-1.6 if k % 2 else 1.6)
-    rod((xc, 0.2, zc - 0.3), (xc, 0.2, zc), 0.06, WAX, 12)
-    bpy.ops.mesh.primitive_uv_sphere_add(radius=0.05, location=(xc, 0.2, zc + 0.07)); f_ = bpy.context.object; f_.scale = (1, 1, 1.8); f_.data.materials.append(FLAME)
-    rod((xc, 0.2, zc - 0.3), (xc, WALLY, zc - 0.3), 0.02, BRACK, 6)
-
 # ---------------- marble path: gravity parabolas between hits ----------------
 BP = np.zeros((NF, 3)); SPIN = np.zeros(NF)
 ht = np.array([h[0] for h in hits])
@@ -274,6 +251,145 @@ for o, t, glow in STRK:
     o.rotation_mode = 'XYZ'; base = o.rotation_euler[0]
     for df, a in ((-1, 0), (2, 0.18), (5, -0.09), (9, 0.04), (14, 0)):
         o.rotation_euler[0] = base + (a if o is not BIG else a * 0.3); o.keyframe_insert('rotation_euler', index=0, frame=max(0, fh + df))
+
+
+# ---------------- fun layer: FX material, ghost trail, hit ripples + sparks, era gates, gears, bass lamps ----------------
+def fxmat(name, gain=10.0):
+    """transparent where object alpha = 0, glowing in the object colour where alpha = 1"""
+    m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+    oi = nt.nodes.new('ShaderNodeObjectInfo'); em = nt.nodes.new('ShaderNodeEmission'); tr_ = nt.nodes.new('ShaderNodeBsdfTransparent')
+    mx = nt.nodes.new('ShaderNodeMixShader'); mu = nt.nodes.new('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = gain
+    out = nt.nodes.new('ShaderNodeOutputMaterial')
+    nt.links.new(oi.outputs['Color'], em.inputs['Color']); nt.links.new(oi.outputs['Alpha'], mu.inputs[0]); nt.links.new(mu.outputs[0], em.inputs['Strength'])
+    nt.links.new(oi.outputs['Alpha'], mx.inputs['Fac']); nt.links.new(tr_.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2])
+    nt.links.new(mx.outputs[0], out.inputs[0]); return m
+FXM = fxmat('fx', 10.0); TRAILM = fxmat('trail', 3.0)
+
+def key_all(o, loc=None, scl=None, alpha=None, col=None):
+    if col is not None: o.color = (*col, 0)
+    if loc is not None:
+        for k in range(3): key_series(o, 'location', k, loc[:, k])
+    if scl is not None:
+        for k in range(3): key_series(o, 'scale', k, scl)
+    if alpha is not None: key_series(o, 'color', 3, alpha, 1e-3)
+
+# ghost trail: copies of the marble a few frames behind it (same path, so it shows the parabola)
+for j in range(1, 6):
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=R * (1 - 0.13 * j), segments=16, ring_count=8); g_ = bpy.context.object
+    g_.data.materials.append(TRAILM)
+    loc = np.array([(ball_at(t - j * 0.022)[0], 0.0, ball_at(t - j * 0.022)[1]) for t in T])
+    key_all(g_, loc=loc, alpha=np.full(NF, 0.55 * (1 - j / 6.5)), col=(1.0, 0.25, 0.15))
+
+# hit FX pools: an expanding ring around each contact point + three sparks flying out on gravity parabolas
+ERA_GLOW = lambda e: (0.9, 0.95, 1.0) if e < 0 else (PAL[e][2] if e < 6 else (1.0, 0.8, 0.35))
+NRING, NSPK = 10, 36
+ring_loc = np.zeros((NRING, NF, 3)); ring_scl = np.zeros((NRING, NF)); ring_a = np.zeros((NRING, NF)); ring_col = [None] * NRING
+spk_loc = np.zeros((NSPK, NF, 3)); spk_scl = np.zeros((NSPK, NF)); spk_a = np.zeros((NSPK, NF))
+rng2 = np.random.default_rng(7)
+for k, (t0, p, v, s, era) in enumerate(hits):
+    c = CON[k]; n_ = NRM[k]; f0 = int(round(t0 * FPS)); r = k % NRING
+    big = 3.0 if k == NH - 1 else 1.0
+    for df in range(0, 16):
+        f = f0 + df
+        if f >= NF: break
+        u = df / 15
+        ring_loc[r, f] = (c[0], -0.02, c[1]); ring_scl[r, f] = big * (0.35 + 1.6 * (1 - (1 - u) ** 2)); ring_a[r, f] = (1 - u) ** 1.5
+    ring_col[r] = ERA_GLOW(era)
+    for q in range(3):
+        sid = (3 * k + q) % NSPK; ang = math.atan2(n_[0], n_[1]) + rng2.uniform(-1.0, 1.0)
+        sp = rng2.uniform(1.4, 2.6) * (1.6 if k == NH - 1 else 1.0)
+        vx, vz, vy = sp * math.sin(ang), sp * math.cos(ang), -rng2.uniform(0.2, 0.8)
+        for df in range(0, 14):
+            f = f0 + df
+            if f >= NF: break
+            tt = df / FPS
+            spk_loc[sid, f] = (c[0] + vx * tt, vy * tt, c[1] + vz * tt - 0.5 * G * tt * tt)
+            spk_scl[sid, f] = 1 - df / 14; spk_a[sid, f] = 1 - df / 14
+for r in range(NRING):
+    bpy.ops.mesh.primitive_torus_add(major_radius=0.3, minor_radius=0.018, major_segments=40, minor_segments=6, rotation=(math.pi / 2, 0, 0))
+    o = bpy.context.object; o.data.materials.append(FXM)
+    for f in range(1, NF):                                      # stay put while invisible
+        if ring_a[r, f] == 0: ring_loc[r, f] = ring_loc[r, f - 1]
+    key_all(o, loc=ring_loc[r], scl=np.maximum(ring_scl[r], 1e-3), alpha=ring_a[r], col=ring_col[r] or (1, 1, 1))
+SPKCOL = np.zeros((NSPK, 3)) + 1
+for k in range(NH):
+    for q in range(3): SPKCOL[(3 * k + q) % NSPK] = ERA_GLOW(hits[k][4])
+for sid in range(NSPK):
+    bpy.ops.mesh.primitive_ico_sphere_add(radius=0.028, subdivisions=1); o = bpy.context.object; o.data.materials.append(FXM)
+    for f in range(1, NF):
+        if spk_a[sid, f] == 0: spk_loc[sid, f] = spk_loc[sid, f - 1]
+    key_all(o, loc=spk_loc[sid], scl=np.maximum(spk_scl[sid], 1e-3), alpha=spk_a[sid], col=tuple(SPKCOL[sid]))
+
+# era gates: a glowing ring the marble flies straight through just before the era's first note, year label above
+def clear_of_strikers(p, d):
+    return np.min(np.hypot(CON[:-1, 0] - p[0], CON[:-1, 1] - p[1])) > d
+GATEM = glowmat('gate', gain=8.0, base=0.3, rough=0.25); GATEM.node_tree.nodes['Principled BSDF'].inputs['Metallic'].default_value = 1.0
+for s_, (year, name, ts, te) in enumerate(SECS):
+    tg = None
+    for need in (1.0, 0.85, 0.7):
+        for tt in np.arange(ts - 0.06, max(0.2, ts - 1.2), -1 / 120):
+            if clear_of_strikers(ball_at(tt), need): tg = tt; break
+        if tg is not None: break
+    if tg is None: tg = ts - 0.3
+    p0, p1 = np.array(ball_at(tg - 0.01)), np.array(ball_at(tg + 0.01)); vv = (p1 - p0) / 0.02
+    bpy.ops.mesh.primitive_torus_add(major_radius=0.42, minor_radius=0.045, major_segments=48, minor_segments=10,
+                                     location=(ball_at(tg)[0], 0, ball_at(tg)[1]), rotation=(0, math.atan2(vv[0], vv[1]), 0))
+    o = bpy.context.object; o.data.materials.append(GATEM); o.color = (*PAL[s_][2], 0)
+    fg = int(round(tg * FPS))
+    for df, a_ in ((-2, 0.0), (0, 1.0), (8, 0.35), (40, 0.1)):
+        o.color = (*PAL[s_][2], a_); o.keyframe_insert('color', index=3, frame=max(0, fg + df))
+    gx, gz = ball_at(tg)
+    cu = bpy.data.curves.new(f'y{s_}', 'FONT'); cu.body = ('c.' if year == 1680 else '') + str(year); cu.size = 0.95; cu.extrude = 0.04
+    cu.align_x = 'CENTER'; cu.align_y = 'BOTTOM'
+    yo = link(bpy.data.objects.new(f'year{s_}', cu)); yo.location = (gx, WALLY - 0.06, gz + 0.6); yo.rotation_euler = (math.pi / 2, 0, 0)
+    yo.data.materials.append(emis(f'ym{s_}', PAL[s_][2], 4.0))
+    a = np.clip((T - (tg - 0.5)) / 0.35, 0, 1); a = 1 - (1 - a) ** 3
+    sc_ = np.where(a > 0, 0.001 + a * (1 + 0.15 * np.sin(a * math.pi)), 0.001)
+    for k in range(3): key_series(yo, 'scale', k, sc_)
+
+# wall gears (decor, flush on the wall behind the marble): meshing pairs turning at matched speeds
+def gear(r, teeth, thick=0.03):
+    bm = bmesh.new(); pts = []
+    for k in range(teeth * 4):
+        a_ = 2 * math.pi * k / (teeth * 4); rr = r * (1.0 if (k // 2) % 2 == 0 else 0.86)
+        pts.append(bm.verts.new((rr * math.cos(a_), rr * math.sin(a_), 0)))
+    f_ = bm.faces.new(pts); ex = bmesh.ops.extrude_face_region(bm, geom=[f_])
+    bmesh.ops.translate(bm, vec=(0, 0, thick), verts=[e for e in ex['geom'] if isinstance(e, bmesh.types.BMVert)])
+    me = bpy.data.meshes.new('gear'); bm.to_mesh(me); bm.free()
+    return link(bpy.data.objects.new('gear', me))
+GEARM = mat('gearm', (0.3, 0.2, 0.09), 0.45, **{'Metallic': 1.0})
+placed = []
+for i in range(0, NH - 1, 7):
+    e = hits[i][4]; col = PAL[max(0, min(5, e if e >= 0 else hits[i][3]))]
+    for side in (-1, 1):
+        cx_, cz_ = X[i] + side * 1.3, Z[i] - 1.1
+        r1 = 0.45 + 0.2 * ((i // 7) % 3) / 2; r2 = r1 * 0.6
+        ok = all(np.hypot(CON[:-1, 0] - px, CON[:-1, 1] - pz).min() > rr + 0.35 for px, pz, rr in ((cx_, cz_, r1), (cx_ + side * (r1 + r2) * 0.93, cz_ + 0.15, r2)))
+        ok = ok and all(math.hypot(cx_ - a_, cz_ - b_) > 2.4 for a_, b_ in placed)
+        if not ok: continue
+        placed.append((cx_, cz_))
+        for (gx, gz, rr, tn, sgn) in ((cx_, cz_, r1, 12, 1), (cx_ + side * (r1 + r2) * 0.93, cz_ + 0.15, r2, 8, -1)):
+            o = gear(rr, tn); o.data.materials.append(GEARM); o.location = (gx, WALLY - 0.035, gz); o.rotation_mode = 'XYZ'
+            w_ = sgn * 0.5 * (r1 / rr)
+            o.rotation_euler = (math.pi / 2, 0, 0); o.keyframe_insert('rotation_euler', index=1, frame=0)
+            o.rotation_euler = (math.pi / 2, w_ * NF / FPS, 0); o.keyframe_insert('rotation_euler', index=1, frame=NF - 1)
+            for fc in (o.animation_data.action.fcurves if hasattr(o.animation_data.action, 'fcurves') else []):
+                for kp in fc.keyframe_points: kp.interpolation = 'LINEAR'
+
+# bass lamps: little lamps on the wall along the path pulse on every bass note of the accompaniment
+BASS = sorted(n[0] for n in NOTES if n[2] == 'bass')
+pulse = np.zeros(NF)
+for tb_ in BASS:
+    f0 = int(round(tb_ * FPS)); m_ = np.arange(f0, min(NF, f0 + 12)); pulse[m_] = np.maximum(pulse[m_], np.exp(-(m_ - f0) / 4.0))
+LAMPM = fxmat('lamp', 14.0); LBASE = mat('lampbase', (0.2, 0.18, 0.16), 0.4, **{'Metallic': 0.9})
+for i in range(3, NH - 1, 5):
+    e = hits[i][4]; col = ERA_GLOW(e if e >= 0 else hits[i][3])
+    for side in (-1, 1):
+        lx, lz = X[i] + side * 0.9, Z[i] + 0.75
+        if np.hypot(CON[:-1, 0] - lx, CON[:-1, 1] - lz).min() < 0.5: continue
+        bpy.ops.mesh.primitive_cylinder_add(radius=0.11, depth=0.04, location=(lx, WALLY - 0.02, lz), rotation=(math.pi / 2, 0, 0)); bpy.context.object.data.materials.append(LBASE)
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.07, segments=16, ring_count=8, location=(lx, WALLY - 0.08, lz)); o = bpy.context.object
+        o.data.materials.append(LAMPM); key_all(o, alpha=0.12 + 0.88 * pulse, col=col)
 
 # ---------------- world & lights ----------------
 w = bpy.data.worlds.new('W'); sc.world = w; w.use_nodes = True

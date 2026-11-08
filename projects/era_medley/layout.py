@@ -15,12 +15,13 @@ import json, os, sys
 import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-G = 9.0                      # gravity (wall units / s^2), identical for the whole video
+G = 7.0                      # gravity (wall units / s^2), identical for the whole video
 R = 0.14                     # marble radius
 XW = 60.0                    # soft: XPULL keeps it near the middle
 DXMIN, DXMAX = 0.43, 2.4
 HWC, TKC = 0.2, 0.3         # collision half-width / thickness used while planning
-VCRUISE, VMAX = 4.0, 8.5
+VCRUISE, VMAX = 3.5, 8.5
+VHIT, WHIT = 4.2, 60.0          # keep impact speeds low so every hit is visible on a 30 fps frame
 H0 = 1.6                     # first free-fall height (from rest)
 BEAM = 64
 XPULL = 0.3
@@ -59,7 +60,7 @@ def plan(ht):
         vo = np.hypot(ox, oz); vn = np.hypot(nxv, nzv); X1 = x[:, None] + dx; Z1 = z[:, None] + dz
         c = cost[:, None] + np.where(dot < -1e-3, 0, 1e9)
         c += np.where(nzv < -0.3, 0, 1e6 + 1e5 * (nzv + 0.3))
-        c += 300 * np.maximum(0, need[i + 1] - vn) ** 2
+        c += 300 * np.maximum(0, need[i + 1] - vn) ** 2 + WHIT * np.maximum(0, vn - VHIT) ** 2
         c += 2 * ((vo - VCRUISE) / VCRUISE) ** 2 + 50 * np.maximum(0, vn - VMAX) ** 2
         c += TW * (CT / np.radians(45)) ** 4 + 0.3 * (1 - CF) + 0.4 * (CE - 0.65) ** 2
         c += 40 * np.maximum(0, np.maximum(0, oz) ** 2 / (2 * G) - 1.2) ** 2
@@ -146,6 +147,16 @@ if __name__ == '__main__':
     hits = hits_from_lead(); ht = np.array([h[0] for h in hits])
     X, Z, V0, TH, VIN, info = plan(ht)
     info['collisions'] = check(X, Z, TH, V0, ht)
+    gap = []                                  # marble centre at the rendered frame nearest each hit vs. at the hit
+    for i in range(len(ht) - 1):
+        s_ = round(ht[i] * 30) / 30 - ht[i]; j = i if s_ >= 0 else i - 1; s_ = round(ht[i] * 30) / 30 - ht[j]
+        b = (X[j] + V0[j][0] * s_, Z[j] + R + V0[j][1] * s_ - 0.5 * G * s_ * s_) if j >= 0 else (X[0], Z[0] + R)
+        gap.append(np.hypot(b[0] - X[i], b[1] - Z[i] - R))
+    SHUT = 0.5                                # render motion-blur shutter (fraction of a frame, centred)
+    blur = [max(0.0, g * (1 - SHUT / 2 * 30 / 30 / max(1e-9, abs(round(t * 30) / 30 - t) * 30) )) if abs(round(t * 30) / 30 - t) * 30 > SHUT / 2 else 0.0
+            for g, t in zip(gap, ht)]
+    info['blur_gap_max'] = round(max(blur), 3)
+    info['frame_gap_max'] = round(max(gap), 3); info['frame_gap_mean'] = round(float(np.mean(gap)), 3)
     print(info)
     json.dump({'G': G, 'R': R, 'H0': H0, 'HW': HWC, 't': ht.round(5).tolist(), 'x': X.round(6).tolist(), 'z': Z.round(6).tolist(),
                'tilt': TH.round(6).tolist(), 'v0': V0.round(6).tolist(), 'vin': VIN.round(6).tolist()}, open(f'{HERE}/layout.json', 'w'))

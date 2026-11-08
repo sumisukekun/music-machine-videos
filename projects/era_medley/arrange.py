@@ -57,14 +57,35 @@ tell = load('tell_gallop'); tev = json.load(open(R + 'tell_gallop/events.json'))
 ta = dict((k, v) for k, v in tev['secs'])['A']; tb_ = ta + 24 * tev['bar']
 first = min((n for n in tell if n[2] == 'xylo' and ta <= n[0] < tb_), key=lambda n: n[0])
 T = tunnel(T, last, first[3], 3); a = T
+nb0 = len(notes)
 T = take(tell, ta, tb_, 1.0, {'xylo': 'lead', 'cb': 'bass', 'hnst': 'chord'}, T, 3)
+# tell_gallop's bass is built from root = 40 + pc, i.e. a major third too high (G#/D# under E/B7 instead of E/B):
+# put the galop bass back on the chord roots/fifths
+for n in notes[nb0:]:
+    if n[2] == 'bass': n[3] -= 4
 secs.append([1829, 'ウィリアム・テル序曲', a, T]); last = lead[-1][1]
 # 5) 1783 Rondo alla Turca - pick-up + theme A (A minor)
 tk = load('turkish_march'); kev = json.load(open(R + 'turkish_march/events.json')); ks = dict((k, v) for k, v in kev['secs'])
 k0, k1 = ks['A'] - 2 * kev['q'], ks['B']
 first = min((n for n in tk if n[2] == 'lead' and k0 <= n[0] < k1), key=lambda n: n[0])
 T = tunnel(T, last, first[3], 4); a = T
-T = take(tk, k0, k1, 1.0, {'lead': 'lead', 'pbass': 'bass', 'pchord': 'chord'}, T, 4)
+nb0 = len(notes); kq = kev['q']; kbar = kev['bar']; ka = T
+# Mozart bar 8 is just the long E (the E-F after it is the pick-up into the B section, which the medley skips)
+T = take(tk, k0, k1, 1.0, {'lead': 'lead', 'pbass': 'bass', 'pchord': 'chord'}, T, 4, lambda n: n[0] < k1 - kq - 1e-6)
+# Mozart bars 5-7: the melody is B A G(natural) A over a bare E-B fifth (LH 'e <h e'>'); bar 7 ends on low B.
+# turkish_march had G# there (and a G#-B-E chord), which clashes by one note against the original.
+mz = lambda t: round(((t - ka) / kbar - 1) * 8) / 8                       # bar index in the Mozart A section (0 = bar 1)
+for n in notes[nb0:]:
+    b = mz(n[0])
+    if 4 - 1e-6 <= b < 7 - 1e-6:
+        if n[2] == 'lead' and n[3] == 80 and n[1] > kq / 2 * 0.9: n[3] = 79
+        if n[2] == 'chord' and n[3] == 56: n[1] = -1           # drop the G#
+        if n[2] == 'bass' and 6.5 - 1e-6 <= b and n[3] in (40, 28): n[3] += 7   # E -> B on the 2nd beat of bar 7
+for l in lead:
+    if l[3] == 4 and 4 - 1e-6 <= mz(l[0]) < 7 - 1e-6 and l[1] == 80:
+        src = [n for n in notes[nb0:] if n[2] == 'lead' and abs(n[0] - l[0]) < 1e-4]
+        if src and src[0][3] == 79: l[1] = 79
+notes[:] = [n for n in notes if n[1] > 0]
 secs.append([1783, 'トルコ行進曲', a, T]); last = lead[-1][1]
 # 6) c.1680 Pachelbel Canon in D - first violin, 4 bars + own ground bass & chords
 cn = load('canon_balls'); beat = 0.7142857
