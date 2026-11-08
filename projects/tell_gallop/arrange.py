@@ -41,13 +41,13 @@ BR = [  # B-section bridge
     'd4 d2 d2', 'd4 e4', 'f4 d4', 'd4 f4', 'e4 c4', 'c4 e4', 'd4 G4', 'G4 d4',
     'd4 d2 d2', 'd4 e4', 'f4 d4', 'd4 f4', 'e4 c4', 'c4 e4', 'd4 G4', 'G4 G2 G2']
 CODA = [
-    'c4 z4', 'e4 f4', 'g4 z4', 'c4 d4', 'e4 z4', 'E4 F4', 'G4 z4', 'z4 B4',
+    'c4 z4', 'e4 f4', 'g4 z4', 'c4 d4', 'e4 z4', 'E4 F4', 'G4 z4', 'z8', 'B8',
     'c4 B4', 'c4 B4', 'c4 B4', 'c4 B4', 'c8', 'z4 c2 c2', 'c4 z4', 'c4 z4', 'c8', 'z4 z2 e2', 'e8', 'z4 z2 c2', 'c8']
 # chords per bar (C-major names, transposed later)
 CH_A = ['C', 'C', 'C', 'C', 'C', 'C', 'G7', 'G7', 'C', 'C', 'C', 'C', 'G7', 'G7', 'C', 'C']
 CH_AM = ['Am', 'Am', 'Am', 'Am', 'Am', 'E7', 'Am', 'Am', 'Am', 'Am', 'Am', 'Am', 'Am', 'D7', 'G', 'G7']
 CH_BR = ['G7', 'G7', 'G7', 'G7', 'C', 'C', 'G7', 'G7', 'G7', 'G7', 'G7', 'G7', 'C', 'C', 'G7', 'G7']
-CH_CODA = ['C', 'C', 'C', 'C', 'C', 'C', 'C', 'G7', 'CG', 'CG', 'CG', 'CG', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C']
+CH_CODA = ['C', 'C', 'C', 'C', 'C', 'C', 'C', 'G7', 'G7', 'CG', 'CG', 'CG', 'CG', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C']
 CHORD = {'F': (5, [5, 9, 0]), 'Dm': (2, [2, 5, 9]), 'E': (4, [4, 8, 11]), 'C': (0, [0, 4, 7]), 'G7': (7, [7, 11, 2, 5]), 'Am': (9, [9, 0, 4]), 'E7': (4, [4, 8, 11, 2]),
          'D7': (2, [2, 6, 9, 0]), 'G': (7, [7, 11, 2])}
 
@@ -103,12 +103,12 @@ for bi, (name, toks, ch) in enumerate(bars):
         if bi == 7:
             for k in range(8): N(t_bar + k * S16, 0.1, 'snare', 0, 60 + k * 7)
         continue
-    if name == 'coda' and bi >= tail_bars[0] + 8:
+    if name == 'coda' and bi >= tail_bars[0] + 8:   # from the held B on: homophonic tutti
         continue   # homophonic tutti handled below
     names = ch if ch != 'CG' else 'C'
     r, tones = CHORD[names]
-    root = 40 + ((r + TR) % 12)
-    if root > 47: root -= 12
+    root = 36 + ((r + TR) % 12)          # pitch class of the chord root, placed in E2..D#3 (was 40 + pc: a major third too high)
+    if root < 40: root += 12
     fifth = root + 7
     lo = {'A': 1.0, 'A2': 1.06, 'Am': 0.92, 'br': 0.95, 'A3': 1.04, 'C': 0.88, 'A4': 1.12, 'coda': 1.15}[name]
     for beat, bp in ((0, root), (1, fifth if ch not in ('E7', 'D7') else root + 7)):
@@ -134,8 +134,8 @@ for t, p, v, d, name in lead:
     if t >= t_tut - 1e-6:
         cg = (p - TR) % 12 in (11, 2, 5, 7) and abs(p - TR - 71) < 1   # B -> dominant
         r = (7 if cg else 0) + TR
-        root = 40 + r % 12
-        if root > 47: root -= 12
+        root = 36 + r % 12
+        if root < 40: root += 12
         tones = [7, 11, 2] if cg else [0, 4, 7]
         N(t, d * 0.9, 'tuba', root, 118); N(t, d * 0.9, 'cb', root + 12, 110); N(t, 0.5, 'timp', root if root >= 40 else root + 12, 120)
         for pc in tones: N(t, d * 0.9, 'hnst', 60 + (pc + TR) % 12 - (12 if 60 + (pc + TR) % 12 > 69 else 0), 108)

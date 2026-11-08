@@ -1,4 +1,4 @@
-"""William Tell galop - acoustic render with VSCO-2 CE (CC0): xylophone keys (what the train strikes),
+"""William Tell galop - acoustic render with VSCO-2 CE (CC0): xylophone keys (what the balls strike),
 trumpets, horns, trombone, tuba, violin & cello sections, contrabass, timpani, snare, bass drum, cymbal."""
 import sys, os, json, math, glob
 sys.argv = [sys.argv[0], sys.argv[1]]
@@ -32,9 +32,18 @@ for t, d, role, p, v in json.load(open('notes.json')):
     elif role == 'bd': hit(BD, t, v, 0.32, 0.0)
     elif role == 'crash': hit(CRASH, t, v, 0.26, 0.25)
     elif role == 'bt': hit(BT, t, v, 0.25, -0.2)
-# the railway's own sounds: start whistle-bell and the buffer stop
-hit(WOOD, 0.25, 90, 0.2, -0.3)
-hit(SLAP, EV['final'] + 0.35, 100, 0.25, 0.3)
+# the race's own sounds (times from layout.json): starting pistol, baton knocks, trapdoor, see-saw, tape, kusudama
+for kind, t in json.load(open('layout.json'))['sfx']:
+    if kind == 'gun': hit(SLAP, t, 125, 0.55, -0.2); hit(SNARE, t + 0.004, 120, 0.25, -0.2)
+    elif kind == 'clack': hit(CLAV, t, 110, 0.3, 0.15)
+    elif kind == 'basket': hit(WOOD, t, 80, 0.18, 0.2)
+    elif kind == 'trap': hit(RAT, t, 100, 0.22, -0.3)
+    elif kind == 'splat': hit(LOGLO, t, 90, 0.3, -0.2)
+    elif kind == 'thud': hit(LOGLO, t, 80, 0.25, -0.2)
+    elif kind == 'release': hit(WOOD, t, 90, 0.2, 0.3)
+    elif kind == 'weight': hit(BD, t, 125, 0.5, 0.0); hit(LOGLO, t + 0.003, 120, 0.4, 0.1)
+    elif kind == 'tape': hit(SLAP, t, 100, 0.25, 0.25)
+    elif kind == 'kusudama': hit(SLEIGH, t + 0.05, 110, 0.3, 0.3); hit(BT, t + 0.12, 100, 0.3, -0.3)
 L = int(2.2 * SR); tt = np.arange(L) / SR
 ir = np.stack([rng.normal(0, 1, L), rng.normal(0, 1, L)], 1) * np.exp(-tt / 0.5)[:, None]
 for c in range(2): ir[:, c] = lfilter([0.3], [1, -0.6], ir[:, c])
