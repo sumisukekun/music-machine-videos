@@ -1,5 +1,7 @@
 """Era medley 1901 -> 1680: one marble falls down a tall wall through six eras.
-Every lead note = the marble landing on a striker; strikers are laid out like a keyboard (pitch -> x).
+Every lead note = the marble landing on a striker. The marble obeys one constant gravity: pure parabolas between
+notes, and at each note a rigid bounce off a tilted striker that never adds speed (layout.py plans where every
+striker has to sit so the parabola reaches it exactly on its note; the result is layout.json).
 Each era has its own striker shape / palette and a glowing year number on the wall."""
 import os, sys, json, math, time, colorsys
 import bpy, bmesh
@@ -80,12 +82,9 @@ def rod(p0, p1, r, mt, verts=10):
 
 SECS = E['secs']
 
-# ---------------- layout: one striker per lead note ----------------
-R = 0.14                                   # marble radius
-XW = 2.5                                   # strikers span x in [-XW, XW]
-RATE = 0.55                                # wall units per second (min)
-MINDZ = 0.42
-ERA = []                                   # era index per note (-1 tunnel, 6 final)
+# ---------------- layout: one striker per lead note (planned by layout.py) ----------------
+LAY = json.load(open(f'{HERE}/layout.json'))
+R = LAY['R']; G = LAY['G']; H0 = LAY['H0']             # marble radius, gravity, first free-fall height
 def era_of(t, s):
     if s >= 6: return 6
     return s if t >= SECS[s][2] - 1e-6 else -1
@@ -94,25 +93,20 @@ for t, p, v, s in LEAD:
     if hits and abs(t - hits[-1][0]) < 1e-3: continue
     hits.append([t, p, v, s, era_of(t, s)])
 NH = len(hits)
-# pitch -> x per section (incl. its tunnel)
-X = np.zeros(NH); Z = np.zeros(NH)
-for s in range(7):
-    idx = [i for i in range(NH) if hits[i][3] == s]
-    ps = [hits[i][1] for i in idx]; lo, hi = min(ps), max(ps)
-    for i in idx: X[i] = 0.0 if s == 6 else -XW + 2 * XW * (hits[i][1] - lo) / max(1, hi - lo)
-# keep consecutive strikers apart sideways (repeated notes zig-zag)
-side = 1
-for i in range(1, NH):
-    if abs(X[i] - X[i - 1]) < 0.75 and hits[i][4] != 6:
-        nx = X[i - 1] + side * 0.8
-        if abs(nx) > XW + 0.3: side = -side; nx = X[i - 1] + side * 0.8
-        X[i] = nx; side = -side
-Z[0] = 0.0
-for i in range(1, NH):
-    dt = hits[i][0] - hits[i - 1][0]
-    Z[i] = Z[i - 1] - max(MINDZ, RATE * dt)
-Z[-1] = Z[-2] - 2.6                        # the final bell sits lower
-ZTOP = Z.copy()                            # contact height (top surface of each striker)
+assert NH == len(LAY['t']) and max(abs(h[0] - t) for h, t in zip(hits, LAY['t'])) < 1e-3, 'run layout.py after arrange.py'
+X = np.array(LAY['x']); Z = np.array(LAY['z']); TH = np.array(LAY['tilt']); V0 = np.array(LAY['v0'])
+ZTOP = Z.copy()                            # contact height (ball centre at a hit = (X, Z + R))
+NRM = np.stack([np.sin(TH), np.cos(TH)], 1)              # striker surface normal (x, z)
+CON = np.stack([X, Z + R], 1) - R * NRM                  # contact point on the striker surface
+XC = float(np.mean(X))
+
+
+def pose(o, i, half, base_y=0.0):
+    """put striker o so its top surface touches the marble at hit i, tilted to the bounce normal"""
+    c = CON[i] - half * NRM[i]
+    o.location = (c[0], 0, c[1]); o.rotation_euler = (0, base_y + TH[i], 0)
+    return c
+
 
 # ---------------- materials / palettes ----------------
 PAL = [  # (wall colour, striker colour, glow colour)
@@ -144,53 +138,52 @@ def bracket(x, z):
     rod((x, 0.12, z), (x, WALLY, z), 0.025, BRACK, 8)
 
 for i, (t, p, v, s, era) in enumerate(hits):
-    x, zt = X[i], ZTOP[i]
     if era == -1:                                   # tunnel chime: small silver bar
-        bpy.ops.mesh.primitive_cylinder_add(radius=0.045, depth=0.34, vertices=12, location=(x, 0, zt - 0.045), rotation=(0, math.pi / 2, 0))
-        o = bpy.context.object; finish(o, (0.85, 0.87, 0.92), (0.9, 0.95, 1.0), t, METAL); bracket(x, zt - 0.045); continue
+        bpy.ops.mesh.primitive_cylinder_add(radius=0.045, depth=0.34, vertices=12)
+        o = bpy.context.object; c = pose(o, i, 0.045, math.pi / 2); finish(o, (0.85, 0.87, 0.92), (0.9, 0.95, 1.0), t, METAL); bracket(*c); continue
     if era == 6: continue
     wall, col, glow = PAL[era]
     if era == 0:      # brass tube lying across
-        bpy.ops.mesh.primitive_cylinder_add(radius=0.09, depth=0.44, vertices=20, location=(x, 0, zt - 0.09), rotation=(0, math.pi / 2, 0))
-        o = bpy.context.object; finish(o, col, glow, t, METAL); bracket(x, zt - 0.09)
-        for dx in (-0.22, 0.22):
-            bpy.ops.mesh.primitive_torus_add(major_radius=0.095, minor_radius=0.018, location=(x + dx, 0, zt - 0.09), rotation=(0, math.pi / 2, 0))
+        bpy.ops.mesh.primitive_cylinder_add(radius=0.09, depth=0.4, vertices=20)
+        o = bpy.context.object; c = pose(o, i, 0.09, math.pi / 2); finish(o, col, glow, t, METAL); bracket(*c)
+        tg = np.array([math.cos(TH[i]), -math.sin(TH[i])])
+        for dx in (-0.2, 0.2):
+            bpy.ops.mesh.primitive_torus_add(major_radius=0.095, minor_radius=0.018, location=(c[0] + dx * tg[0], 0, c[1] + dx * tg[1]), rotation=(0, math.pi / 2 + TH[i], 0))
             bpy.context.object.data.materials.append(BRACK)
     elif era == 1:    # glass bell, mouth down
-        bpy.ops.mesh.primitive_cone_add(vertices=24, radius1=0.2, radius2=0.07, depth=0.26, location=(x, 0, zt - 0.13))
-        o = bpy.context.object; finish(o, col, glow, t, GLASS); bracket(x, zt - 0.13)
+        bpy.ops.mesh.primitive_cone_add(vertices=24, radius1=0.2, radius2=0.07, depth=0.26)
+        o = bpy.context.object; c = pose(o, i, 0.13); finish(o, col, glow, t, GLASS); bracket(*c)
     elif era == 2:    # crystal shard (flat-topped hexagonal prism, tilted facets)
-        bpy.ops.mesh.primitive_cylinder_add(vertices=6, radius=0.15, depth=0.3, location=(x, 0, zt - 0.15))
+        bpy.ops.mesh.primitive_cylinder_add(vertices=6, radius=0.15, depth=0.3)
         o = bpy.context.object
         bm = bmesh.new(); bm.from_mesh(o.data)
         for vv in bm.verts:
             if vv.co.z < 0: vv.co.x *= 0.35; vv.co.y *= 0.35; vv.co.z -= 0.12
-        bm.to_mesh(o.data); finish(o, col, glow, t, GLASS); bracket(x, zt - 0.15)
+        bm.to_mesh(o.data); c = pose(o, i, 0.15); finish(o, col, glow, t, GLASS); bracket(*c)
     elif era == 3:    # wooden block
-        bpy.ops.mesh.primitive_cube_add(size=1, location=(x, 0, zt - 0.08)); o = bpy.context.object; o.scale = (0.42, 0.26, 0.16)
+        bpy.ops.mesh.primitive_cube_add(size=1); o = bpy.context.object; o.scale = (0.4, 0.26, 0.16)
         bpy.ops.object.transform_apply(scale=True)
         bv = o.modifiers.new('b', 'BEVEL'); bv.width = 0.02; bv.segments = 2
-        finish(o, col if i % 2 else (0.62, 0.38, 0.17), glow, t, GLOW); bracket(x, zt - 0.08)
+        c = pose(o, i, 0.08); finish(o, col if i % 2 else (0.62, 0.38, 0.17), glow, t, GLOW); bracket(*c)
     elif era == 4:    # mosaic tile shelf
-        bpy.ops.mesh.primitive_cube_add(size=1, location=(x, 0, zt - 0.04)); o = bpy.context.object; o.scale = (0.4, 0.3, 0.08)
+        bpy.ops.mesh.primitive_cube_add(size=1); o = bpy.context.object; o.scale = (0.4, 0.3, 0.08)
         bpy.ops.object.transform_apply(scale=True)
-        c = [(0.1, 0.6, 0.65), (0.85, 0.65, 0.2), (0.1, 0.25, 0.7), (0.9, 0.9, 0.85)][i % 4]
-        finish(o, c, glow, t, GLOW); bracket(x, zt - 0.04)
+        cc = [(0.1, 0.6, 0.65), (0.85, 0.65, 0.2), (0.1, 0.25, 0.7), (0.9, 0.9, 0.85)][i % 4]
+        c = pose(o, i, 0.04); finish(o, cc, glow, t, GLOW); bracket(*c)
     elif era == 5:    # harpsichord key (sharps black)
         sharp = (p % 12) in (1, 3, 6, 8, 10)
-        bpy.ops.mesh.primitive_cube_add(size=1, location=(x, 0, zt - 0.05)); o = bpy.context.object; o.scale = (0.44, 0.3, 0.1)
+        bpy.ops.mesh.primitive_cube_add(size=1); o = bpy.context.object; o.scale = (0.4, 0.3, 0.1)
         bpy.ops.object.transform_apply(scale=True)
         bv = o.modifiers.new('b', 'BEVEL'); bv.width = 0.015; bv.segments = 2
-        finish(o, (0.05, 0.04, 0.04) if sharp else col, glow, t, BLACKKEY if sharp else GLOW); bracket(x, zt - 0.05)
+        c = pose(o, i, 0.05); finish(o, (0.05, 0.04, 0.04) if sharp else col, glow, t, BLACKKEY if sharp else GLOW); bracket(*c)
 
 # final golden bell
-zb = ZTOP[-1]
-bpy.ops.mesh.primitive_cone_add(vertices=48, radius1=1.0, radius2=0.35, depth=1.1, location=(0, 0, zb - 0.55))
+zb = ZTOP[-1]; xb = X[-1]
+bpy.ops.mesh.primitive_cone_add(vertices=48, radius1=1.0, radius2=0.35, depth=1.1, location=(xb, 0, zb - 0.55))
 BIG = bpy.context.object; finish(BIG, (1.0, 0.75, 0.3), (1.0, 0.8, 0.35), hits[-1][0], METAL)
-bpy.ops.mesh.primitive_torus_add(major_radius=1.0, minor_radius=0.07, location=(0, 0, zb - 1.1)); bpy.context.object.data.materials.append(METAL)
+bpy.ops.mesh.primitive_torus_add(major_radius=1.0, minor_radius=0.07, location=(xb, 0, zb - 1.1)); bpy.context.object.data.materials.append(METAL)
 bpy.context.object.color = (1.0, 0.75, 0.3, 0)
-rod((0, 0, zb), (0, 0, zb + 0.6), 0.05, BRACK, 12)
-rod((0, 0, zb + 0.6), (0, WALLY, zb + 0.6), 0.04, BRACK, 8)
+rod((xb, 0.25, zb - 0.3), (xb, WALLY, zb - 0.3), 0.05, BRACK, 12)      # bell hangs from the wall behind it
 
 # ---------------- wall, one tinted panel per era ----------------
 sec_top = []
@@ -199,12 +192,13 @@ for s in range(6):
     sec_top.append(ZTOP[idx[0]] + 1.2)
 sec_top.append(ZTOP[-1] - 4.0)
 sec_top[0] = 9.0
+WALLW = float(X.max() - X.min()) + 30.0
 for s in range(6):
     z0, z1 = sec_top[s], sec_top[s + 1]
     wall = PAL[s][0]
     if s == 5: z1 -= 14
-    bpy.ops.mesh.primitive_plane_add(size=1, location=(0, WALLY + 0.03, (z0 + z1) / 2), rotation=(math.pi / 2, 0, 0))
-    o = bpy.context.object; o.scale = (16, z0 - z1, 1)
+    bpy.ops.mesh.primitive_plane_add(size=1, location=(XC, WALLY + 0.03, (z0 + z1) / 2), rotation=(math.pi / 2, 0, 0))
+    o = bpy.context.object; o.scale = (WALLW, z0 - z1, 1)
     m = mat(f'wall{s}', wall, 0.75)
     nt = m.node_tree; b = nt.nodes['Principled BSDF']; nz = nt.nodes.new('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 3
     mix = nt.nodes.new('ShaderNodeMix'); mix.data_type = 'RGBA'; mix.inputs['Factor'].default_value = 0.25
@@ -213,7 +207,7 @@ for s in range(6):
     o.data.materials.append(m)
     # thin gold divider between eras
     if s > 0:
-        bpy.ops.mesh.primitive_cube_add(size=1, location=(0, WALLY, z0)); d = bpy.context.object; d.scale = (16, 0.05, 0.05)
+        bpy.ops.mesh.primitive_cube_add(size=1, location=(XC, WALLY, z0)); d = bpy.context.object; d.scale = (WALLW, 0.05, 0.05)
         d.data.materials.append(emis(f'div{s}', PAL[s][2], 2.0))
 
 # year numbers on the wall (pop in as the era starts)
@@ -223,7 +217,7 @@ for s, (year, name, ts, te) in enumerate(SECS):
     zy = ZTOP[idx[0]] + 0.55
     cu = bpy.data.curves.new(f'y{s}', 'FONT'); cu.body = ('c.' if year == 1680 else '') + str(year); cu.size = 1.25; cu.extrude = 0.04
     cu.align_x = 'CENTER'; cu.align_y = 'BOTTOM'
-    o = link(bpy.data.objects.new(f'year{s}', cu)); o.location = (0, WALLY - 0.06, zy); o.rotation_euler = (math.pi / 2, 0, 0)
+    o = link(bpy.data.objects.new(f'year{s}', cu)); o.location = (float(np.mean(X[idx[:6]])), WALLY - 0.06, zy); o.rotation_euler = (math.pi / 2, 0, 0)
     o.data.materials.append(emis(f'ym{s}', PAL[s][2], 4.0)); YEARS.append((o, ts))
     a = np.clip((T - (ts - 0.45)) / 0.35, 0, 1); a = 1 - (1 - a) ** 3
     sc_ = np.where(a > 0, 0.001 + a * (1 + 0.15 * np.sin(a * math.pi)), 0.001)
@@ -233,34 +227,35 @@ for s, (year, name, ts, te) in enumerate(SECS):
 idx5 = [i for i in range(NH) if hits[i][4] == 5]
 FLAME = emis('flame', (1.0, 0.6, 0.2), 12.0); WAX = mat('wax', (0.95, 0.92, 0.85), 0.5)
 for k in range(8):
-    zc = ZTOP[idx5[0]] - k * (ZTOP[idx5[0]] - ZTOP[idx5[-1]]) / 7; xc = (-3.35 if k % 2 else 3.35)
+    zc = ZTOP[idx5[0]] - k * (ZTOP[idx5[0]] - ZTOP[idx5[-1]]) / 7
+    j = idx5[int(np.argmin(np.abs(ZTOP[idx5] - zc)))]; xc = X[j] + (-1.6 if k % 2 else 1.6)
     rod((xc, 0.2, zc - 0.3), (xc, 0.2, zc), 0.06, WAX, 12)
     bpy.ops.mesh.primitive_uv_sphere_add(radius=0.05, location=(xc, 0.2, zc + 0.07)); f_ = bpy.context.object; f_.scale = (1, 1, 1.8); f_.data.materials.append(FLAME)
     rod((xc, 0.2, zc - 0.3), (xc, WALLY, zc - 0.3), 0.02, BRACK, 6)
 
-# ---------------- marble path ----------------
+# ---------------- marble path: gravity parabolas between hits ----------------
 BP = np.zeros((NF, 3)); SPIN = np.zeros(NF)
 ht = np.array([h[0] for h in hits])
 cz = ZTOP + R                               # ball centre at contact
-for f in range(NF):
-    t = T[f]
+TD = math.sqrt(2 * H0 / G)                  # first drop: released from rest H0 above striker 0
+vin_end = abs(LAY['vin'][-1][1])            # landing speed on the big bell
+SETTLE = []                                 # small decaying hops on the bell crown, then rest
+tb, vb = ht[-1], 0.35 * vin_end
+while vb > 0.25 and len(SETTLE) < 6:
+    SETTLE.append((tb, vb)); tb += 2 * vb / G; vb *= 0.45
+def ball_at(t):
     if t <= ht[0]:
-        a = np.clip((t - (ht[0] - 0.7)) / 0.7, 0, 1)
-        BP[f] = (X[0], 0, cz[0] + 4.0 * (1 - a * a)); continue
+        s_ = max(0.0, t - (ht[0] - TD)); return (X[0], cz[0] + H0 - 0.5 * G * s_ * s_)
     if t >= ht[-1]:
-        k = min(1.0, (t - ht[-1]) / 0.6)
-        BP[f] = (0, 0, cz[-1] - 0.35 * k); continue
-    i = int(np.searchsorted(ht, t, 'right') - 1)
-    t0, t1 = ht[i], ht[i + 1]; u = (t - t0) / (t1 - t0); dt = t1 - t0
-    h = float(np.clip(0.45 * dt, 0.05, 0.7))
-    if i > 0: h = min(h, max(0.04, cz[i - 1] - cz[i] - 0.36))
-    if i + 1 == NH - 1: h = 0.25
-    dx = abs(X[i + 1] - X[i]); uc = min(0.6, (0.27 + R) / max(dx, 1e-3)) if i + 1 < NH - 1 else 0.0
-    xx = X[i] + (X[i + 1] - X[i]) * u
-    g = max(0.0, (u - uc) / (1 - uc)); g = g ** 1.6           # stay above the striker until clear, then fall
-    zz = cz[i] + (cz[i + 1] - cz[i]) * g + h * 4 * u * (1 - u)
-    BP[f] = (xx, 0, zz)
-for f in range(1, NF): SPIN[f] = SPIN[f - 1] + (BP[f][0] - BP[f - 1][0]) / R * 0.8 - 0.05
+        for t0, v in SETTLE:
+            s_ = t - t0
+            if s_ <= 2 * v / G: return (X[-1], cz[-1] + v * s_ - 0.5 * G * s_ * s_)
+        return (X[-1], cz[-1])
+    i = int(np.searchsorted(ht, t, 'right') - 1); s_ = t - ht[i]
+    return (X[i] + V0[i][0] * s_, cz[i] + V0[i][1] * s_ - 0.5 * G * s_ * s_)
+for f in range(NF):
+    bx, bz_ = ball_at(T[f]); BP[f] = (bx, 0, bz_)
+for f in range(1, NF): SPIN[f] = SPIN[f - 1] + (BP[f][0] - BP[f - 1][0]) / R        # rolls with its sideways travel
 bpy.ops.mesh.primitive_uv_sphere_add(radius=R, segments=32, ring_count=16)
 BALL = bpy.context.object
 for p in BALL.data.polygons: p.use_smooth = True
@@ -291,7 +286,7 @@ def smooth(Xa, k):
     for f in range(1, len(Xa)): Y[f] = Y[f - 1] + (Xa[f] - Y[f - 1]) * (1 - math.exp(-1 / FPS / k))
     for f in range(len(Xa) - 2, -1, -1): Y[f] = Y[f + 1] + (Y[f] - Y[f + 1]) * (1 - (1 - math.exp(-1 / FPS / k)))   # keep forward lag
     return Y
-bz = smooth(BP[:, 2].copy(), 0.9)
+bz = smooth(BP[:, 2].copy(), 0.35); bxs = smooth(BP[:, 0].copy(), 0.6)
 fin = np.clip((T - (FINAL - 1.5)) / 2.0, 0, 1); fin = fin * fin * (3 - 2 * fin)
 camd = bpy.data.cameras.new('cam'); camd.lens = 30; camd.sensor_fit = 'VERTICAL'; camd.sensor_height = 24
 cam = link(bpy.data.objects.new('cam', camd)); sc.camera = cam
@@ -301,9 +296,9 @@ CP = np.zeros((NF, 3)); TP = np.zeros((NF, 3))
 for f in range(NF):
     zc = bz[f] - 1.6
     sway = 1.2 * math.sin(T[f] * 0.13)
-    d = 14.0 + 3.0 * fin[f]
-    CP[f] = (sway, -d, zc + 1.8)
-    TP[f] = (0.15 * sway, 0, zc)
+    d = 15.0 + 3.0 * fin[f]
+    CP[f] = (bxs[f] + sway, -d, zc + 1.8)
+    TP[f] = (bxs[f] + 0.15 * sway, 0, zc)
 for i in range(3): key_series(cam, 'location', i, CP[:, i]); key_series(tgt, 'location', i, TP[:, i])
 # key light rides with the camera, rim light from above
 for nm, off, e, col, sz in (('key', (3.5, -7, 3.0), 900, (1.0, 0.92, 0.85), 6), ('fill', (-5, -6, -2), 300, (0.6, 0.55, 1.0), 6), ('top', (0, -2, 7), 400, (1, 0.8, 0.9), 5)):
@@ -312,15 +307,22 @@ for nm, off, e, col, sz in (('key', (3.5, -7, 3.0), 900, (1.0, 0.92, 0.85), 6), 
     c = o.constraints.new('TRACK_TO'); c.target = tgt; c.track_axis = 'TRACK_NEGATIVE_Z'; c.up_axis = 'UP_Y'
     for k in range(3): key_series(o, 'location', k, TP[:, k] + off[k])
 
-# ---------------- sanity: marble never passes through a striker ----------------
-bad = 0
-for f in range(0, NF):
-    t = T[f]; b = BP[f]
-    for i in range(NH - 1):
-        if abs(ht[i] - t) < 0.05: continue
-        if abs(b[2] - ZTOP[i]) < 0.6 and abs(b[0] - X[i]) < 0.22 + R and ZTOP[i] - 0.32 < b[2] - R + 0.0 < ZTOP[i] - 0.01:
-            bad += 1
-            if bad < 25: print('COL f', f, 't', round(t,2), 'striker', i, 'ht', round(ht[i],2), 'ball', np.round(b,2), 'X', round(X[i],2), 'Z', round(ZTOP[i],2))
+# ---------------- sanity: marble never passes through a striker, no sudden speed changes ----------------
+bad = 0; HW = LAY['HW']
+cx_, cz_ = CON[:, 0], CON[:, 1]
+for t in np.arange(ht[0] - TD, ht[-1], 1 / 240):
+    b = ball_at(t); rx, rz = b[0] - cx_, b[1] - cz_
+    u = rx * NRM[:, 1] - rz * NRM[:, 0]; w = rx * NRM[:, 0] + rz * NRM[:, 1]
+    du = np.maximum(0, np.abs(u) - HW); dw = np.where(w > 0, w, np.maximum(0, -w - 0.3))
+    hit = (np.hypot(du, dw) < R - 0.015) & (np.abs(ht - t) > 0.03); hit[-1] = False
+    if hit.any():
+        bad += 1
+        if bad < 25: print('COL t', round(t, 3), 'strikers', np.where(hit)[0][:5])
+SP_ = np.linalg.norm(np.diff(BP, axis=0), axis=1) * FPS
+fh_ = set(int(round(t * FPS)) + k for t in list(ht) + [s0 for s0, _ in SETTLE] for k in (-1, 0, 1))
+rat = [max(SP_[f], SP_[f - 1]) / max(1e-3, min(SP_[f], SP_[f - 1])) for f in range(1, len(SP_))
+       if f not in fh_ and f + 1 not in fh_ and min(SP_[f], SP_[f - 1]) > 0.5]
+print('speed u/s max', round(SP_.max(), 2), 'in-flight max frame-to-frame speed ratio', round(max(rat), 3))
 print('objects', len(bpy.data.objects), 'NF', NF, 'strikers', len(STRK), 'drop', round(ZTOP[0] - ZTOP[-1], 1), 'collisions', bad)
 if MODE == 'check': sys.exit(0)
 if MODE == 'test':
