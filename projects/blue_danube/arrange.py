@@ -1,4 +1,8 @@
 """The Blue Danube (An der schoenen blauen Donau, Op. 314) - Johann Strauss II, 1867, public domain. Own arrangement.
+Score source: Mutopia Project, StraussJJ/O314/blue_danube (main theme; typeset by N. Kouremenos from C. Mondrup's
+four-hand piano reduction of the original, Werner Icking Music Archive; Mutopia edition CC BY-SA 4.0).
+Only Strauss's melody (pitches/rhythm) and the harmony per bar are taken from it; the accompaniment voicing,
+orchestration, ending and everything else are written here.
 Waltz No. 1 main theme (32 bars + pickup), played twice, in the original D major, 3/4.
 Melody / inner voice / harmony follow the standard piano reduction of the theme (written here in C, transposed +2):
   pickup c | c e g | g2 <e'g'> | <e'g'>2 <c'e'> | <c'e'>2 c | c e g | g2 <f'g'> | <f'g'>2 <b f'> | <b f'>2 b, | ...
