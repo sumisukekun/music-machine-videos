@@ -1,0 +1,21 @@
+melody_notes 115
+notes_without_hit []
+hit_time_err_max_s 0.0
+hit_pitch_mismatch []
+hits_without_bar []
+bars_never_hit []
+melody_equals_score True
+bass_notes 47
+bass_pitches ['A2', 'D2', 'E2', 'G2']
+contact_gap_nearest_frame_max_m 0.089
+contact_gap_mean_m 0.025
+path_jumps []
+flight_accel_error_max 0.0
+flight_frame_speed_ratio_max(v>0.5) 1.615
+bounce_speed_out_over_in_max 0.986
+restitution_range (0.31, 0.959)
+bar_tilt_max_deg 34.9
+landings_on_levers_e0 3
+bar_collisions {}
+bar_collision_worst_pen_m 0.0
+ball_ball_min_clearance_m {'gold-rose': 0.34, 'gold-kid': 0.265, 'rose-kid': 0.075}
