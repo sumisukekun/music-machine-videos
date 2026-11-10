@@ -21,7 +21,7 @@ info = {}
 hitmap = {}
 for name, b in L['balls'].items():
     for h in b['hits']:
-        if h['kind'] in ('gutter', 'bucket', 'lever'): continue
+        if h['kind'] in ('gutter', 'bucket', 'lever', 'stop'): continue
         hitmap.setdefault(h['i'], []).append((name, h['t'], h['kind']))
 miss = [i for i in range(len(LEAD)) if i not in hitmap]
 info['onsets'] = len(LEAD); info['onsets_without_visible_hit'] = miss
@@ -79,6 +79,6 @@ for n, b in L['balls'].items():
 info['flight_accel_error_max'] = round(amax, 6); info['flight_speed_ratio_max(v>0.5)'] = round(rat, 3); info['flight_speed_ratio_max(v>2)'] = round(rat_fast, 3)
 hs = [h for b in L['balls'].values() for h in b['hits'] if np.linalg.norm(h['vout']) > 0]
 info['bounce_speed_out_over_in_max'] = round(max(np.linalg.norm(h['vout']) / np.linalg.norm(h['vin']) for h in hs), 3)
-info['restitution_max'] = round(max(h['e'] for h in hs if h['kind'] != 'gutter'), 3)
-info['tilt_max_deg'] = round(max(math.degrees(math.acos(max(-1, min(1, h['n'][2])))) for h in hs), 1)
+info['restitution_max'] = round(max(h['e'] for h in hs if h['kind'] not in ('gutter', 'stop')), 3)
+info['tilt_max_deg(flower parts)'] = round(max(math.degrees(math.acos(max(-1, min(1, h['n'][2])))) for h in hs if h['kind'] != 'stop'), 1)
 for k, v in info.items(): print(k, v)

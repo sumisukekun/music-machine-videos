@@ -562,7 +562,7 @@ for pd in EV['ponds']:
     p = np.array(pd['p'])
     bpy.ops.mesh.primitive_cylinder_add(radius=0.42, depth=0.22, vertices=32, location=(p[0], p[1], p[2] - R - 0.18)); bs = bpy.context.object; bs.data.materials.append(M_STONE)
     bpy.ops.mesh.primitive_cylinder_add(radius=0.38, depth=0.02, vertices=32, location=(p[0], p[1], p[2] - R - 0.07)); wt = bpy.context.object; wt.data.materials.append(M_WATER)
-    rod((p[0], p[1], p[2] - R - 0.3), (p[0], p[1], ground(p[0]) if abs(p[1]) < 0.1 else ZF), 0.05, M_IRON, 8)
+    for dx_ in (-0.38, 0.38): rod((p[0] + dx_, p[1] + 0.1, p[2] - R - 0.1), (p[0] + dx_, p[1] + 0.1, ZR), 0.01, M_BEAK, 4)   # hanging basin
     for k in range(3):
         lp = obj(prim('cyl', M_LEAF, 24), 'lily'); lp.location = (p[0] + 0.2 * math.cos(k * 2.1), p[1] + 0.2 * math.sin(k * 2.1), p[2] - R - 0.055); lp.scale = (0.11, 0.11, 0.008); lp.color = (0.2, 0.6, 0.25, 1)
     # splash crown
@@ -615,19 +615,23 @@ for sd, gu in EV['gutters'].items():
     zc = lambda x: z0 - abs(x - x0) * math.tan(th) - R
     for y in (-0.42, 0.42):
         rod((x0, y, zc(x0) + 0.08), (x1, y, zc(x1) + 0.08), 0.03, M_GUT, 8)
-    ln = abs(x1 - x0) / math.cos(th)
-    bot = box(((x0 + x1) / 2, 0.0, (zc(x0) + zc(x1)) / 2 - 0.015), (ln, 0.88, 0.03), M_GUT, rot=(0, s * th, 0), name='gutter')
+    xh = x1 - s * (R + 0.06)                                   # the bottom stops short of the end: the drop hole
+    ln = abs(xh - x0) / math.cos(th)
+    bot = box(((x0 + xh) / 2, 0.0, (zc(x0) + zc(xh)) / 2 - 0.015), (ln, 0.88, 0.03), M_GUT, rot=(0, s * th, 0), name='gutter')
     for x in np.linspace(x0, x1, 5): rod((x, 0.45, zc(x)), (x, 0.45, ZR), 0.012, M_IRON, 6)
+def ch_end_z(sd):
+    gu = EV['gutters'][sd]; return gu['z0'] - abs(gu['x1'] - gu['x0']) * math.tan(math.radians(8.0))
 # counterweight buckets on the rope; window in the roof above the tree; rope over pulleys
 BK = {}
 for sd, bk in EV['buckets'].items():
     keys = np.array(bk['keys']); zb = np.interp(T, keys[:, 0], keys[:, 1]); BK[sd] = zb
     piv = link(bpy.data.objects.new('bucket', None))
-    key_loc(piv, np.stack([np.full(NF, bk['x']), np.zeros(NF), zb - R - 0.04], 1))
-    bpy.ops.mesh.primitive_cylinder_add(radius=0.42, depth=0.6, vertices=32, location=(0, 0, 0.3)); bo = bpy.context.object
+    key_loc(piv, np.stack([np.full(NF, bk['x']), np.full(NF, -0.075), zb - R - 0.04], 1))
+    bpy.ops.mesh.primitive_cylinder_add(radius=0.56, depth=0.75, vertices=32, location=(0, 0, 0.375)); bo = bpy.context.object
     bm = bmesh.new(); bm.from_mesh(bo.data); bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.normal.z > 0.9], context='FACES'); bm.to_mesh(bo.data); bm.free()
     bo.modifiers.new('s', 'SOLIDIFY').thickness = 0.025; bo.data.materials.append(M_BRASS); bo.parent = piv
-    for y in (-0.42, 0.42): rod((0, y, 0.6), (0, 0, 1.3), 0.01, M_BEAK, 4).parent = piv
+    for y in (-0.56, 0.56): rod((0, y, 0.75), (0, 0, 1.3), 0.01, M_BEAK, 4).parent = piv
+    sd_ = float(sd); box((bk['x'] + sd_ * (R + 0.04), 0.0, ch_end_z(sd) + 0.05), (0.04, 0.9, 0.35), M_GUT, name='endstop')
     rp = rod((0, 0, 0), (0, 0, 1), 0.012, mat('rope', (0.85, 0.75, 0.55), 0.9), 6)       # rope from bucket bail to pulley
     PZ = ZR + 0.2
     P = np.stack([np.full(NF, bk['x']), np.zeros(NF), zb - R - 0.04 + 1.3], 1)
@@ -733,7 +737,7 @@ signboard((24.5, -0.95, ground(24.5) + 1.0), 2.8, 0.62, [('バレエ音楽', 0.0
 signboard((5.3, -0.9, ground(5.3) + 5.6), 3.0, 0.7, [('魔法の温室', 0.0, 0.5, M_TXT_W)])
 # end board with the comment question
 sf_ = np.array(EV['sunflower']['p'])
-signboard((sf_[0] - 1.0, -0.9, sf_[2] + 3.0), 4.4, 0.8, [('何の花が一番好き？', 0.0, 0.46, M_TXT_Y)])
+signboard((sf_[0], -0.9, sf_[2] + 3.9), 4.4, 0.8, [('何の花が一番好き？', 0.0, 0.46, M_TXT_Y)])
 
 # ======================================================================= the giant sunflower (final chord)
 M_SFD = mat('sfdisc', (0.25, 0.12, 0.04), 0.7, **{'Emission Color': (1, 0.6, 0.2, 1), 'Emission Strength': 0.0})

@@ -156,13 +156,13 @@ LY = {'H': 0.0, 'dew': -0.35, 'gold': 0.35}
 
 # ===================================================================== H: horn theme 1
 H = ball('H', 'bird')
-h1 = SEC['horn1']                                           # notes 0..13
+h1 = SEC['horn1']                                           # A D F# | G G F# | F# (tulip) | A D F# | G F# E | A D (tulip)
 t_rel = 0.55; p_first = np.array([0.0, LY['H'], 2.4 + R])
 p_moon = p_first + np.array([0, 0, 0.5 * G * (TN[0] - t_rel) ** 2])
 H.rest(0.0, t_rel, p_moon); vin = flight(H, t_rel, TN[0], p_moon, p_first)[1]
 EV['moon'] = dict(p=p_moon.tolist(), t_open=t_rel - 0.25, t_rel=t_rel)
 SFX.append(['latch', t_rel - 0.05])
-p, vin = run(H, p_first, vin, h1[:5], lambda i: 1.4, dvx=(0, 1.5))       # A D F# G (F#) : last = the petal of the tulip
+p, vin = run(H, p_first, vin, h1[:6], lambda i: 1.4, dvx=(0, 1.5))       # A D F# G G (F#) : last = the petal of the tulip
 
 
 def tulip(ball, i_pet, p, vin, i_cup, t_launch, i_next, dx_next, dz_next, vy=0.0):
@@ -189,8 +189,8 @@ def cup_only(ball, i_cup, p, vin, t_launch, i_next, dx_next, dz_next, vy=0.0):
     return tgt, vin, p
 
 
-p, vin, cup1 = tulip(H, h1[4], p, vin, h1[5], TN[h1[6]] - 0.62, h1[6], 1.0, 0.5)
-p, vin = run(H, p, vin, h1[6:], lambda i: 1.5)                            # A D F# | G F# E | A D
+p, vin, cup1 = tulip(H, h1[5], p, vin, h1[6], TN[h1[7]] - 0.62, h1[7], 1.0, 0.5)
+p, vin = run(H, p, vin, h1[7:], lambda i: 1.5)                            # A D F# | G F# E | A D
 p_last_h1 = p.copy(); vin_last_h1 = vin.copy()
 
 # H lands in the 2nd tulip (D4, end of bar 11); its stem pulls the string of watering can 1
@@ -211,11 +211,12 @@ h1_cup2_land = p
 
 # ----- dew1: three drops, chain reaction of watering cans (leaves hang from the vines on the upper level)
 VXD = 1.7
-dew = SEC['dew1']; d1 = [i for i in dew if i <= 22]; d2 = [i for i in dew if 23 <= i <= 31]; d3 = [i for i in dew if i >= 32]
+def bars(sec, b0, b1): return [i for i in SEC[sec] if b0 <= LEAD[i]['bar'] <= b1]
+d1 = bars('dew1', 45, 46); d2 = bars('dew1', 47, 48); d3 = bars('dew1', 49, 53)
 spout1 = h1_cup2_land + np.array([0.9, LY['dew'] - LY['H'], 4.4])
-D1, p, vin = can_drop('D1', TN[13] + 0.02, spout1, d1[0], lever=None)
+D1, p, vin = can_drop('D1', TN[h1[-1]] + 0.02, spout1, d1[0], lever=None)
 EV['cans'][-1]['string_from'] = h1_cup2_land.tolist()
-SFX.append(['tip', TN[13] + 0.02])
+SFX.append(['tip', TN[h1[-1]] + 0.02])
 p, vin = run(D1, p, vin, d1, lambda i: VXD, lambda i: -0.03, dvx=(0, 1.8), kind_of=lambda i: 'leaf')
 def into_lever(d, i_last, p, vin, dt, dx, dz):
     tgt = p + np.array([dx, 0, dz])
@@ -239,21 +240,21 @@ EV['ponds'].append(dict(p=pp.tolist(), t=float(tp))); SFX.append(['splash', floa
 
 # ===================================================================== H: horn theme 2 + the cold F#-minor run
 h2 = SEC['horn2']; cold = SEC['cold']
-p, vin, cup2 = cup_only(H, 13, h1_cup2_land, vin_last_h1, TN[57] - 0.8, 57, 1.3, 1.0)
-p, vin = run(H, p, vin, h2[:5], lambda i: 1.45)
-p, vin, cup3 = tulip(H, h2[4], p, vin, h2[5], TN[h2[6]] - 0.85, h2[6], 1.3, 1.3)
-p, vin = run(H, p, vin, h2[6:] + cold, lambda i: 1.5 if i < 71 else 1.75,
-             kind_of=lambda i: 'bud' if i < 71 else 'ice')
+p, vin, cup2 = cup_only(H, h1[-1], h1_cup2_land, vin_last_h1, TN[h2[0]] - 0.8, h2[0], 1.3, 1.0)
+p, vin = run(H, p, vin, h2[:6], lambda i: 1.45)
+p, vin, cup3 = tulip(H, h2[5], p, vin, h2[6], TN[h2[7]] - 0.85, h2[7], 1.3, 1.3)
+p, vin = run(H, p, vin, h2[7:] + cold, lambda i: 1.5 if i < cold[0] else 1.75,
+             kind_of=lambda i: 'bud' if i < cold[0] else 'ice')
 # note 116 (E5) is played by the shelter tulip itself: H lands in it and waits out the storm
 H.hits[-1]['kind'] = H.hits[-1]['kind']
 cold_cup = p.copy(); vin_cold = vin.copy()
-T_GUST = BT[28]                                              # bar 28: the F#-minor turn = the gust
+T_GUST = BT[61]                                              # bar 28: the F#-minor turn = the gust
 EV['gust'] = dict(t=T_GUST)
 # ===================================================================== gold seed balls (violin theme)
 # The golden bell tree: the seed rack sits at the top of its trunk; G1/G3 run down the right branches, G2/G4 the left
 # ones (G4 on the back branch); each branch ends on a gutter that rolls the ball into that side's counterweight bucket.
 gold = SEC['gold']
-GPH = [[i for i in gold if BT[37 + 4 * k] - 1e-6 <= TN[i] < BT[41 + 4 * k] - 1e-6] for k in range(4)]
+GPH = [[i for i in gold if BT[70 + 4 * k] - 1e-6 <= TN[i] < BT[74 + 4 * k] - 1e-6] for k in range(4)]
 X_TREE = cold_cup[0] + 2.6; Z_RACK = cold_cup[2] + 8.6
 GDIR = [1, -1, 1, -1]; GLANE = [0.25, 0.25, 0.25, -0.4]; VXG = 2.2
 G_END = []
@@ -288,7 +289,7 @@ def ch_z(x, side): g_ = GUT[side]; return g_['z0'] - abs(x - g_['x0']) * math.ta
 HR = 2.1
 BKS = {}
 for side in (1, -1):
-    g_ = GUT[side]; xb = g_['x1'] + side * 0.55; zh = ch_z(g_['x1'], side) - 0.75
+    g_ = GUT[side]; xb = g_['x1']; zh = ch_z(g_['x1'], side) - 0.75          # bucket right under the hole at the gutter's end
     BKS[side] = dict(x=xb, z_high=zh, z_low=zh - HR, keys=[(0.0, zh - HR), (T_GUST, zh - HR), (T_GUST + 0.35, zh)])
 SPOTS = [(-0.15, 0.15), (0.15, -0.15), (0.15, 0.15), (-0.15, -0.15)]
 T_OPEN = T_GUST + 0.35
@@ -301,14 +302,15 @@ for k, (pe, ve, ie) in enumerate(G_END):
     tr = (-v0 + math.sqrt(v0 * v0 + 2 * ACH * L_)) / ACH
     g.seg.append(dict(k='acc', t0=float(t1), t1=float(t1 + tr), p=pl.tolist(), v=vt.tolist(), a=(ACH * U).tolist()))
     plip = pl + vt * tr + 0.5 * ACH * U * tr * tr; vlip = vt + ACH * U * tr
-    zb = bk['keys'][-1][1]; nin = sum(1 for j in range(k) if GDIR[j] == side)
-    spot = np.array([bk['x'] + SPOTS[nin][0] * side, plip[1], zb + R + 0.04])
+    # the end stop takes the rolling speed (felt pad, no bounce); the ball drops through the hole into the bucket
+    zb = bk['keys'][-1][1]; nst = sum(1 for j in range(k) if GDIR[j] == side and abs(GLANE[j] - GLANE[k]) < 1e-6)
+    spot = np.array([plip[0], plip[1], zb + R + 0.04 + 2 * R * nst])
+    vdrop = np.array([0.0, 0.0, vlip[2]])
+    hit(g, ie, plip, vlip, vdrop, 'stop', t=t1 + tr)
     dzf = plip[2] - spot[2]; vz0 = vlip[2]
     tfl = (vz0 + math.sqrt(vz0 * vz0 + 2 * G * dzf)) / G
-    # horizontal: from the lip with the rolling speed; the bucket spot is where it comes down
-    spot[0] = plip[0] + vlip[0] * tfl; spot[1] = plip[1]
     tl = t1 + tr + tfl
-    g.fly(t1 + tr, tl, plip, vlip); v_in = vlip + np.array([0, 0, -G * tfl])
+    g.fly(t1 + tr, tl, plip, vdrop); v_in = vdrop + np.array([0, 0, -G * tfl])
     hit(g, ie, spot, v_in, np.zeros(3), 'bucket', t=tl)
     SFX.append(['clunk', float(tl)])
     g.rest(tl, tl + 0.15, spot)
@@ -329,54 +331,49 @@ EV['gutters'] = {str(s_): v for s_, v in GUT.items()}; EV['tree'] = dict(x=X_TRE
 
 # ===================================================================== H: climb (after the window is shut) + horn theme 3
 climb = SEC['climb']; h3 = SEC['horn3']
-p, vin, cupc = cup_only(H, 116, cold_cup, vin_cold, TN[162] - 1.0, 162, 1.5, 2.5)
-p, vin = run(H, p, vin, climb + h3[:5], lambda i: 1.5, lambda i: -0.03)
-p, vin, cup4 = tulip(H, h3[4], p, vin, h3[5], TN[h3[6]] - 0.85, h3[6], 1.3, 1.2)
-p, vin = run(H, p, vin, h3[6:], lambda i: 1.5)
+p, vin, cupc = cup_only(H, cold[-1], cold_cup, vin_cold, TN[climb[0]] - 1.0, climb[0], 1.5, 2.5)
+p, vin = run(H, p, vin, climb + h3[:6], lambda i: 1.5, lambda i: -0.03)
+p, vin, cup4 = tulip(H, h3[5], p, vin, h3[6], TN[h3[7]] - 0.85, h3[7], 1.3, 1.2)
+p, vin = run(H, p, vin, h3[7:], lambda i: 1.5)
 h3_cup = p.copy(); vin_h3 = vin.copy()
 
 # ----- dew2: three more cans further along (same chain reaction)
-dew2 = SEC['dew2']; e1 = [i for i in dew2 if i <= 199]; e2 = [i for i in dew2 if 200 <= i <= 208]; e3 = [i for i in dew2 if i >= 209]
+e1 = bars('dew2', 97, 98); e2 = bars('dew2', 99, 100); e3 = bars('dew2', 101, 105)
 spout4 = h3_cup + np.array([0.9, LY['dew'] - LY['H'], 4.4])
-D4, p, vin = can_drop('D4', TN[190] + 0.02, spout4, e1[0])
-EV['cans'][-1]['string_from'] = h3_cup.tolist(); SFX.append(['tip', TN[190] + 0.02])
+D4, p, vin = can_drop('D4', TN[h3[-1]] + 0.02, spout4, e1[0])
+EV['cans'][-1]['string_from'] = h3_cup.tolist(); SFX.append(['tip', TN[h3[-1]] + 0.02])
 p, vin = run(D4, p, vin, e1, lambda i: VXD, lambda i: -0.03, dvx=(0, 1.8), kind_of=lambda i: 'leaf')
 lev5 = into_lever(D4, e1[-1], p, vin, 0.2, 0.4, -0.1)
 D5, p, vin = can_drop('D5', TN[e1[-1]] + 0.17, lev5 + np.array([0.75, 0, 0.32]), e2[0], lever=lev5.tolist())
 p, vin = run(D5, p, vin, e2, lambda i: VXD, lambda i: -0.03, dvx=(0, 1.8), kind_of=lambda i: 'leaf')
-lev6 = into_lever(D5, e2[-1], p, vin, 0.2, 0.4, -0.1)
-D6, p, vin = can_drop('D6', TN[e2[-1]] + 0.17, lev6 + np.array([0.75, 0, 0.32]), e3[0], lever=lev6.tolist())
-p, vin = run(D6, p, vin, e3, lambda i: VXD, lambda i: -0.035, dvx=(0, 1.8), kind_of=lambda i: 'leaf')
-tp = TN[e3[-1]] + 0.42; pond = p + np.array([0.7, 0, -0.3])
-pp, vv = bounce_to(D6, e3[-1], p, vin, tp, pond, kind='leaf')
-D6.rest(tp, 80, pp + np.array([0, 0, -0.4]))
+tp = TN[e2[-1]] + 0.42; pond = p + np.array([0.7, 0, -0.3])
+pp, vv = bounce_to(D5, e2[-1], p, vin, tp, pond, kind='leaf')
+D5.rest(tp, 80, pp + np.array([0, 0, -0.4]))
 EV['ponds'].append(dict(p=pp.tolist(), t=float(tp))); SFX.append(['splash', float(tp)])
 
-# ===================================================================== coda: H, sunrise, giant sunflower
+# ===================================================================== last answer + final chord: the hummingbird itself
+# flicked out of its tulip, H plays the last clarinet answer over new buds and lands in the heart of the giant sunflower
 coda = SEC['coda']
-p, vin, cup5 = cup_only(H, 190, h3_cup, vin_h3, TN[229] - 0.9, 229, 1.3, 1.9)
-p, vin = run(H, p, vin, coda, lambda i: 1.3, lambda i: -0.02)
-hit(H, coda[-1], p, vin, np.zeros(3), 'sunflower', t=TN[coda[-1]]) if False else None
-H.hits[-1]['kind'] = H.hits[-1]['kind']
-# the last chord: H lands in the heart of the giant sunflower and stays
+p, vin, cup5 = cup_only(H, h3[-1], h3_cup, vin_h3, TN[e3[0]] - 0.8, e3[0], 1.4, 1.2)
+p, vin = run(H, p, vin, e3 + coda, lambda i: 1.7, lambda i: -0.03, dvx=(-0.3, 0.3))
 H.hits.append(dict(i=int(coda[-1]), t=float(TN[coda[-1]]), p=p.tolist(), n=[0, 0, 1.0], e=0.0, kind='sunflower',
                    vin=vin.tolist(), vout=[0, 0, 0], ball='H'))
 H.rest(TN[coda[-1]], 90.0, p)
 EV['sunflower'] = dict(p=p.tolist(), t=float(TN[coda[-1]]))
-EV['sunrise'] = dict(t0=float(BT[72]), t1=float(TN[coda[-1]]))
+EV['sunrise'] = dict(t0=float(BT[97]), t1=float(TN[coda[-1]]))
 
 
 # ------------------------------------------------------------------ checks
 def check():
     info = {}
     hs = [h for b in B.values() for h in b.hits]
-    bb = [h for h in hs if np.linalg.norm(h['vout']) > 0 and h['kind'] not in ('gutter',)]
+    bb = [h for h in hs if np.linalg.norm(h['vout']) > 0 and h['kind'] not in ('gutter', 'stop')]
     info['e_max'] = round(max(h['e'] for h in bb), 3)
     info['speed_out_over_in_max'] = round(max(np.linalg.norm(h['vout']) / np.linalg.norm(h['vin']) for h in hs if np.linalg.norm(h['vout']) > 0), 3)
-    info['tilt_max_deg'] = round(max(math.degrees(math.acos(max(-1, min(1, h['n'][2])))) for h in hs), 1)
+    info['tilt_max_deg'] = round(max(math.degrees(math.acos(max(-1, min(1, h['n'][2])))) for h in hs if h['kind'] != 'stop'), 1)
     played = {}
     for h in hs:
-        if h['kind'] in ('gutter', 'bucket', 'lever'): continue
+        if h['kind'] in ('gutter', 'bucket', 'lever', 'stop'): continue
         played.setdefault(h['i'], []).append(h)
     info['notes_uncovered'] = sorted(set(range(NN)) - set(played))
     info['notes_double'] = sorted(i for i, v in played.items() if len(v) > 1)
