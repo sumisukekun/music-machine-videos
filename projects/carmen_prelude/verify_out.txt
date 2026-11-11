@@ -1,0 +1,24 @@
+score_rh_onsets 385
+score_lh_onsets 278
+score_mismatches []
+struck_but_not_in_audio []
+contact_gap_nearest_frame_max_m 0.066
+contact_gap_mean_m 0.025
+contact_gap_worst [(0.06628027284116805, 'bull', 'drum', 31.92), (0.060595709419060284, 'bull', 'drum', 16.68), (0.056774955354919825, 'red', 'key', 45.48)]
+contact_gap_exact_time_max_m 0.0
+collisions {'bull->bull': 8}
+collision_examples {'bull->bull': [(46.154, 0.01, 'piece_t', 45.96), (47.117, 0.01, 'piece_t', 46.92), (47.354, 0.01, 'piece_t', 47.16)]}
+collision_worst_pen_m 0.01
+min_ball_surface_gap (0.24, 'red', 'gold', 0.2)
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) 1.435
+worst_ratio_at ('m04', np.float64(46.03), np.float64(0.54), np.float64(0.77))
+flight_speed_ratio_max(v>2) 1.108
+mechanism_speed_change_per_frame_max_mps 0.347
+ramp_lip_speed_before_after (3.094, 3.1)
+trebuchet_release_speed_before_after (6.574, 6.591)
+bounce_speed_out_over_in_max 0.9997
+restitution_range (0.163, 0.975)
+key_tilt_max_deg 31.9
+crowd_marbles 59
+crowd_bounce_out_over_in_max 0.542
