@@ -1,0 +1,20 @@
+events {'V1': 153, 'V2': 107, 'B': 141}
+events_wrong_or_missing []
+final_chord_struck ['B4', 'D5', 'G5']
+pitched_hits_not_in_score []
+contact_gap_nearest_frame_max_m 0.053
+contact_gap_mean_m 0.012
+contact_gap_worst [(0.053, 'rose', 'uni', 37.15), (0.053, 'pearl', 'uni', 37.15), (0.051, 'bass', 'bell', 42.15)]
+contact_gap_exact_time_max_m 0.0
+collisions {}
+collision_examples {}
+collision_worst_pen_m 0.0
+min_ball_surface_gap (0.245, 'rose', 'pearl', 52.4)
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) 1.4
+worst_ratio_at ('lamp', np.float64(1.5), np.float64(0.58), np.float64(0.82))
+mechanism_speed_change_per_frame_max_mps (0.188, ('bass', 22.09))
+bounce_speed_out_over_in_max 1.0
+restitution_range (0.301, 0.973)
+key_tilt_max_deg 33.5
+ramps(who,pass,deg,crr,v0,v1,L,k_land) [('lamp', 1, 5.0, 0.03, 0.95, 1.61, 3.7, 0.85), ('lamp', 2, 5.0, 0.03, 0.88, 1.54, 3.5, 0.85), ('bass', 1, 1.5, 0.019, 1.48, 1.48, 16.5, 0.95), ('bass', 2, 1.26, 0.016, 1.26, 1.26, 14.0, 0.77)]
