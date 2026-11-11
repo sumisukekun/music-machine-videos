@@ -1,0 +1,30 @@
+melody_notes 126
+melody_missing_or_wrong []
+melody_time_err 0.0
+bass_notes 56
+bass_missing []
+pair_notes 48
+pair_missing []
+rain_beats 31
+rain_balls 496
+rain_chord_mismatch []
+final_count [60.88, 512]
+contact_gap_nearest_frame_max_m 0.163
+contact_gap_mean_m 0.028
+contact_gap_exact_time_max_m 0.0
+contact_gap_nearest_frame_by_role(max, mean) {'melody': (0.096, 0.016), 'bass': (0.0, 0.0), 'pair': (0.083, 0.053), 'rain': (0.163, 0.047)}
+collisions {}
+collision_examples {}
+collision_worst_pen_m 0.0
+rain_vs_tubes_pen_max_m (0.0, 0)
+rain_vs_riser_pen_max_m(before seating) 0.0
+min_ball_surface_gap_m (0.0205, 'r187', 'r204', 51.07)
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) 1.4
+worst_ratio_at ('solo', 1.4, 0.58, 0.82)
+ramp_speed_change_per_frame_max_mps 0.589
+bounce_speed_out_over_in_max 0.9922
+restitution_range (0.208, 0.975)
+dead_landings(final) 16
+key_tilt_max_deg 33.4
+seesaw_energy (4.08, 3.44)
