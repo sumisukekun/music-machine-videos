@@ -1,0 +1,19 @@
+score_notes_checked {'mel': 123, 'har': 111, 'bas': 78, 'birdA': 79, 'birdB': 79}
+score_mismatch {}
+events_not_struck_once []
+contact_gap_nearest_frame_max_m 0.055
+contact_gap_mean_m 0.017
+contact_gap_exact_time_max_m 0.0
+collisions {}
+collision_examples {}
+collision_worst_pen_m 0.0
+min_ball_surface_gap (0.947, 'bas', 'birdA', 43.09)
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) 1.4
+worst_ratio_at ('har', np.float64(1.3), np.float64(0.58), np.float64(0.82))
+speed_after_over_before_bounce_sampled_max 1.008
+mechanism_speed_change_per_frame_max_mps 0.051
+bounce_speed_out_over_in_max 0.9982
+restitution_range (0.296, 0.97)
+key_tilt_max_deg 33.9
+duration_s 73.67
