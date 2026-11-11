@@ -1,0 +1,215 @@
+  0   1.800s bar 1 8th 1.0  score B5       struck B5       frame    54  flute:B5:key
+  1   2.220s bar 1 8th 2.0  score G#5      struck G#5      frame    67  flute:G#5:key
+  2   2.640s bar 1 8th 3.0  score F#5      struck F#5      frame    79  flute:F#5:key
+  3   3.060s bar 1 8th 4.0  score E5       struck E5       frame    92  flute:E5:key
+  4   3.480s bar 1 8th 5.0  score F#5      struck F#5      frame   104  flute:F#5:key
+  5   3.900s bar 1 8th 6.0  score G#5      struck G#5      frame   117  flute:G#5:key
+  6   4.320s bar 2 8th 1.0  score B5       struck B5       frame   130  flute:B5:key
+  7   4.740s bar 2 8th 2.0  score G#5      struck G#5      frame   142  flute:G#5:key
+  8   5.160s bar 2 8th 3.0  score F#5      struck F#5      frame   155  flute:F#5:key
+  9   5.580s bar 2 8th 4.0  score E5       struck E5       frame   167  flute:E5:key
+ 10   6.000s bar 2 8th 5.0  score F#5      struck F#5      frame   180  flute:F#5:key
+ 11   6.210s bar 2 8th 5.5  score G#5      struck G#5      frame   186  flute:G#5:key
+ 12   6.420s bar 2 8th 6.0  score F#5      struck F#5      frame   193  flute:F#5:key
+ 13   6.630s bar 2 8th 6.5  score G#5      struck G#5      frame   199  flute:G#5:key
+ 14   6.840s bar 3 8th 1.0  score B5       struck B5       frame   205  flute:B5:key
+ 15   7.260s bar 3 8th 2.0  score G#5      struck G#5      frame   218  flute:G#5:key
+ 16   7.680s bar 3 8th 3.0  score B5       struck B5       frame   230  flute:B5:key
+ 17   8.100s bar 3 8th 4.0  score C#6      struck C#6      frame   243  flute:C#6:key
+ 18   8.520s bar 3 8th 5.0  score G#5      struck G#5      frame   256  flute:G#5:key
+ 19   8.940s bar 3 8th 6.0  score C#6      struck C#6      frame   268  flute:C#6:key
+ 20   9.360s bar 4 8th 1.0  score B5       struck B5       frame   281  flute:B5:key
+ 21   9.780s bar 4 8th 2.0  score G#5      struck G#5      frame   293  flute:G#5:key
+ 22  10.200s bar 4 8th 3.0  score F#5      struck F#5      frame   306  flute:F#5:key
+ 23  10.620s bar 4 8th 4.0  score E5       struck E5       frame   319  flute:E5:lever
+ 24  11.880s bar 5 8th 1.0  score B4       struck B4       frame   356  oboe:B4:key
+ 25  12.300s bar 5 8th 2.0  score G#4      struck G#4      frame   369  oboe:G#4:key
+ 26  12.720s bar 5 8th 3.0  score F#4      struck F#4      frame   382  oboe:F#4:key
+ 27  13.140s bar 5 8th 4.0  score E4       struck E4       frame   394  oboe:E4:key
+ 28  13.560s bar 5 8th 5.0  score F#4      struck F#4      frame   407  oboe:F#4:key
+ 29  13.980s bar 5 8th 6.0  score G#4      struck G#4      frame   419  oboe:G#4:key
+ 30  14.400s bar 6 8th 1.0  score B4       struck B4       frame   432  oboe:B4:key
+ 31  14.820s bar 6 8th 2.0  score G#4      struck G#4      frame   445  oboe:G#4:key
+ 32  15.240s bar 6 8th 3.0  score F#4      struck F#4      frame   457  oboe:F#4:key
+ 33  15.660s bar 6 8th 4.0  score E4       struck E4       frame   470  oboe:E4:key
+ 34  16.080s bar 6 8th 5.0  score F#4      struck F#4      frame   482  oboe:F#4:key
+ 35  16.290s bar 6 8th 5.5  score G#4      struck G#4      frame   489  oboe:G#4:key
+ 36  16.500s bar 6 8th 6.0  score F#4      struck F#4      frame   495  oboe:F#4:key
+ 37  16.710s bar 6 8th 6.5  score G#4      struck G#4      frame   501  oboe:G#4:key
+ 38  16.920s bar 7 8th 1.0  score B4       struck B4       frame   508  oboe:B4:key
+ 39  17.340s bar 7 8th 2.0  score G#4      struck G#4      frame   520  oboe:G#4:key
+ 40  17.760s bar 7 8th 3.0  score B4       struck B4       frame   533  oboe:B4:key
+ 41  18.180s bar 7 8th 4.0  score C#5      struck C#5      frame   545  oboe:C#5:key
+ 42  18.600s bar 7 8th 5.0  score G#4      struck G#4      frame   558  oboe:G#4:key
+ 43  19.020s bar 7 8th 6.0  score C#5      struck C#5      frame   571  oboe:C#5:key
+ 44  19.440s bar 8 8th 1.0  score D#5      struck D#5      frame   583  oboe:D#5:key
+ 45  19.860s bar 8 8th 2.0  score C5       struck C5       frame   596  oboe:C5:key
+ 46  20.280s bar 8 8th 3.0  score A#4      struck A#4      frame   608  oboe:A#4:key
+ 47  20.700s bar 8 8th 4.0  score G#4      struck G#4      frame   621  oboe:G#4:lever
+ 48  21.960s bar 9 8th 1.0  score D#6      struck D#6      frame   659  flute:D#6:key
+ 49  22.380s bar 9 8th 2.0  score C6       struck C6       frame   671  flute:C6:key
+ 50  22.800s bar 9 8th 3.0  score A#5      struck A#5      frame   684  flute:A#5:key
+ 51  23.220s bar 9 8th 4.0  score G#5      struck G#5      frame   697  flute:G#5:key
+ 52  23.640s bar 9 8th 5.0  score A#5      struck A#5      frame   709  flute:A#5:key
+ 53  24.060s bar 9 8th 6.0  score C6       struck C6       frame   722  flute:C6:key
+ 54  24.480s bar10 8th 1.0  score D#6      struck D#6      frame   734  flute:D#6:key
+ 55  24.900s bar10 8th 2.0  score C6       struck C6       frame   747  flute:C6:key
+ 56  25.320s bar10 8th 3.0  score A#5      struck A#5      frame   760  flute:A#5:key
+ 57  25.740s bar10 8th 4.0  score G#5      struck G#5      frame   772  flute:G#5:key
+ 58  26.160s bar10 8th 5.0  score A#5      struck A#5      frame   785  flute:A#5:key
+ 59  26.370s bar10 8th 5.5  score C6       struck C6       frame   791  flute:C6:key
+ 60  26.580s bar10 8th 6.0  score A#5      struck A#5      frame   797  flute:A#5:key
+ 61  26.790s bar10 8th 6.5  score C6       struck C6       frame   804  flute:C6:key
+ 62  27.000s bar11 8th 1.0  score D#6      struck D#6      frame   810  flute:D#6:key
+ 63  27.420s bar11 8th 2.0  score C6       struck C6       frame   823  flute:C6:key
+ 64  27.840s bar11 8th 3.0  score D#6      struck D#6      frame   835  flute:D#6:key
+ 65  28.260s bar11 8th 4.0  score E6       struck E6       frame   848  flute:E6:key
+ 66  28.680s bar11 8th 5.0  score C6       struck C6       frame   860  flute:C6:key
+ 67  29.100s bar11 8th 6.0  score E6       struck E6       frame   873  flute:E6:key
+ 68  29.520s bar12 8th 1.0  score D#6      struck D#6      frame   886  flute:D#6:key
+ 69  29.940s bar12 8th 2.0  score C6       struck C6       frame   898  flute:C6:key
+ 70  30.360s bar12 8th 3.0  score A#5      struck A#5      frame   911  flute:A#5:key
+ 71  30.780s bar12 8th 4.0  score G#5      struck G#5      frame   923  flute:G#5:lever
+ 72  32.040s bar13 8th 1.0  score D#5      struck D#5      frame   961  oboe:D#5:key
+ 73  32.460s bar13 8th 2.0  score C5       struck C5       frame   974  oboe:C5:key
+ 74  32.880s bar13 8th 3.0  score A#4      struck A#4      frame   986  oboe:A#4:key
+ 75  33.300s bar13 8th 4.0  score G#4      struck G#4      frame   999  oboe:G#4:key
+ 76  33.720s bar13 8th 5.0  score A#4      struck A#4      frame  1012  oboe:A#4:key
+ 77  34.140s bar13 8th 6.0  score C5       struck C5       frame  1024  oboe:C5:key
+ 78  34.560s bar14 8th 1.0  score D#5      struck D#5      frame  1037  oboe:D#5:key
+ 79  34.980s bar14 8th 2.0  score C5       struck C5       frame  1049  oboe:C5:key
+ 80  35.400s bar14 8th 3.0  score A#4      struck A#4      frame  1062  oboe:A#4:key
+ 81  35.820s bar14 8th 4.0  score G#4      struck G#4      frame  1075  oboe:G#4:key
+ 82  36.240s bar14 8th 5.0  score A#4      struck A#4      frame  1087  oboe:A#4:key
+ 83  36.450s bar14 8th 5.5  score C5       struck C5       frame  1093  oboe:C5:key
+ 84  36.660s bar14 8th 6.0  score A#4      struck A#4      frame  1100  oboe:A#4:key
+ 85  36.870s bar14 8th 6.5  score C5       struck C5       frame  1106  oboe:C5:key
+ 86  37.080s bar15 8th 1.0  score D#5      struck D#5      frame  1112  oboe:D#5:key
+ 87  37.500s bar15 8th 2.0  score C5       struck C5       frame  1125  oboe:C5:key
+ 88  37.920s bar15 8th 3.0  score D#5      struck D#5      frame  1138  oboe:D#5:key
+ 89  38.340s bar15 8th 4.0  score E5       struck E5       frame  1150  oboe:E5:key
+ 90  38.760s bar15 8th 5.0  score C#5      struck C#5      frame  1163  oboe:C#5:key
+ 91  39.180s bar15 8th 6.0  score E5       struck E5       frame  1175  oboe:E5:key
+ 92  39.600s bar16 8th 1.0  score F#5      struck F#5      frame  1188  oboe:F#5:key
+ 93  40.020s bar16 8th 2.0  score D#5      struck D#5      frame  1201  oboe:D#5:key
+ 94  40.440s bar16 8th 3.0  score C#5      struck C#5      frame  1213  oboe:C#5:key
+ 95  40.860s bar16 8th 4.0  score B4       struck B4       frame  1226  oboe:B4:lever
+ 96  42.120s bar17 8th 1.0  score F#6      struck F#6      frame  1264  flute:F#6:key
+ 97  42.540s bar17 8th 2.0  score D#6      struck D#6      frame  1276  flute:D#6:key
+ 98  42.960s bar17 8th 3.0  score C#6      struck C#6      frame  1289  flute:C#6:key
+ 99  43.380s bar17 8th 4.0  score B5       struck B5       frame  1301  flute:B5:key
+100  43.800s bar17 8th 5.0  score C#6      struck C#6      frame  1314  flute:C#6:key
+101  44.010s bar17 8th 5.5  score D#6      struck D#6      frame  1320  flute:D#6:key
+102  44.220s bar17 8th 6.0  score C#6      struck C#6      frame  1327  flute:C#6:key
+103  44.430s bar17 8th 6.5  score D#6      struck D#6      frame  1333  flute:D#6:key
+104  44.640s bar18 8th 1.0  score F#5      struck F#5      frame  1339  flute:F#5:key
+105  45.060s bar18 8th 2.0  score D#5      struck D#5      frame  1352  flute:D#5:key
+106  45.480s bar18 8th 3.0  score C#5      struck C#5      frame  1364  flute:C#5:key
+107  45.900s bar18 8th 4.0  score B4       struck B4       frame  1377  flute:B4:key
+108  46.320s bar18 8th 5.0  score C#5      struck C#5      frame  1390  flute:C#5:key
+109  46.530s bar18 8th 5.5  score D#5      struck D#5      frame  1396  flute:D#5:key
+110  46.740s bar18 8th 6.0  score C#5      struck C#5      frame  1402  flute:C#5:key
+111  46.950s bar18 8th 6.5  score D#5      struck D#5      frame  1408  flute:D#5:key
+112  47.160s bar19 8th 1.0  score F#6      struck F#6      frame  1415  flute:F#6:key
+113  47.580s bar19 8th 2.0  score D#6      struck D#6      frame  1427  flute:D#6:key
+114  48.000s bar19 8th 3.0  score B5       struck B5       frame  1440  flute:B5:key
+115  48.420s bar19 8th 4.0  score F#5      struck F#5      frame  1453  flute:F#5:key
+116  48.840s bar19 8th 5.0  score D#5      struck D#5      frame  1465  flute:D#5:key
+117  49.260s bar19 8th 6.0  score B4       struck B4       frame  1478  flute:B4:key
+118  49.680s bar20 8th 1.0  score F#6      struck F#6      frame  1490  flute:F#6:key
+119  50.100s bar20 8th 2.0  score D#6      struck D#6      frame  1503  flute:D#6:key
+120  50.520s bar20 8th 3.0  score B5       struck B5       frame  1516  flute:B5:key
+121  50.940s bar20 8th 4.0  score F#5      struck F#5      frame  1528  flute:F#5:key
+122  51.360s bar20 8th 5.0  score D#5      struck D#5      frame  1541  flute:D#5:key
+123  51.780s bar20 8th 6.0  score B4       struck B4       frame  1553  flute:B4:key
+124  52.200s bar21 8th 1.0  score B5+B4    struck B4+B5    frame  1566  flute:B5:pkey oboe:B4:pkey
+125  52.620s bar21 8th 2.0  score G#5+G#4  struck G#4+G#5  frame  1579  flute:G#5:pkey oboe:G#4:pkey
+126  53.040s bar21 8th 3.0  score F#5+F#4  struck F#4+F#5  frame  1591  flute:F#5:pkey oboe:F#4:pkey
+127  53.460s bar21 8th 4.0  score E5+E4    struck E4+E5    frame  1604  flute:E5:pkey oboe:E4:pkey
+128  53.880s bar21 8th 5.0  score F#5+F#4  struck F#4+F#5  frame  1616  flute:F#5:pkey oboe:F#4:pkey
+129  54.300s bar21 8th 6.0  score G#5+G#4  struck G#4+G#5  frame  1629  flute:G#5:pkey oboe:G#4:pkey
+130  54.720s bar22 8th 1.0  score B5+B4    struck B4+B5    frame  1642  flute:B5:pkey oboe:B4:pkey
+131  55.140s bar22 8th 2.0  score G#5+G#4  struck G#4+G#5  frame  1654  flute:G#5:pkey oboe:G#4:pkey
+132  55.560s bar22 8th 3.0  score F#5+F#4  struck F#4+F#5  frame  1667  flute:F#5:pkey oboe:F#4:pkey
+133  55.980s bar22 8th 4.0  score E5+E4    struck E4+E5    frame  1679  flute:E5:pkey oboe:E4:pkey
+134  56.400s bar22 8th 5.0  score F#5+F#4  struck F#4+F#5  frame  1692  flute:F#5:pkey oboe:F#4:pkey
+135  56.610s bar22 8th 5.5  score G#5+G#4  struck G#4+G#5  frame  1698  flute:G#5:pkey oboe:G#4:pkey
+136  56.820s bar22 8th 6.0  score F#5+F#4  struck F#4+F#5  frame  1705  flute:F#5:pkey oboe:F#4:pkey
+137  57.030s bar22 8th 6.5  score G#5+G#4  struck G#4+G#5  frame  1711  flute:G#5:pkey oboe:G#4:pkey
+138  57.240s bar23 8th 1.0  score B5+B4    struck B4+B5    frame  1717  flute:B5:pkey oboe:B4:pkey
+139  57.660s bar23 8th 2.0  score G#5+G#4  struck G#4+G#5  frame  1730  flute:G#5:pkey oboe:G#4:pkey
+140  58.080s bar23 8th 3.0  score B5+B4    struck B4+B5    frame  1742  flute:B5:pkey oboe:B4:pkey
+141  58.500s bar23 8th 4.0  score C#6+C#5  struck C#5+C#6  frame  1755  flute:C#6:pkey oboe:C#5:pkey
+142  58.920s bar23 8th 5.0  score G#5+G#4  struck G#4+G#5  frame  1768  flute:G#5:pkey oboe:G#4:pkey
+143  59.340s bar23 8th 6.0  score C#6+C#5  struck C#5+C#6  frame  1780  flute:C#6:pkey oboe:C#5:pkey
+144  59.760s bar24 8th 1.0  score B5+B4    struck B4+B5    frame  1793  flute:B5:pkey oboe:B4:pkey
+145  60.180s bar24 8th 2.0  score G#5+G#4  struck G#4+G#5  frame  1805  flute:G#5:pkey oboe:G#4:pkey
+146  60.600s bar24 8th 3.0  score F#5+F#4  struck F#4+F#5  frame  1818  flute:F#5:pkey oboe:F#4:pkey
+147  61.020s bar24 8th 4.0  score E5+E4    struck E4+E5    frame  1831  flute:E5:cup oboe:E4:cup
+gate   1.800s bar 1 8th 1.0 chord  E3+B3+G#4  frame 54
+gate   4.320s bar 2 8th 1.0 chord  E3+B3+G#4  frame 130
+gate   6.840s bar 3 8th 1.0 chord  E3+B3+G#4  frame 205
+gate   8.100s bar 3 8th 4.0 chord  C#3+G#3+E4  frame 243
+gate   9.360s bar 4 8th 1.0 chord  E3+B3+G#4  frame 281
+gate  10.620s bar 4 8th 4.0 chord  E3+B3  frame 319
+gate  11.040s bar 4 8th 5.0 single G#3  frame 331
+gate  11.460s bar 4 8th 6.0 single F#3  frame 344
+gate  11.880s bar 5 8th 1.0 chord  E2+B2+E3  frame 356
+gate  14.400s bar 6 8th 1.0 chord  E2+B2+E3  frame 432
+gate  16.920s bar 7 8th 1.0 chord  E2+B2+G#3  frame 508
+gate  18.180s bar 7 8th 4.0 chord  C#3+G#3+C#4  frame 545
+gate  19.440s bar 8 8th 1.0 chord  G#2+D#3+C4  frame 583
+gate  20.700s bar 8 8th 4.0 chord  C4+D#4  frame 621
+gate  21.120s bar 8 8th 5.0 single C4  frame 634
+gate  21.540s bar 8 8th 6.0 single A#3  frame 646
+gate  21.960s bar 9 8th 1.0 chord  G#3+D#4+C5  frame 659
+gate  24.480s bar10 8th 1.0 chord  G#3+D#4+C5  frame 734
+gate  27.000s bar11 8th 1.0 chord  G#3+D#4+C5  frame 810
+gate  28.260s bar11 8th 4.0 chord  E3+C4+G#4  frame 848
+gate  29.520s bar12 8th 1.0 chord  G#3+D#4+C5  frame 886
+gate  30.780s bar12 8th 4.0 single D#4  frame 923
+gate  31.200s bar12 8th 5.0 single C4  frame 936
+gate  31.620s bar12 8th 6.0 single A#3  frame 949
+gate  32.040s bar13 8th 1.0 chord  G#2+D#3+G#3  frame 961
+gate  34.560s bar14 8th 1.0 chord  G#2+D#3+G#3  frame 1037
+gate  37.080s bar15 8th 1.0 chord  G#2+D#3+C4  frame 1112
+gate  38.340s bar15 8th 4.0 chord  C#3+G#3+E4  frame 1150
+gate  39.600s bar16 8th 1.0 chord  B2+F#3+D#4  frame 1188
+gate  40.860s bar16 8th 4.0 single F#4  frame 1226
+gate  41.280s bar16 8th 5.0 single D#4  frame 1238
+gate  41.700s bar16 8th 6.0 single C#4  frame 1251
+gate  42.120s bar17 8th 1.0 chord  B3+F#4+D#5  frame 1264
+gate  44.640s bar18 8th 1.0 chord  B2+F#3+D#4  frame 1339
+gate  47.160s bar19 8th 1.0 chord  B3+F#4+D#5  frame 1415
+gate  48.420s bar19 8th 4.0 chord  B2+F#3+D#4  frame 1453
+gate  49.680s bar20 8th 1.0 chord  B3+A4+D#5  frame 1490
+gate  50.940s bar20 8th 4.0 chord  B2+B3+D#4+A4  frame 1528
+gate  52.200s bar21 8th 1.0 chord  E2+E4+G#4+B4  frame 1566
+gate  54.720s bar22 8th 1.0 chord  E2+E4+G#4+B4  frame 1642
+gate  57.240s bar23 8th 1.0 chord  E2+E4+G#4+B4  frame 1717
+gate  58.500s bar23 8th 4.0 chord  E2+E4+G#4+C#5  frame 1755
+gate  59.760s bar24 8th 1.0 chord  E2+E4+G#4+B4  frame 1793
+gate  61.020s bar24 8th 4.0 final  E2+E4+G#4+B4  frame 1831
+melody_notes 148
+melody_wrong_or_missing []
+melody_time_error_max_s 0.0
+accomp_onsets 44
+accomp_wrong_or_missing []
+contact_gap_nearest_frame_max_m 0.042
+contact_gap_mean_m 0.015
+contact_gap_worst [(0.04193498789645733, 'oboe', 'basket', 21.18), (0.04098607401451057, 'oboe', 'key', 11.88), (0.039238680063308, 'flute', 'key', 22.38)]
+contact_gap_exact_time_max_m 0.0
+collisions {}
+collision_examples {}
+collision_worst_pen_m 0.0
+min_ball_surface_gap (0.193, 'flute', 'oboe', 52.1)
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) 1.412
+worst_ratio_at ('oboe', np.float64(51.7), np.float64(0.57), np.float64(0.8))
+flight_speed_ratio_max(v>2) 1.112
+mechanism_speed_change_per_frame_max_mps 0.099
+mechanism_worst ('dawn', np.float64(62.29), np.float64(0.15), np.float64(0.05))
+bounce_speed_out_over_in_max 0.9871
+restitution_range (0.26, 0.969)
+key_tilt_max_deg 33.7
+ramp_lip_speeds [1.6, 1.6, 1.6, 1.6]
