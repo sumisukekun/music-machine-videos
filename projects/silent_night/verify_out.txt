@@ -1,0 +1,26 @@
+melody_notes 92
+melody_missing_or_wrong []
+melody_time_err 0.0
+bass_notes 39
+bass_missing []
+pair_notes 31
+pair_missing []
+final_count [63.08, 1818]
+contact_gap_nearest_frame_max_m 0.09
+contact_gap_mean_m 0.027
+contact_gap_exact_time_max_m 0.0
+contact_gap_nearest_frame_by_role(max, mean) {'melody': (0.082, 0.023), 'bass': (0.075, 0.037), 'pair': (0.09, 0.037)}
+collisions {}
+collision_examples {}
+collision_worst_pen_m 0.0
+min_ball_surface_gap_m (0.1, 'pairlo', 'pairhi', 63.07)
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) 1.4
+worst_ratio_at ('solo', 0.8, 0.58, 0.82)
+ramp_speed_change_per_frame_max_mps 0.582
+bounce_speed_out_over_in_max 0.9963
+restitution_range (0.359, 0.975)
+dead_landings(final) 10
+key_tilt_max_deg 31.9
+seesaw_energy (5.46, 2.91)
+lights {'total': 1818, 'last': [63.08, 1818], 'by_balls': 400}

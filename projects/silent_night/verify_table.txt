@@ -1,0 +1,188 @@
+mel   0   1.700s bar 1 eighth1.0  G4   frame    51.0 balls 1
+mel   1   2.330s bar 1 eighth2.5  A4   frame    69.9 balls 1
+mel   2   2.540s bar 1 eighth3.0  G4   frame    76.2 balls 1
+mel   3   2.960s bar 1 eighth4.0  E4   frame    88.8 balls 1
+mel   4   4.220s bar 2 eighth1.0  G4   frame   126.6 balls 1
+mel   5   4.850s bar 2 eighth2.5  A4   frame   145.5 balls 1
+mel   6   5.060s bar 2 eighth3.0  G4   frame   151.8 balls 1
+mel   7   5.480s bar 2 eighth4.0  E4   frame   164.4 balls 1
+mel   8   6.740s bar 3 eighth1.0  D5   frame   202.2 balls 1
+mel   9   7.580s bar 3 eighth3.0  D5   frame   227.4 balls 1
+mel  10   8.000s bar 3 eighth4.0  B4   frame   240.0 balls 1
+mel  11   9.260s bar 4 eighth1.0  C5   frame   277.8 balls 1
+mel  12  10.100s bar 4 eighth3.0  C5   frame   303.0 balls 1
+mel  13  10.520s bar 4 eighth4.0  G4   frame   315.6 balls 1
+mel  14  11.780s bar 5 eighth1.0  A4   frame   353.4 balls 1
+mel  15  12.620s bar 5 eighth3.0  A4   frame   378.6 balls 1
+mel  16  13.040s bar 5 eighth4.0  C5   frame   391.2 balls 1
+mel  17  13.670s bar 5 eighth5.5  B4   frame   410.1 balls 1
+mel  18  13.880s bar 5 eighth6.0  A4   frame   416.4 balls 1
+mel  19  14.300s bar 6 eighth1.0  G4   frame   429.0 balls 1
+mel  20  14.930s bar 6 eighth2.5  A4   frame   447.9 balls 1
+mel  21  15.140s bar 6 eighth3.0  G4   frame   454.2 balls 1
+mel  22  15.560s bar 6 eighth4.0  E4   frame   466.8 balls 1
+mel  23  16.820s bar 7 eighth1.0  A4   frame   504.6 balls 1
+mel  24  17.660s bar 7 eighth3.0  A4   frame   529.8 balls 1
+mel  25  18.080s bar 7 eighth4.0  C5   frame   542.4 balls 1
+mel  26  18.710s bar 7 eighth5.5  B4   frame   561.3 balls 1
+mel  27  18.920s bar 7 eighth6.0  A4   frame   567.6 balls 1
+mel  28  19.340s bar 8 eighth1.0  G4   frame   580.2 balls 1
+mel  29  19.970s bar 8 eighth2.5  A4   frame   599.1 balls 1
+mel  30  20.180s bar 8 eighth3.0  G4   frame   605.4 balls 1
+mel  31  20.600s bar 8 eighth4.0  E4   frame   618.0 balls 1
+mel  32  21.860s bar 9 eighth1.0  D5   frame   655.8 balls 1
+mel  33  22.700s bar 9 eighth3.0  D5   frame   681.0 balls 1
+mel  34  23.120s bar 9 eighth4.0  F5   frame   693.6 balls 1
+mel  35  23.750s bar 9 eighth5.5  D5   frame   712.5 balls 1
+mel  36  23.960s bar 9 eighth6.0  B4   frame   718.8 balls 1
+mel  37  24.380s bar10 eighth1.0  C5   frame   731.4 balls 1
+mel  38  25.640s bar10 eighth4.0  E5   frame   769.2 balls 1
+mel  39  26.900s bar11 eighth1.0  C5   frame   807.0 balls 1
+mel  40  27.530s bar11 eighth2.5  G4   frame   825.9 balls 1
+mel  41  27.740s bar11 eighth3.0  E4   frame   832.2 balls 1
+mel  42  28.160s bar11 eighth4.0  G4   frame   844.8 balls 1
+mel  43  28.790s bar11 eighth5.5  F4   frame   863.7 balls 1
+mel  44  29.000s bar11 eighth6.0  D4   frame   870.0 balls 1
+mel  45  29.420s bar12 eighth1.0  C4   frame   882.6 balls 1
+mel  46  31.940s bar13 eighth1.0  G4   frame   958.2 balls 2
+mel  47  32.570s bar13 eighth2.5  A4   frame   977.1 balls 2
+mel  48  32.780s bar13 eighth3.0  G4   frame   983.4 balls 2
+mel  49  33.200s bar13 eighth4.0  E4   frame   996.0 balls 3
+mel  50  34.460s bar14 eighth1.0  G4   frame  1033.8 balls 4
+mel  51  35.090s bar14 eighth2.5  A4   frame  1052.7 balls 4
+mel  52  35.300s bar14 eighth3.0  G4   frame  1059.0 balls 4
+mel  53  35.720s bar14 eighth4.0  E4   frame  1071.6 balls 5
+mel  54  36.980s bar15 eighth1.0  D5   frame  1109.4 balls 6
+mel  55  37.820s bar15 eighth3.0  D5   frame  1134.6 balls 6
+mel  56  38.240s bar15 eighth4.0  B4   frame  1147.2 balls 6
+mel  57  39.500s bar16 eighth1.0  C5   frame  1185.0 balls 6
+mel  58  40.340s bar16 eighth3.0  C5   frame  1210.2 balls 6
+mel  59  40.760s bar16 eighth4.0  G4   frame  1222.8 balls 6
+mel  60  42.020s bar17 eighth1.0  A4   frame  1260.6 balls 6
+mel  61  42.860s bar17 eighth3.0  A4   frame  1285.8 balls 6
+mel  62  43.280s bar17 eighth4.0  C5   frame  1298.4 balls 6
+mel  63  43.910s bar17 eighth5.5  B4   frame  1317.3 balls 6
+mel  64  44.120s bar17 eighth6.0  A4   frame  1323.6 balls 6
+mel  65  44.540s bar18 eighth1.0  G4   frame  1336.2 balls 6
+mel  66  45.170s bar18 eighth2.5  A4   frame  1355.1 balls 6
+mel  67  45.380s bar18 eighth3.0  G4   frame  1361.4 balls 6
+mel  68  45.800s bar18 eighth4.0  E4   frame  1374.0 balls 6
+mel  69  47.060s bar19 eighth1.0  A4   frame  1411.8 balls 6
+mel  70  47.900s bar19 eighth3.0  A4   frame  1437.0 balls 6
+mel  71  48.320s bar19 eighth4.0  C5   frame  1449.6 balls 6
+mel  72  48.950s bar19 eighth5.5  B4   frame  1468.5 balls 6
+mel  73  49.160s bar19 eighth6.0  A4   frame  1474.8 balls 6
+mel  74  49.580s bar20 eighth1.0  G4   frame  1487.4 balls 6
+mel  75  50.210s bar20 eighth2.5  A4   frame  1506.3 balls 6
+mel  76  50.420s bar20 eighth3.0  G4   frame  1512.6 balls 6
+mel  77  50.840s bar20 eighth4.0  E4   frame  1525.2 balls 6
+mel  78  52.100s bar21 eighth1.0  D5   frame  1563.0 balls 6
+mel  79  52.940s bar21 eighth3.0  D5   frame  1588.2 balls 6
+mel  80  53.360s bar21 eighth4.0  F5   frame  1600.8 balls 6
+mel  81  53.990s bar21 eighth5.5  D5   frame  1619.7 balls 6
+mel  82  54.200s bar21 eighth6.0  B4   frame  1626.0 balls 6
+mel  83  54.620s bar22 eighth1.0  C5   frame  1638.6 balls 6
+mel  84  55.880s bar22 eighth4.0  E5   frame  1676.4 balls 6
+mel  85  57.140s bar23 eighth1.0  C5   frame  1714.2 balls 6
+mel  86  57.796s bar23 eighth2.5  G4   frame  1733.9 balls 6
+mel  87  58.027s bar23 eighth3.0  E4   frame  1740.8 balls 6
+mel  88  58.505s bar23 eighth4.0  G4   frame  1755.2 balls 6
+mel  89  59.266s bar23 eighth5.5  F4   frame  1778.0 balls 6
+mel  90  59.532s bar23 eighth6.0  D4   frame  1786.0 balls 6
+mel  91  60.080s bar24 eighth1.0  C4   frame  1802.4 balls 6
+bass  11.780s bar 5 eighth1 F3  chord ['C', 'F', 'A']
+bass  13.040s bar 5 eighth4 F3  chord ['C', 'E', 'F', 'A']
+bass  14.300s bar 6 eighth1 C3  chord ['C', 'E', 'G']
+bass  15.560s bar 6 eighth4 C3  chord ['C', 'E', 'G']
+bass  16.820s bar 7 eighth1 F3  chord ['C', 'F', 'A']
+bass  18.080s bar 7 eighth4 F3  chord ['C', 'F', 'A']
+bass  19.340s bar 8 eighth1 C3  chord ['C', 'E', 'G']
+bass  20.600s bar 8 eighth4 C3  chord ['C', 'E', 'G']
+bass  21.860s bar 9 eighth1 G2  chord ['D', 'F', 'G', 'B']
+bass  23.120s bar 9 eighth4 B2  chord ['D', 'F', 'G', 'B']
+bass  24.380s bar10 eighth1 C3  chord ['C', 'E']
+bass  25.640s bar10 eighth4 C3  chord ['C', 'E', 'G']
+bass  26.900s bar11 eighth1 C3  chord ['C', 'E', 'G']
+bass  28.160s bar11 eighth4 G2  chord ['G', 'B']
+bass  29.420s bar12 eighth1 C3  chord ['C', 'E']
+bass  30.680s bar12 eighth4 C3  chord ['C', 'E']
+bass  31.940s bar13 eighth1 C3  chord ['C', 'E', 'G']
+bass  33.200s bar13 eighth4 C3  chord ['C', 'E', 'G']
+bass  34.460s bar14 eighth1 C3  chord ['C', 'E', 'G']
+bass  35.720s bar14 eighth4 C3  chord ['C', 'E', 'G']
+bass  36.980s bar15 eighth1 G2  chord ['D', 'F', 'G', 'B']
+bass  38.240s bar15 eighth4 G2  chord ['D', 'F', 'G', 'B']
+bass  39.500s bar16 eighth1 C3  chord ['C', 'E']
+bass  40.760s bar16 eighth4 C3  chord ['C', 'E', 'G']
+bass  42.020s bar17 eighth1 F3  chord ['C', 'F', 'A']
+bass  43.280s bar17 eighth4 F3  chord ['C', 'E', 'F', 'A']
+bass  44.540s bar18 eighth1 C3  chord ['C', 'E', 'G']
+bass  45.800s bar18 eighth4 C3  chord ['C', 'E', 'G']
+bass  47.060s bar19 eighth1 F3  chord ['C', 'F', 'A']
+bass  48.320s bar19 eighth4 F3  chord ['C', 'F', 'A']
+bass  49.580s bar20 eighth1 C3  chord ['C', 'E', 'G']
+bass  50.840s bar20 eighth4 C3  chord ['C', 'E', 'G']
+bass  52.100s bar21 eighth1 G2  chord ['D', 'F', 'G', 'B']
+bass  53.360s bar21 eighth4 B2  chord ['D', 'F', 'G', 'B']
+bass  54.620s bar22 eighth1 C3  chord ['C', 'E']
+bass  55.880s bar22 eighth4 C3  chord ['C', 'E', 'G']
+bass  57.140s bar23 eighth1 C3  chord ['C', 'E', 'G']
+bass  58.505s bar23 eighth4 G2  chord ['G', 'B']
+bass  60.080s bar24 eighth1 C3  chord ['C', 'E']
+pair  22.280s bar 9 eighth2 B3+F4  chord ['D', 'F', 'G', 'B']
+pair  23.540s bar 9 eighth5 D4+G4  chord ['D', 'F', 'G', 'B']
+pair  24.800s bar10 eighth2 C4+E4  chord ['C', 'E']
+pair  26.060s bar10 eighth5 C4+G4  chord ['C', 'E', 'G']
+pair  27.320s bar11 eighth2 G3+E4  chord ['C', 'E', 'G']
+pair  28.580s bar11 eighth5 G3+B3  chord ['G', 'B']
+pair  29.840s bar12 eighth2 E3+C4  chord ['C', 'E']
+pair  31.100s bar12 eighth5 E3+C4  chord ['C', 'E']
+pair  32.360s bar13 eighth2 C4+E4  chord ['C', 'E', 'G']
+pair  33.620s bar13 eighth5 G3+C4  chord ['C', 'E', 'G']
+pair  34.880s bar14 eighth2 C4+E4  chord ['C', 'E', 'G']
+pair  36.140s bar14 eighth5 G3+C4  chord ['C', 'E', 'G']
+pair  37.400s bar15 eighth2 B3+F4  chord ['D', 'F', 'G', 'B']
+pair  38.660s bar15 eighth5 D4+F4  chord ['D', 'F', 'G', 'B']
+pair  39.920s bar16 eighth2 C4+E4  chord ['C', 'E']
+pair  41.180s bar16 eighth5 C4+E4  chord ['C', 'E', 'G']
+pair  42.440s bar17 eighth2 C4+F4  chord ['C', 'F', 'A']
+pair  43.700s bar17 eighth5 E4+A4  chord ['C', 'E', 'F', 'A']
+pair  44.960s bar18 eighth2 C4+E4  chord ['C', 'E', 'G']
+pair  46.220s bar18 eighth5 G3+C4  chord ['C', 'E', 'G']
+pair  47.480s bar19 eighth2 F3+C4  chord ['C', 'F', 'A']
+pair  48.740s bar19 eighth5 F4+A4  chord ['C', 'F', 'A']
+pair  50.000s bar20 eighth2 C4+E4  chord ['C', 'E', 'G']
+pair  51.260s bar20 eighth5 G3+C4  chord ['C', 'E', 'G']
+pair  52.520s bar21 eighth2 B3+F4  chord ['D', 'F', 'G', 'B']
+pair  53.780s bar21 eighth5 D4+G4  chord ['D', 'F', 'G', 'B']
+pair  55.040s bar22 eighth2 C4+E4  chord ['C', 'E']
+pair  56.300s bar22 eighth5 C4+G4  chord ['C', 'E', 'G']
+pair  57.572s bar23 eighth2 G3+E4  chord ['C', 'E', 'G']
+pair  59.007s bar23 eighth5 G3+B3  chord ['G', 'B']
+pair  60.080s bar24 eighth1 E3+C4  chord ['C', 'E']
+melody_notes 92
+melody_missing_or_wrong []
+melody_time_err 0.0
+bass_notes 39
+bass_missing []
+pair_notes 31
+pair_missing []
+final_count [63.08, 1818]
+contact_gap_nearest_frame_max_m 0.09
+contact_gap_mean_m 0.027
+contact_gap_exact_time_max_m 0.0
+contact_gap_nearest_frame_by_role(max, mean) {'melody': (0.082, 0.023), 'bass': (0.075, 0.037), 'pair': (0.09, 0.037)}
+collisions {}
+collision_examples {}
+collision_worst_pen_m 0.0
+min_ball_surface_gap_m (0.1, 'pairlo', 'pairhi', 63.07)
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) 1.4
+worst_ratio_at ('solo', 0.8, 0.58, 0.82)
+ramp_speed_change_per_frame_max_mps 0.582
+bounce_speed_out_over_in_max 0.9963
+restitution_range (0.359, 0.975)
+dead_landings(final) 10
+key_tilt_max_deg 31.9
+seesaw_energy (5.46, 2.91)
+lights {'total': 1818, 'last': [63.08, 1818], 'by_balls': 400}
