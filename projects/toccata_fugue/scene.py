@@ -14,8 +14,11 @@ MODE = args[0] if args else 'test'
 HERE = os.path.dirname(os.path.abspath(__file__))
 EVJ = json.load(open(f'{HERE}/events.json')); LEAD = json.load(open(f'{HERE}/lead.json')); LAY = json.load(open(f'{HERE}/layout.json'))
 S = EVJ['secs']; FPS = 30; FINAL = EVJ['final']; T_END = S['end']
-NF = int((T_END + 3.4) * FPS); T = np.arange(NF) / FPS
+NF = int((T_END + EVJ['tail']) * FPS); T = np.arange(NF) / FPS
 G = LAY['G']; R = LAY['R']; P = LAY['parts']; KEYS = LAY['keys']
+# finale: after the flood the whole organ lights up (a wave from the golden pipes outwards) while the full organ holds the
+# fermata; at the release the light dies away with the reverb and the title card comes up
+T_WAVE = P['final']['t_last'] + 2.6; T_REL = FINAL + EVJ['hold']; X_WAVE = 25.4
 rng = np.random.default_rng(11)
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -186,6 +189,17 @@ def pulse(times, decay=5.0, length=16, amp=1.0):
     for t in times:
         f0 = int(round(t * FPS)); m_ = np.arange(max(0, f0), min(NF, f0 + length))
         a[m_] = np.maximum(a[m_], amp * np.exp(-(m_ - f0) / decay))
+    return a
+
+
+def wave_glow(x, peak=1.0, sus=0.7):
+    """finale light wave: reaches x at T_WAVE + 0.06 |x - X_WAVE|, holds while the chord is held, fades with the reverb"""
+    t0 = T_WAVE + 0.06 * abs(x - X_WAVE); a = np.zeros(NF)
+    for f in range(NF):
+        t = T[f]
+        if t < t0: continue
+        a[f] = (sus + (peak - sus) * math.exp(-(t - t0) / 0.35)) * min(1.0, (t - t0) / 0.12)
+        if t > T_REL: a[f] *= math.exp(-(t - T_REL) / 1.1)
     return a
 
 
@@ -423,7 +437,7 @@ def pipe_flat(x0, x1, zb, y, pitches, scale=1.0, r0=0.09):
         foot = obj(prim('cone', M_PIPE, 16, 1.0, 0.25, 1.0), 'foot'); foot.location = (x, y, zb + 0.175); foot.scale = (rr, rr, 0.35)
         mouth = box((x, y - rr * 0.8, zb + 0.5), (rr * 1.1, 0.02, rr * 0.9), M_PLATE, name='mouth')
         col = (0.33, 0.34, 0.38)
-        a = held([q[0] for q in ACTIVE.get(p, [])], [q[1] for q in ACTIVE.get(p, [])], 1.0, 0.55, 5.0)
+        a = np.maximum(held([q[0] for q in ACTIVE.get(p, [])], [q[1] for q in ACTIVE.get(p, [])], 1.0, 0.55, 5.0), wave_glow(x))
         for ob in (o, foot):
             ob.color = (*col, 0); key_series(ob, 'color', 3, a, 1e-3)
         out.append(o)
@@ -734,7 +748,14 @@ spot((6.0, -6.5, 7.0), (6.0, 0.6, 1.8), 2000.0, (1.0, 0.8, 0.55), 45)          #
 spot((13.0, -6.5, 7.0), (13.0, 0.6, 1.5), 2000.0, (1.0, 0.8, 0.55), 45)        # upper stairs, landing
 spot((18.5, -6.5, 5.0), (18.0, 0.6, -1.0), 2000.0, (1.0, 0.8, 0.55), 45)       # cascade
 spot((23.5, -6.5, 3.0), (23.5, 0.4, -2.8), 1700.0, (1.0, 0.8, 0.55), 48)       # solo / pedal II
-area((0.0, 1.8, 11.0), (math.radians(-160), 0, 0), 3.0, 120.0, (0.5, 0.6, 1.0))            # rose window glow
+rose = area((0.0, 1.8, 11.0), (math.radians(-160), 0, 0), 3.0, 120.0, (0.5, 0.6, 1.0))            # rose window glow
+WG = {x_: wave_glow(x_, 1.0, 0.8) for x_ in (0.0, 8.0, 16.0)}
+for f in range(NF):
+    if f % 3 == 0 or f == NF - 1: rose.energy = 120.0 + 700.0 * WG[0.0][f]; rose.keyframe_insert('energy', frame=f)
+for (x_, z_) in ((8.0, 7.5), (16.0, 6.5)):                                                   # the façade pipes catch the wave
+    li_ = area((x_, -2.0, z_), (math.radians(60), 0, 0), 6.0, 0.0, (1.0, 0.72, 0.38))
+    for f in range(NF):
+        if f % 3 == 0 or f == NF - 1: li_.energy = 900.0 * WG[x_][f]; li_.keyframe_insert('energy', frame=f)
 inner = area((0.0, 3.1, 2.6), (math.radians(90), 0, 0), 2.6, 0.0, (1.0, 0.55, 0.22))        # light from inside the door
 for f in range(NF):
     v = 1400.0 * ease((T[f] - D['t_open0']) / (D['t_open1'] - D['t_open0']))
@@ -742,7 +763,7 @@ for f in range(NF):
         inner.energy = v; inner.keyframe_insert('energy', frame=f)
 fl_ = area((25.4, -2.5, 3.0), (math.radians(40), 0, 0), 6.0, 0.0, (1.0, 0.75, 0.35))          # the flood lights up the golden pipes
 for f in range(NF):
-    v = 1400.0 * ease((T[f] - FI['t_final'] + 0.2) / 0.6)
+    v = 1400.0 * ease((T[f] - FI['t_final'] + 0.2) / 0.6) * (1.0 if T[f] <= T_REL else 0.25 + 0.75 * math.exp(-(T[f] - T_REL) / 1.1))
     if f % 3 == 0 or f == NF - 1: fl_.energy = v; fl_.keyframe_insert('energy', frame=f)
 
 # ---------------- camera ----------------
@@ -751,6 +772,7 @@ CK = [  # t, x, z, width
     (10.3, 0.4, 4.9, 5.0), (13.6, 0.6, 4.4, 5.2), (14.9, 0.9, 3.4, 6.2), (16.1, 0.2, 3.6, 7.0), (18.6, 0.4, 2.5, 6.0),
     (20.6, 0.9, 1.6, 5.0)]
 FOC = np.zeros((NF, 3)); WID = np.zeros(NF)
+CAM_END = (21.0, 2.4, 17.0)                                                    # x, z, width of the closing wide shot
 tri = ['T0', 'T1', 'T2']
 for f in range(NF):
     t = T[f]
@@ -771,6 +793,8 @@ for f in range(NF):
     else:
         u = ease((t - FI['t_last'] - 0.3) / 2.5)
         FOC[f] = (25.5 - 1.5 * u, 0, -0.4 + 1.3 * u); WID[f] = 8.6 + 3.4 * u
+        u2 = ease((t - T_WAVE + 0.2) / 3.2)                                     # pull back: the whole organ lit
+        FOC[f] = (FOC[f][0] + (CAM_END[0] - FOC[f][0]) * u2, 0, FOC[f][2] + (CAM_END[1] - FOC[f][2]) * u2); WID[f] += (CAM_END[2] - WID[f]) * u2
 FOC[:, 0] = smooth(FOC[:, 0], 0.3); FOC[:, 2] = smooth(FOC[:, 2], 0.35); WID = smooth(WID, 0.45)
 LENS = 35.0
 camd = bpy.data.cameras.new('cam'); camd.lens = LENS; camd.sensor_fit = 'VERTICAL'; camd.sensor_height = 24; camd.clip_end = 400
@@ -828,8 +852,17 @@ for o_ in (hudtext('565 marbles = BWV 565', 0, hh_ * 0.03, hh_ * 0.042, M_TXTG, 
            hudtext('Did you notice?', 0, -hh_ * 0.022, hh_ * 0.03, M_TXT, w=hw_ * 0.9),
            hudtext('ビー玉565個 = BWV 565', 0, -hh_ * 0.058, hh_ * 0.02, M_TXTJ, w=hw_ * 0.9)):
     o_.parent = endc
-ev_ = np.array([0.001 if t < FI['t_last'] + 0.35 else min(1.0, (t - FI['t_last'] - 0.35) * 3) for t in T])
+ev_ = np.array([0.001 if t < FI['t_last'] + 0.35 else max(0.001, min(1.0, (t - FI['t_last'] - 0.35) * 3, 1 - (t - T_REL) * 4)) for t in T])
 for k in range(3): key_series(endc, 'scale', k, ev_, 1e-3)
+# title card after the release: the piece and the composer
+endt = link(bpy.data.objects.new('endt', None)); endt.parent = hud; endt.location = (0, -hh_ * 0.33, 0)
+ep2 = box((0, 0, -0.01), (hw_ * 0.98, hh_ * 0.17, 0.005), M_HPL, name='endplate2'); ep2.parent = endt
+for o_ in (hudtext('Toccata and Fugue in D minor', 0, hh_ * 0.036, hh_ * 0.04, M_TXTG, font=FONT_SERIF, w=hw_ * 0.92),
+           hudtext('J. S. Bach  ·  BWV 565', 0, -hh_ * 0.016, hh_ * 0.032, M_TXT, font=FONT_SERIF, w=hw_ * 0.8),
+           hudtext('バッハ「トッカータとフーガ ニ短調」', 0, -hh_ * 0.058, hh_ * 0.022, M_TXTJ, w=hw_ * 0.9)):
+    o_.parent = endt
+et_ = np.array([0.001 if t < T_REL + 0.3 else min(1.0, (t - T_REL - 0.3) * 3) for t in T])
+for k in range(3): key_series(endt, 'scale', k, et_, 1e-3)
 for o in bpy.data.objects:
     p_ = o
     while p_.parent is not None: p_ = p_.parent

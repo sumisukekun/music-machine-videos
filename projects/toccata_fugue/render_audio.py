@@ -11,7 +11,7 @@ sys.argv = [sys.argv[0], sys.argv[1] if len(sys.argv) > 1 else '/home/claude/sam
 HERE = os.path.dirname(os.path.abspath(__file__)); os.chdir(HERE)
 src = open(os.path.join(HERE, 'ra_base.py')).read()
 src = src[:src.index("for t, d, role, p, v in json.load(open('notes.json')):")]
-src = src.replace("EV = json.load(open('events.json')); DUR = EV['final'] + 5.5", "EV = json.load(open('events.json')); DUR = EV['secs']['end'] + 3.4")
+src = src.replace("EV = json.load(open('events.json')); DUR = EV['final'] + 5.5", "EV = json.load(open('events.json')); DUR = EV['secs']['end'] + EV['tail']")
 exec(src)
 LEAD = json.load(open('lead.json')); LAY = json.load(open('layout.json')); P = LAY['parts']
 CRANK = Hit(sorted(glob.glob(os.path.join(ROOT, 'Percussion/Ratchet1-Slow*'))) or sorted(glob.glob(os.path.join(ROOT, 'Percussion/Ratchet1-Crank*'))))
@@ -83,6 +83,11 @@ tF = final_row[0]; dF = final_row[1]
 for p in final_row[2]:
     put(organ(p, dF, 0.3 if p > 40 else 0.5, full=True, rel=1.2), tF)
 put(organ(26, dF, 0.35, full=False, att=0.25, rel=1.5, chiff=0.0), tF)
+# finale (the whole organ lights up): more stops are drawn on the same held chord - the same six notes, no new pitches -
+# entering softly with the light wave, all released together at the end of the fermata
+T_WAVE = P['final']['t_last'] + 2.6; dW = tF + dF - T_WAVE
+for p in final_row[2]:
+    put(organ(p, dW, 0.16 if p > 40 else 0.22, full=True, att=0.6, rel=1.2, chiff=0.0), T_WAVE)
 # every marble strike: a small click of the marble on the key (so the hits read in the sound too)
 hits = []
 for n, b in LAY['balls'].items():
@@ -122,7 +127,14 @@ ir = np.stack([rngA.normal(0, 1, L_), rngA.normal(0, 1, L_)], 1) * np.exp(-tt / 
 for c in range(2): ir[:, c] = lfilter([0.25], [1, -0.72], ir[:, c])
 ir = np.concatenate([np.zeros((int(0.03 * SR), 2)), ir])
 ir /= np.sqrt((ir ** 2).sum(0)); wet = np.stack([fftconvolve(out[:, c], ir[:, c])[:N] for c in range(2)], 1)
-mix = out + 0.42 * wet
+# after the release of the last chord the cathedral keeps ringing: a longer tail only from the release onwards
+L2 = int(6.5 * SR); t2_ = np.arange(L2) / SR
+ir2 = np.stack([rngA.normal(0, 1, L2), rngA.normal(0, 1, L2)], 1) * np.exp(-t2_ / 1.1)[:, None]
+for c in range(2): ir2[:, c] = lfilter([0.25], [1, -0.8], ir2[:, c])
+ir2 /= np.sqrt((ir2 ** 2).sum(0))
+iR = int((tF + dF - 0.6) * SR); seg = out[iR:].copy(); seg[:int(0.6 * SR)] *= np.linspace(0, 1, int(0.6 * SR))[:, None]
+wet2 = np.zeros_like(out); wet2[iR:] = np.stack([fftconvolve(seg[:, c], ir2[:, c])[:N - iR] for c in range(2)], 1)
+mix = out + 0.42 * wet + 0.3 * wet2
 fade = int(1.8 * SR); mix[-fade:] *= np.linspace(1, 0, fade)[:, None]
 mix /= max(1e-6, np.abs(mix).max()) / 0.89
 sf.write('music_raw.wav', mix, SR)

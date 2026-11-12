@@ -30,7 +30,8 @@ Q10 = 1.05                     # broadening: bar 10 beat 3 (pedal) -> beat 4 (ch
 QH = 1.12                      # the held chord bar 10 beat 4 - bar 11 beat 2
 QB = 0.9                       # bar 11 (the recitative run)
 RIT12 = 0.18                   # extra time before the final chord
-HOLD12 = 5.6                   # final fermata
+HOLD12 = 8.6                   # final fermata (long cathedral fermata: the full organ rings out; no notes added)
+TAIL = 6.4                     # after the release: the cathedral's reverb dies away under the title card (video = end + TAIL)
 
 
 def build_times():
@@ -163,7 +164,7 @@ if __name__ == '__main__':
     secs = dict(call1=CALL_T[1]['a'], call2=CALL_T[2]['a'], call3=CALL_T[3]['a'], ped1=T_PED1, chord=tm(2, 3.0), dmaj=tm(3, 1.0),
                 end3=tm(3, 2.0), pick1=T_PICK1, b4=BT[4], b5=BT[5], pick2=T_PICK2, b6=BT[6], b7=BT[7], pick3=T_PICK3, b8=BT[8],
                 b9=BT[9], b10=BT[10], ped2=T_PED2, ch10=T_CH10, b11=T_B11, trill=tm(11, 3.0), final=T_FINAL, end=T_FINAL + HOLD12)
-    json.dump(dict(secs=secs, qp=QP, final=T_FINAL, hold=HOLD12), open(f'{HERE}/events.json', 'w'))
+    json.dump(dict(secs=secs, qp=QP, final=T_FINAL, hold=HOLD12, tail=TAIL), open(f'{HERE}/events.json', 'w'))
     from collections import Counter
     print('keys struck', len(rows), dict(Counter(r[3] for r in rows)))
     for k, v in secs.items(): print(f'  {k:6s} {v:7.3f}')
