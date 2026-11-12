@@ -1,0 +1,22 @@
+score_notes_checked {'mel': 151, 'bas': 137, 'rain1': 273, 'rain2': 273}
+score_mismatch {}
+events_not_struck_once []
+contact_gap_nearest_frame_max_m 0.043
+contact_gap_mean_m 0.004
+contact_gap_exact_time_max_m 0.0
+collisions {}
+collision_examples {}
+collision_worst_pen_m 0.0
+min_ball_surface_gap (1.275, 'mel', 'bas', 65.31)
+raindrops 546
+raindrop_speed_out_over_in_max 0.284
+raindrop_contact_gap_m 0.0
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) 1.4
+worst_ratio_at ('bas', np.float64(1.6), np.float64(0.58), np.float64(0.82))
+speed_after_over_before_bounce_sampled_max 1.0
+mechanism_speed_change_per_frame_max_mps 0.142
+bounce_speed_out_over_in_max 0.9927
+restitution_range (0.0, 0.969)
+key_tilt_max_deg 29.0
+duration_s 74.5
