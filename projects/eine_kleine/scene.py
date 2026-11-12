@@ -364,11 +364,15 @@ bpy.ops.mesh.primitive_plane_add(size=1.0); wall = bpy.context.object; wall.data
 wall.location = ((WX0 + WX1) / 2, WALL_Y + 0.05, -6); wall.rotation_euler = (math.pi / 2, 0, 0); wall.scale = (WX1 - WX0, 40, 1)
 M_NIGHT = emis('night', (0.05, 0.1, 0.3), 1.2)
 WIN = []
-for k, x0 in enumerate(np.arange(WX0 + 3, WX1 - 2, 6.0)):
+_WXS = np.arange(WX0 + 3, WX1 - 2, 6.0)
+XG = float(_WXS[np.argmin(np.abs(_WXS - (float(np.interp(GUST, T, POS['lamp'][:, 0])) + 0.8)))])   # the gust window: centred in the shot at the gust
+for k, x0 in enumerate(_WXS):
     zf = floor_z_at(x0)
     for dx in (-1.5, 1.5):                                   # pilasters
         box((x0 + dx + 3.0, WALL_Y - 0.15, zf + 5.5), (0.5, 0.3, 11.0), M_COL)
         box((x0 + dx + 3.0, WALL_Y - 0.32, zf + 0.25), (0.62, 0.1, 0.5), M_GOLDD)
+    box((x0 + 3.0, WALL_Y - 0.03, zf + 1.6), (3.4, 0.04, 1.8), M_PANEL); box((x0 + 3.0, WALL_Y - 0.05, zf + 1.6), (3.5, 0.03, 1.9), M_GOLDD)
+    if abs(x0 - XG) < 0.1: continue                          # built separately (the gust window)
     # tall window (night sky) with gold frame and red curtains
     box((x0, WALL_Y + 0.02, zf + 4.6), (1.9, 0.02, 4.4), M_NIGHT, name='winsky')
     for xx in (x0 - 1.0, x0 + 1.0): box((xx, WALL_Y - 0.06, zf + 4.6), (0.1, 0.12, 4.5), M_GOLD)
@@ -376,7 +380,6 @@ for k, x0 in enumerate(np.arange(WX0 + 3, WX1 - 2, 6.0)):
     box((x0, WALL_Y - 0.05, zf + 4.6), (0.05, 0.08, 4.4), M_GOLD)
     for xx in (x0 - 1.35, x0 + 1.35): box((xx, WALL_Y - 0.25, zf + 4.3), (0.45, 0.12, 5.6), M_VELVET, name='curtain')
     WIN.append((x0, zf))
-    box((x0 + 3.0, WALL_Y - 0.03, zf + 1.6), (3.4, 0.04, 1.8), M_PANEL); box((x0 + 3.0, WALL_Y - 0.05, zf + 1.6), (3.5, 0.03, 1.9), M_GOLDD)
 # stars in the windows
 for x0, zf in WIN:
     for j in range(6):
@@ -387,8 +390,10 @@ CANDLES = []                    # dict(fl=flame obj, x, on=[(t0, t1)], who)
 FUSE_V = 9.0
 X_BRAZ = EV['brazier'][0]
 def t_relight(x): return DACAPO + 0.35 + abs(x - X_BRAZ) / FUSE_V
-X_WIN_GUST = float(np.interp(GUST, T, POS['lamp'][:, 0])) + 2.6
-def t_out(x): return GUST + 0.12 + max(0.0, X_WIN_GUST - x) / 14.0
+X_WIN_GUST = XG
+def t_out(x):
+    """the wind front leaves the window: candles go out nearest-first (slowly in the shot, faster off screen)"""
+    d = max(0.0, X_WIN_GUST - x); return GUST + 0.3 + min(d, 5.0) / 4.5 + max(0.0, d - 5.0) / 14.0
 
 
 def candle(base, h=0.22, r=0.045, scale=1.0, who='lamp'):
@@ -400,17 +405,23 @@ def candle(base, h=0.22, r=0.045, scale=1.0, who='lamp'):
     return c, fe
 
 
+LEAN_T = 0.55                   # the wind reaches a candle this long before it goes out: the flame bends away and stretches
 def animate_flame(fe, on, k):
-    s = np.zeros(NF); lean = np.zeros(NF)
+    sx = np.zeros(NF); sz = np.zeros(NF); lean = np.zeros(NF)
     for t0, t1 in on:
         for f in range(NF):
             t = T[f]
             if t < t0 or t > t1 + 0.25: continue
-            a = min(1.0, (t - t0) / 0.12)
-            if t > t1: a *= max(0.0, 1 - (t - t1) / 0.2); lean[f] = -0.9 * min(1, (t - t1) / 0.12)
-            s[f] = max(s[f], a)
-    s = np.maximum(s, 0.001)
-    for c in range(3): key_series(fe, 'scale', c, s, 2e-3)
+            a = min(1.0, (t - t0) / 0.12); w = 0.0
+            if t1 < 1e8 and t > t1 - LEAN_T:
+                w = min(1.0, (t - (t1 - LEAN_T)) / 0.3); w = w * w * (3 - 2 * w)
+            if t > t1: a *= max(0.0, 1 - (t - t1) / 0.15)
+            if a * (1 - 0.3 * w) >= sx[f]:
+                sx[f] = a * (1 - 0.3 * w); sz[f] = a * (1 + 1.1 * w)
+                lean[f] = w * (-1.25 + 0.18 * math.sin(37 * t + k))
+    sx = np.maximum(sx, 0.001); sz = np.maximum(sz, 0.001)
+    for c in range(2): key_series(fe, 'scale', c, sx, 2e-3)
+    key_series(fe, 'scale', 2, sz, 2e-3)
     fe.rotation_mode = 'XYZ'; key_series(fe, 'rotation_euler', 1, lean, 1e-3)
 
 
@@ -561,37 +572,115 @@ for el in EV['elev']:
     gear.rotation_mode = 'XYZ'; key_series(gear, 'rotation_euler', 1, ang, 1e-4)
     text('Lift', (pin[0] - 0.75, pin[1] - 0.6, pin[2] + 0.2), 0.24, M_TXT_G, font=FONT)
 
-# ---------------- the gust: a window bursts open, wind streaks, every candle goes out ----------------
-xg = X_WIN_GUST; zfg = floor_z_at(xg)
-box((xg, WALL_Y + 0.03, zfg + 4.6), (2.4, 0.02, 4.6), M_NIGHT, name='gustsky')
-for side in (-1, 1):
-    hg = link(bpy.data.objects.new('casement', None)); hg.location = (xg + side * 1.2, WALL_Y - 0.12, zfg + 4.6)
-    pane = box((-side * 0.6, 0, 0), (1.2, 0.05, 4.4), M_GLASS, name='pane'); pane.parent = hg
-    for zz in (-2.2, 0, 2.2): box((-side * 0.6, -0.02, zz), (1.22, 0.07, 0.07), M_GOLD).parent = hg
-    box((-side * 1.18, -0.02, 0), (0.07, 0.07, 4.4), M_GOLD).parent = hg; box((-side * 0.02, -0.02, 0), (0.07, 0.07, 4.4), M_GOLD).parent = hg
+# ---------------- the gust: the big window bursts open, curtains fly, wind, snow and leaves blow in, candles go out ----------------
+xg = X_WIN_GUST; zfg = floor_z_at(xg); ZW = zfg + 4.6            # window centre
+def sstep(u): u = min(1.0, max(0.0, u)); return u * u * (3 - 2 * u)
+M_SKYG = emis('gustsky', (0.12, 0.22, 0.55), 1.2)
+_sk = M_SKYG.node_tree.nodes['Emission'].inputs['Strength']
+for f in range(0, NF, 2):
+    t = T[f]; _sk.default_value = float(1.2 + 3.0 * math.exp(-max(0.0, t - GUST) / 0.5) * (t > GUST) + 1.0 * (t > GUST)); _sk.keyframe_insert('default_value', frame=f)
+box((xg, WALL_Y + 0.03, ZW), (2.3, 0.02, 4.6), M_SKYG, name='gustsky')
+sphere((xg + 0.45, WALL_Y + 0.0, ZW + 1.3), 0.42, emis('moondisc', (1.0, 0.95, 0.8), 6.0), (24, 12))       # full moon in the window
+for j in range(14): sphere((xg + rng.uniform(-1.0, 1.0), WALL_Y + 0.0, ZW + rng.uniform(-1.8, 2.1)), 0.025, M_TXT, (6, 4))
+# heavy gold frame + arch rail
+for xx in (xg - 1.2, xg + 1.2): box((xx, WALL_Y - 0.08, ZW), (0.2, 0.18, 4.8), M_GOLD)
+for zz in (ZW - 2.3, ZW + 2.3): box((xg, WALL_Y - 0.08, zz), (2.6, 0.18, 0.2), M_GOLD)
+M_PANE = mat('gpane', (0.55, 0.72, 1.0), 0.04, **{'Alpha': 0.45, 'Emission Color': (0.35, 0.55, 1.0), 'Emission Strength': 0.5})
+CASE = []
+for side in (-1, 1):                                         # two casements, hinged at the outer frame, swing INTO the hall
+    hg = link(bpy.data.objects.new('casement', None)); hg.location = (xg + side * 1.1, WALL_Y - 0.12, ZW)
+    pane = box((-side * 0.55, 0, 0), (1.1, 0.04, 4.4), M_PANE, name='pane'); pane.parent = hg
+    for zz in (-2.2, -1.1, 0, 1.1, 2.2): box((-side * 0.55, -0.03, zz), (1.12, 0.08, 0.08), M_GOLD).parent = hg
+    for xx in (-side * 0.02, -side * 0.55, -side * 1.08): box((xx, -0.03, 0), (0.08, 0.08, 4.4), M_GOLD).parent = hg
     an = np.zeros(NF)
     for f in range(NF):
-        u = (T[f] - GUST) / 0.22
-        if u > 0: an[f] = side * (1.9 * min(1, u) ** 1.5 + 0.08 * math.exp(-(T[f] - GUST - 0.22) / 0.4) * math.sin(18 * (T[f] - GUST)) * (u > 1))
-    hg.rotation_mode = 'XYZ'; key_series(hg, 'rotation_euler', 2, an, 1e-4)
-    cur = box((xg + side * 1.55, WALL_Y - 0.35, zfg + 4.3), (0.5, 0.12, 5.6), M_VELVET, name='curtainG')
-    cur.rotation_mode = 'XYZ'
-    rx = np.array([(-0.5 * math.exp(-max(0, T[f] - GUST) / 1.2) * (1 + 0.3 * math.sin(9 * T[f])) if T[f] > GUST else 0.0) for f in range(NF)])
-    key_series(cur, 'rotation_euler', 0, rx, 1e-3)
+        t = T[f]; u = t - GUST
+        if -0.6 < u <= 0: an[f] = 0.035 * (1 + u / 0.6) * math.sin(70 * t + side)          # the windows rattle just before
+        elif u > 0:
+            a = 1.85 * sstep(u / 0.12)                                                       # BANG: open in 4 frames
+            a += 0.25 * math.exp(-u / 0.35) * math.sin(14 * u) * (u > 0.12)                  # slam into the stop and bounce
+            a += 0.07 * math.sin(9 * t + 2 * side) * math.exp(-max(0.0, u - 2.5) / 1.5)       # rattling in the wind
+            an[f] = a
+        an[f] *= side
+    hg.rotation_mode = 'XYZ'; key_series(hg, 'rotation_euler', 2, an, 1e-4); CASE.append(hg)
+# curtains: a chain of 7 hinged strips each side -> they billow up into the hall
+AW = np.array([0.0 if t < GUST else (sstep((t - GUST) / 0.28) * (1.0 if t < GUST + 2.6 else 0.35 + 0.65 * math.exp(-(t - GUST - 2.6) / 0.8))) for t in T])
+box((xg, WALL_Y - 0.4, zfg + 7.15), (4.4, 0.12, 0.12), M_GOLD, name='curtainrod')
+M_CURT = mat('curtain', (0.75, 0.06, 0.1), 0.6, **{'Sheen Weight': 1.0, 'Emission Color': (0.9, 0.1, 0.15), 'Emission Strength': 0.25})
+for side in (-1, 1):
+    par = None; top = (xg + side * 1.75, WALL_Y - 0.4, zfg + 7.1)
+    for k in range(7):
+        h_ = link(bpy.data.objects.new('curtainhinge', None))
+        if par is None: h_.location = top
+        else: h_.parent = par; h_.location = (0, 0, -0.8)
+        sg = box((0, 0, -0.4), (0.95, 0.08, 0.84), M_CURT, name='curtainG'); sg.parent = h_
+        if k == 6: box((0, 0, -0.82), (0.97, 0.1, 0.07), M_GOLD, name='fringe').parent = h_
+        rx = np.array([-AW[f] * (0.16 + 0.075 * k) * (1 + 0.25 * math.sin(11 * T[f] + 0.9 * k + side)) for f in range(NF)])
+        ry = np.array([-side * AW[f] * 0.09 * (k > 0) for f in range(NF)])     # and spread outwards
+        h_.rotation_mode = 'XYZ'; key_series(h_, 'rotation_euler', 0, rx, 1e-3); key_series(h_, 'rotation_euler', 1, ry, 1e-3)
+        par = h_
 moon = bpy.data.lights.new('moonshaft', 'SPOT'); moon.color = (0.55, 0.7, 1.0); moon.spot_size = math.radians(40); moon.spot_blend = 0.5
 mo = link(bpy.data.objects.new('moonshaft', moon)); mo.location = (xg, WALL_Y + 1.5, zfg + 7.5); mo.rotation_euler = (math.radians(-35), 0, 0)
 for f in range(0, NF, 3):
     t = T[f]; moon.energy = float(0 if t < GUST else 4000 * min(1, (t - GUST) / 0.3) * (1 if t < DACAPO else max(0.25, 1 - (t - DACAPO) / 2)))
     moon.keyframe_insert('energy', frame=f)
-for k in range(36):                                          # wind streaks (fly out of the window, across the hall)
-    st = obj(prim('cube', M_FX), 'wind'); st.color = (0.75, 0.85, 1.0, 0)
-    t0 = GUST + 0.05 + rng.uniform(0, 0.9); sp = rng.uniform(9, 16); zz = zfg + rng.uniform(1.0, 6.5); yy = rng.uniform(-1.5, 3.8)
+fl_ = box((xg, WALL_Y - 0.2, ZW), (2.3, 0.02, 4.5), M_FX, name='gustflash'); fl_.color = (0.8, 0.9, 1.0, 0)   # white flash as it bursts open
+key_series(fl_, 'color', 3, 0.6 * pulse_alpha([GUST + 0.03], decay=3, length=12), 1e-3)
+WDIR = np.array([-0.78, -0.62, 0.0]); WDIR /= np.linalg.norm(WDIR)       # the wind blows out of the window, into the hall and to the left
+M_WIND = fxmat('wind', 3.0)
+for k in range(44):                                          # thick white wind streaks
+    st = obj(prim('cube', M_WIND), 'wind'); st.color = (0.92, 0.96, 1.0, 0)
+    t0 = GUST + 0.02 + 1.9 * rng.uniform(0, 1) ** 1.6; sp = rng.uniform(8, 13); ln = rng.uniform(1.6, 3.2)
+    p0 = np.array([xg + rng.uniform(-0.9, 0.9), WALL_Y - 0.3, ZW + rng.uniform(-2.2, 2.0)])
+    dz = rng.uniform(-0.25, 0.1)
     P = np.zeros((NF, 3)); A = np.zeros(NF)
     for f in range(NF):
         u = T[f] - t0
-        P[f] = (xg - sp * max(0, u), yy if u > 0 else WALL_Y, zz - 0.4 * max(0, u))
-        A[f] = 0 if u < 0 or u > 1.4 else 0.35 * math.sin(math.pi * u / 1.4)
-    key_loc(st, P); st.scale = (0.9, 0.02, 0.02); key_series(st, 'color', 3, A, 1e-3)
+        P[f] = p0 + (WDIR * sp + [0, 0, dz * sp]) * max(0.0, min(u, 1.3)) + WDIR * ln / 2
+        A[f] = 0 if u < 0 or u > 1.3 else 0.75 * min(1, u / 0.12) * min(1, (1.3 - u) / 0.4)
+    key_loc(st, P); st.rotation_euler = (0, -math.atan2(dz, 1.0), math.atan2(WDIR[1], WDIR[0]))
+    th_ = rng.uniform(0.045, 0.09); st.scale = (ln, th_, th_); key_series(st, 'color', 3, A, 1e-3)
+M_LEAF = objcol('leaf', 0.6, emit=1.2)
+LEAFC = [(1.0, 0.45, 0.08), (0.95, 0.22, 0.08), (1.0, 0.75, 0.15), (0.45, 0.75, 0.2)]
+for k in range(260):                                         # snow, autumn leaves and paper blown in through the window
+    kind = ('snow', 'snow', 'leaf', 'paper')[k % 4]
+    if kind == 'snow': o = sphere((0, 0, 0), 1.0, M_FX, (8, 4), name='snow'); o.color = (0.95, 0.97, 1.0, 0.9); sz = rng.uniform(0.035, 0.06); sc3 = (sz, sz, sz)
+    else:
+        o = obj(prim('plane', M_LEAF), kind)
+        o.color = (*(LEAFC[int(rng.integers(4))] if kind == 'leaf' else (1.0, 0.97, 0.88)), 1)
+        sc3 = (0.16, 0.1, 1) if kind == 'leaf' else (0.13, 0.17, 1)
+    t0 = GUST + 0.02 + 2.2 * rng.uniform(0, 1) ** 1.8; life = rng.uniform(2.0, 3.0)
+    p0 = np.array([xg + rng.uniform(-0.9, 0.9), WALL_Y - 0.2, ZW + rng.uniform(-2.1, 2.1)])
+    v0 = WDIR * rng.uniform(6, 11) + np.array([rng.uniform(-1, 1), rng.uniform(-1.5, 1.0), rng.uniform(-0.6, 1.6)]); tau = rng.uniform(0.9, 1.6)
+    gk = 0.9 if kind == 'snow' else 0.6; ph = rng.uniform(0, 6.3); spin = rng.uniform(4, 12)
+    P = np.zeros((NF, 3)); RT = np.zeros((NF, 3)); S = np.zeros(NF)
+    for f in range(NF):
+        u = T[f] - t0
+        if u < 0: P[f] = p0; continue
+        uu = min(u, life)
+        P[f] = p0 + v0 * tau * (1 - math.exp(-uu / tau)) + np.array([0.25 * math.sin(5 * uu + ph), 0, -0.5 * gk * uu * uu + 0.15 * math.sin(7 * uu + ph)])
+        RT[f] = (spin * uu, 0.7 * spin * uu + ph, 0.4 * spin * uu)
+        S[f] = 1.0 if u < life else 0.0
+    key_loc(o, P)
+    for c_ in range(3):
+        key_series(o, 'scale', c_, np.maximum(0.0005, S * sc3[c_]), 1e-4)
+        if kind != 'snow': key_series(o, 'rotation_euler', c_, RT[:, c_], 1e-3)
+# smoke wisps rise from every candle in view as it goes out
+M_SMOKE = fxmat('smoke', 2.6)
+for c in CANDLES:
+    if c['who'] != 'lamp' or c['fl'] is None or not (c['on'][0][1] < DACAPO) or not (xg - 9.0 < c['x'] < xg + 3.0): continue
+    t1 = c['on'][0][1]; base = np.array(c['fl'].location)
+    for j in range(5):
+        pf = sphere((0, 0, 0), 1.0, M_SMOKE, (8, 6), name='smoke'); pf.color = (0.75, 0.75, 0.8, 0)
+        ts = t1 + 0.06 * j; P = np.zeros((NF, 3)); A = np.zeros(NF); S = np.zeros(NF)
+        for f in range(NF):
+            u = T[f] - ts
+            if u < 0: P[f] = base; continue
+            P[f] = base + np.array([-0.35 * u - 0.05 * j, 0, 0.55 * u + 0.08 * math.sin(6 * u + j)])
+            A[f] = 0 if u > 1.8 else 0.8 * min(1, u / 0.1) * (1 - u / 1.8)
+            S[f] = 0.035 + 0.1 * min(u, 1.8)
+        key_loc(pf, P); key_series(pf, 'color', 3, A, 1e-3)
+        for c_ in range(3): key_series(pf, 'scale', c_, np.where(A > 0, S, 0.0005), 1e-4)
 
 # ---------------- wall sconces (3 candles each) and ceiling chandeliers: lit by the fuse at the da capo ----------------
 SCON = np.arange(WX0 + 1.5, WX1 - 1.0, 1.8)
@@ -796,6 +885,11 @@ for f in range(NF):
     FOC[f] = np.array([lP[f, 0] + 0.5, 0, 0.55 * lP[f, 2] + 0.45 * (bP[f, 2] - ZO['bass']) + 1.45])
     WID[f] = 5.9
     if DACAPO - 0.2 < t < DACAPO + 4.5: WID[f] = 5.9 + 1.8 * math.sin(math.pi * min(1, (t - DACAPO + 0.2) / 4.7))
+    if GUST - 1.6 < t < GUST + 3.6:                          # pull back a little: the whole gust window and the candles in the shot
+        u = (t - (GUST - 1.6)) / 5.2; WID[f] = 5.9 + 1.5 * math.sin(math.pi * u) ** 0.6
+        FOC[f, 2] += 0.5 * math.sin(math.pi * u)
+    if GUST + 0.15 < t < GUST + 3.4:                         # then glance left, along the wind, at the candles going out
+        FOC[f, 0] -= 1.2 * math.sin(math.pi * (t - GUST - 0.15) / 3.25) ** 0.7
     if t > FINAL - 1.6:
         u = min(1, (t - (FINAL - 1.6)) / 1.0)
         FOC[f] = (1 - u) * FOC[f] + u * np.array([PXs, 0, (gz + cupc[2]) / 2 + 0.2]); WID[f] = (1 - u) * WID[f] + u * 8.2
@@ -808,8 +902,9 @@ trc = cam.constraints.new('TRACK_TO'); trc.target = tgt; trc.track_axis = 'TRACK
 CP = np.zeros((NF, 3)); TP = np.zeros((NF, 3))
 for f in range(NF):
     D = WID[f] / (9 / 16) * LENS / 24
-    CP[f] = (FOC[f, 0], -D, FOC[f, 2] + 0.2 * D)
-    TP[f] = (FOC[f, 0], 0.0, FOC[f, 2] + 0.2)
+    u = T[f] - GUST; shk = 0.07 * math.exp(-u / 0.3) * np.array([math.sin(53 * u), 0, math.sin(41 * u + 1)]) if u > 0 else 0   # the bang shakes the camera
+    CP[f] = np.array((FOC[f, 0], -D, FOC[f, 2] + 0.2 * D)) + shk
+    TP[f] = np.array((FOC[f, 0], 0.0, FOC[f, 2] + 0.2)) + shk
 key_loc(cam, CP); key_loc(tgt, TP)
 # hall lights: warm area lights riding with the camera (their power follows the lit candles)
 for k, (dx, dz) in enumerate(((-3.0, 6.5), (3.0, 6.5), (0.0, 3.0))):
@@ -849,14 +944,35 @@ cnt_a = np.array([0.0 if t < 3.6 else min(1.0, (t - 3.6) / 0.3) for t in T])
 lab = hud_text('LIGHTS', -0.185, 0.9, 0.07, M_HUDG, align='RIGHT'); vis(lab, cnt_a)
 cb_ = obj(prim('plane', M_HUDBG), 'cntbg'); cb_.parent = cam; cb_.location = (-0.12, 0.9, -HUD_D - 0.01); cb_.scale = (0.62, 0.16, 1); vis(cb_, cnt_a)
 DIG_X = [-0.14, -0.065, 0.01]
+T_ZERO = float(T[np.argmax((T > GUST) & (CNT == 0))])          # the moment the last light goes out
+_uz = T - T_ZERO
+ZWIN = ((_uz >= 0) & (_uz < 2.2)).astype(float)
+ZBLINK = ZWIN * ((np.floor(np.maximum(_uz, 0) / 0.2) % 2) == 0)   # red zero blinks 2.5x per second
+ZPULSE = np.where(_uz >= 0, 1.0 + 0.6 * np.exp(-np.maximum(_uz, 0) / 0.25), 1.0)
+print('counter zero at', T_ZERO)
 for pos in range(3):
     dv = (CNT // (10 ** (2 - pos))) % 10
     shown = CNT >= 10 ** (2 - pos) if pos < 2 else np.ones(NF, bool)
     for dgt in range(10):
         o = hud_text(str(dgt), DIG_X[pos], 0.9, 0.105, M_HUDW)
         o.data.font = FONT; o.data.size = 0.105 * TXT_K          # keep the original digit glyphs (the slot spacing is made for them)
-        vis(o, ((dv == dgt) & shown).astype(float) * cnt_a)
+        a_ = ((dv == dgt) & shown).astype(float) * cnt_a
+        if pos == 2 and dgt == 0: a_ = a_ * (1 - ZBLINK)              # the red zero takes over while it blinks
+        vis(o, a_)
 tot = hud_text('/ 525', 0.17, 0.9, 0.06, M_HUDG); vis(tot, cnt_a * (T > FINAL + 0.9))
+# the gust caption and the counter hitting zero
+M_HUDB = emis('hudb', (0.85, 0.95, 1.0), 6.0); M_HUDR = emis('hudr', (1.0, 0.1, 0.06), 8.0)
+cap_a = np.zeros(NF)
+for f in range(NF):
+    u = T[f] - (GUST + 0.04)
+    if 0 <= u < 1.75: cap_a[f] = (1.12 * math.sin(math.pi / 2 * u / 0.12) if u < 0.12 else 1.0 + 0.12 * math.exp(-(u - 0.12) / 0.08)) * (1 if u < 1.55 else 1 - (u - 1.55) / 0.2)
+CAP_Y = -0.6
+c1 = fit_w(hud_text('WHOOSH!  A gust!', 0, CAP_Y, 0.17, M_HUDB), 1.04); vis(c1, cap_a * c1.scale[0]); c1.rotation_euler = (0, 0, 0.04)
+c2 = hud_text('突風で灯りが消えた！', 0, CAP_Y - 0.16, 0.066, M_HUDW); vis(c2, cap_a)
+cpb = obj(prim('plane', M_HUDBG), 'capbg'); cpb.parent = cam; cpb.location = (0, CAP_Y - 0.06, -HUD_D - 0.01); cpb.scale = (1.3, 0.36, 1); vis(cpb, np.minimum(cap_a, 1.0))
+o = hud_text('0', DIG_X[2], 0.9, 0.105, M_HUDR); o.data.font = FONT; o.data.size = 0.105 * TXT_K
+vis(o, ZBLINK * ZPULSE)
+zo = hud_text('ALL OUT!', 0.36, 0.9, 0.06, M_HUDR); vis(zo, ZWIN * (0.75 + 0.25 * ZBLINK))
 
 # ---------------- banners on the back wall (keywords for search, readable on a phone) ----------------
 def banner(lines, x, w, h, zc):
@@ -880,7 +996,7 @@ for tb, w_, h_, lines in ((5.2, 5.6, 2.5, [('Eine kleine', 0.58, M_TXT_G, S), ('
                           (16.8, 4.8, 1.7, [('Night Palace Ball', 0.44, M_TXT_G, S), ('Marbles light the candles', 0.28, M_TXT, J), ('夜の宮殿の舞踏会', 0.2, M_TXT, J)]),
                           (22.6, 5.0, 1.7, [('Mozart Masterpiece', 0.4, M_TXT_G, J), ('Serenade in G · 1st mvt. Allegro', 0.26, M_TXT, J), ('モーツァルトの名曲 第1楽章', 0.2, M_TXT, J)]),
                           (28.4, 4.8, 1.7, [('Moonlight Piano', 0.42, M_TXT_P, S), ('Marble Machine ASMR', 0.3, M_TXT_G, J), ('月明かりのピアノ マーブルマシン', 0.2, M_TXT, J)])):
-    banner(lines, x_(tb) + 0.6, w_, h_, bz_(tb))
+    banner(lines, (XG + 5.6) if abs(tb - 22.6) < 0.01 else x_(tb) + 0.6, w_, h_, bz_(tb))   # keep the gust window clear
 # the answer under the chandelier
 k525 = label('Mozart K.525', 'モーツァルト', (PXs, -1.3, cupc[2] - 0.9), 0.4, M_TXT_G, k=0.5, font=FONT_S)
 for o_ in k525: vis(o_, np.array([0.0 if t < FINAL + 0.9 else min(1.0, (t - FINAL - 0.9) / 0.3) for t in T]))
