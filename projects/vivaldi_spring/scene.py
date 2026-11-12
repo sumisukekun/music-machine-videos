@@ -38,6 +38,7 @@ try: sc.view_settings.view_transform = 'AgX'; sc.view_settings.look = 'AgX - Pun
 except Exception: pass
 sc.frame_start, sc.frame_end = 0, NF - 1
 FONT = bpy.data.fonts.load(f'{HERE}/jp_sub.otf')
+FONT_EN = bpy.data.fonts.load(f'{HERE}/en_bold.ttf')
 TXT_K = 2.75
 
 
@@ -175,9 +176,32 @@ def sphere(c, r, m, seg=(16, 8), name='sph'):
 
 
 def text(s, loc, size, m, rot=(math.pi / 2 - 0.25, 0, 0), align='CENTER', ext=0.02):
-    cu = bpy.data.curves.new('t', 'FONT'); cu.body = s; cu.font = FONT; cu.size = size * TXT_K; cu.extrude = ext
+    cu = bpy.data.curves.new('t', 'FONT'); cu.body = s; cu.font = FONT_EN if _latin(s) else FONT; cu.size = size * TXT_K * (EN_K if _latin(s) else 1.0); cu.extrude = ext
     cu.align_x = align; cu.align_y = 'CENTER'
     o = link(bpy.data.objects.new('txt', cu)); o.location = loc; o.rotation_euler = rot; o.data.materials.append(m); return o
+
+
+# English-first on-screen text (2026-11-12): Latin strings use DejaVu Sans Bold (en_bold.ttf, free DejaVu font license),
+# Japanese subtitles keep the Noto CJK subset.
+def _latin(s): return all(ord(c) < 0x2E80 for c in s)
+EN_K = 0.75                  # DejaVu renders ~1.45x taller than the CJK font at the same size: match the line heights
+
+
+def fit_w(o, w):
+    """shrink a text object uniformly so that it is at most w wide"""
+    bpy.context.view_layer.update()
+    if w and o.dimensions.x > w: k = w / o.dimensions.x; o.scale = (k, k, k)
+    return o
+
+
+def label(en, jp, loc, size, m, mj=None, k=0.5, w=None, **kw):
+    """English line at loc, a small Japanese line just below it (in the text plane). Returns [en_obj, jp_obj]."""
+    o = fit_w(text(en, loc, size, m, **kw), w)
+    if not jp: return [o]
+    R = o.rotation_euler.to_matrix()
+    d = R @ Vector((0, -(size * 0.62 + size * k * 0.62) * o.scale[0] / 1.0, 0))
+    o2 = fit_w(text(jp, tuple(Vector(loc) + d), size * k, mj or M_TXT, **kw), w)
+    return [o, o2]
 
 
 def pulse_alpha(times, decay=5.0, length=16, amp=1.0):
@@ -599,7 +623,7 @@ for n, key_ in (('birdA', 'nestA'), ('birdB', 'nestB')):
         box((0, 0, -r - 0.02), (2 * r + 0.1, 2 * r + 0.1, 0.04), M_NEST).parent = bk
         for dx in (-1, 1): rod((dx * (r + 0.06), 0, -r * 0.4), (0, 0, hgt), 0.012, M_BARK, 5).parent = bk
         sphere((0, 0, hgt), 0.04, M_GOLD, (8, 6)).parent = bk
-        text('ジップライン', tuple(p0 + [0.9, -0.5, hgt + 0.35]), 0.22, M_TXT)
+        text('Zip Line', tuple(p0 + [0.9, -0.5, hgt + 0.35]), 0.22, M_TXT)
 
 # ---------------- ropeway: cables, stations, gondolas with cup bells and trapdoors ----------------
 HANG = 0.95
@@ -726,28 +750,29 @@ def sign(lines, x, y, z, w, h, pole_role='mel'):
     for xx in (x - w / 2 + 0.25, x + w / 2 - 0.25): rod((xx, y + 0.16, z - h / 2), (xx, y + 0.16, ground(pole_role, xx) - 0.2), 0.05, M_SIGN, 8)
     zz = z + h / 2
     for s_, size, mt in lines:
-        zz -= size * 1.28
-        text(s_, (x, y - 0.0 + 0.12 * (zz + size * 0.15 - z), zz + size * 0.15), size, mt, rot=(math.pi / 2 - 0.12, 0, 0))
+        zz -= size * 1.28 + (0.05 if zz < z + h / 2 - 0.1 else 0.0)        # a little air between the Latin lines
+        fit_w(text(s_, (x, y - 0.0 + 0.12 * (zz + size * 0.15 - z), zz + size * 0.15), size, mt, rot=(math.pi / 2 - 0.12, 0, 0)), w - 0.3)
 def mx(t): return float(np.interp(t, T, POS['mel'][:, 0]))
 def mz(t): return float(np.interp(t, T, POS['mel'][:, 2]))
 def osign(lines, x, w, h):
     zg = float(np.interp(x, Xo, Zo)); sign(lines, x, 4.55, zg + 0.35 + h / 2, w, h, pole_role='bas')
-osign([('ヴィヴァルディ', 0.42, M_TXT_G), ('「四季」より「春」', 0.46, M_TXT_P), ('第1楽章 × ビー玉からくり', 0.23, M_TXT)], 2.3, 3.6, 1.6)
-for tt_, lines, wd in ((6.5, [('バロック音楽', 0.34, M_TXT_G), ('1725年の名曲', 0.28, M_TXT)], 3.0),
-                       (12.0, [('ビー玉が通ると', 0.28, M_TXT), ('春になる', 0.4, M_TXT_GR)], 3.0),
-                       (18.0, [('クラシック名曲', 0.32, M_TXT_G), ('マーブルマシン', 0.28, M_TXT)], 3.0),
-                       (24.0, [('このあと', 0.26, M_TXT), ('鳥のさえずり', 0.38, M_TXT_P)], 3.2)):
+osign([('VIVALDI', 0.46, M_TXT_G), ('"Spring" – The Four Seasons', 0.3, M_TXT_P), ('1st mvt. × Marble Machine', 0.24, M_TXT),
+       ('ヴィヴァルディ「四季」より「春」', 0.17, M_TXT)], 2.3, 3.6, 1.6)
+for tt_, lines, wd in ((6.5, [('Baroque Music', 0.32, M_TXT_G), ('A classic from 1725', 0.24, M_TXT), ('バロック音楽 1725年の名曲', 0.15, M_TXT)], 3.0),
+                       (12.0, [('Marbles bring', 0.24, M_TXT), ('SPRING', 0.34, M_TXT_GR), ('ビー玉が通ると春になる', 0.15, M_TXT)], 3.0),
+                       (18.0, [('Classical Music', 0.32, M_TXT_G), ('Satisfying Marble Machine', 0.24, M_TXT), ('クラシック名曲 マーブルマシン', 0.15, M_TXT)], 3.0),
+                       (24.0, [('Coming up:', 0.22, M_TXT), ('BIRDSONG', 0.34, M_TXT_P), ('このあと 鳥のさえずり', 0.15, M_TXT)], 3.2)):
     x_ = mx(tt_) + 1.8
     sign(lines, x_, 0.62, ground('mel', x_) + 1.45, wd, 1.0)
-for role, lbl, mt in (('mel', '春のメロディ', M_TXT_GR), ('har', '花の和音', M_TXT_P), ('bas', '大地の低音', M_TXT_G)):
+for role, lbl, mt in (('mel', 'Melody', M_TXT_GR), ('har', 'Chords', M_TXT_P), ('bas', 'Bass', M_TXT_G)):
     p0 = POS[role][int(2.0 * FPS)]
     text(lbl, (2.3 + (0.6 if role == 'bas' else 0), p0[1] - 0.75, ground(role, 2.3) + 0.55), 0.3, mt)
 nA = EV['nestA']['nest']; nB = EV['nestB']['nest']
-text('ねむる鳥', (nA[0] - 1.2, nA[1] - 0.6, nA[2] + 0.45), 0.26, M_TXT_G)
-text('もう1羽', (nB[0] - 1.1, nB[1] - 0.6, nB[2] + 0.45), 0.26, M_TXT_P)
+text('Sleeping Bird', (nA[0] - 1.2, nA[1] - 0.6, nA[2] + 0.45), 0.22, M_TXT_G)
+text('Another Bird', (nB[0] - 1.1, nB[1] - 0.6, nB[2] + 0.45), 0.22, M_TXT_P)
 rp = EV['rope']['har']['pts']
-text('ロープウェイ', (rp[1][0] + 1.4, 1.2, rp[1][2] + 1.55), 0.26, M_TXT)
-text('満開の桜', (crown_c[0], crown_c[1] - 2.6, crown_c[2] + 2.6), 0.5, M_TXT_P)
+text('Ropeway', (rp[1][0] + 1.4, 1.2, rp[1][2] + 1.55), 0.28, M_TXT)
+label('FULL BLOOM!', '満開の桜', (crown_c[0], crown_c[1] - 2.6, crown_c[2] + 2.7), 0.5, M_TXT_P, k=0.5)
 
 # ---------------- sky, sun, falling snow -> falling petals ----------------
 w = bpy.data.worlds.new('W'); sc.world = w; w.use_nodes = True

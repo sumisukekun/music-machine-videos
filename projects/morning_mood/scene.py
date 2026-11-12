@@ -39,6 +39,7 @@ try: sc.view_settings.view_transform = 'AgX'; sc.view_settings.look = 'AgX - Pun
 except Exception: pass
 sc.frame_start, sc.frame_end = 0, NF - 1
 FONT = bpy.data.fonts.load(f'{HERE}/jp_sub.otf')
+FONT_EN = bpy.data.fonts.load(f'{HERE}/en_bold.ttf')
 TXT_K = 2.75
 
 
@@ -175,9 +176,32 @@ def sphere(c, r, m, seg=(16, 8), name='sph'):
 
 
 def text(s, loc, size, m, rot=(math.pi / 2 - 0.12, 0, 0), align='CENTER', ext=0.02):
-    cu = bpy.data.curves.new('t', 'FONT'); cu.body = s; cu.font = FONT; cu.size = size * TXT_K; cu.extrude = ext
+    cu = bpy.data.curves.new('t', 'FONT'); cu.body = s; cu.font = FONT_EN if _latin(s) else FONT; cu.size = size * TXT_K * (EN_K if _latin(s) else 1.0); cu.extrude = ext
     cu.align_x = align; cu.align_y = 'CENTER'
     o = link(bpy.data.objects.new('txt', cu)); o.location = loc; o.rotation_euler = rot; o.data.materials.append(m); return o
+
+
+# English-first on-screen text (2026-11-12): Latin strings use DejaVu Sans Bold (en_bold.ttf, free DejaVu font license),
+# Japanese subtitles keep the Noto CJK subset.
+def _latin(s): return all(ord(c) < 0x2E80 for c in s)
+EN_K = 0.75                  # DejaVu renders ~1.45x taller than the CJK font at the same size: match the line heights
+
+
+def fit_w(o, w):
+    """shrink a text object uniformly so that it is at most w wide"""
+    bpy.context.view_layer.update()
+    if w and o.dimensions.x > w: k = w / o.dimensions.x; o.scale = (k, k, k)
+    return o
+
+
+def label(en, jp, loc, size, m, mj=None, k=0.5, w=None, **kw):
+    """English line at loc, a small Japanese line just below it (in the text plane). Returns [en_obj, jp_obj]."""
+    o = fit_w(text(en, loc, size, m, **kw), w)
+    if not jp: return [o]
+    R = o.rotation_euler.to_matrix()
+    d = R @ Vector((0, -(size * 0.62 + size * k * 0.62) * o.scale[0] / 1.0, 0))
+    o2 = fit_w(text(jp, tuple(Vector(loc) + d), size * k, mj or M_TXT, **kw), w)
+    return [o, o2]
 
 
 def tube(pts, r, m, name='tube', seg=8):
@@ -427,7 +451,7 @@ for n in ('flute', 'oboe'):
         PIECES.append(dict(t=h['t'], top=top, n=nv, ball=n))
 
 # ---------------- ramps with gates (the waiting ball), levers ----------------
-LBL = {'flute': ('フルート', M_TXT_B), 'oboe': ('オーボエ', M_TXT_O)}
+LBL = {'flute': ('Flute', M_TXT_B), 'oboe': ('Oboe', M_TXT_O)}
 for k, rp in enumerate(EV['ramps']):
     hd = np.array(rp['head']); lp = np.array(rp['lip']); a = rp['alpha']
     # chute: two side rails + floor, from a little behind the head to the lip
@@ -451,7 +475,7 @@ for k, rp in enumerate(EV['ramps']):
         link_.color = (1.0, 0.7, 0.3, aa); link_.keyframe_insert('color', index=3, frame=max(0, int(round(lv['t'] * FPS)) + df))
     # label of the waiting ball (keyword sign)
     nm_, mt = LBL[rp['ball']]
-    text(nm_, (hd[0] - 0.2, hd[1] - 0.3, hd[2] + 0.62), 0.26, mt)
+    text(nm_, (hd[0] - 0.2, hd[1] - 0.3, hd[2] + 0.62), 0.28, mt)
 # baskets
 for bk in EV['baskets']:
     p = np.array(bk['p'])
@@ -525,7 +549,7 @@ for j in range(0, len(rp_), 6):
 pt = np.array(RL['p_top'])
 shed = box((pt[0] - 0.35, pt[1], pt[2] + 0.1), (0.9, 0.8, 0.8), M_WALL, name='shed'); shed.color = (0.4, 0.25, 0.15, 1)
 sr = obj(prim('prism', M_ROOF), 'shedroof'); sr.location = (pt[0] - 0.35, pt[1], pt[2] + 0.5); sr.scale = (1.1, 1.0, 0.5); sr.color = (0.5, 0.1, 0.08, 1)
-text('夜明けの玉', (pt[0] + 0.2, pt[1] - 0.55, pt[2] + 1.2), 0.24, M_TXT_G)
+text('Dawn Ball', (pt[0] + 0.2, pt[1] - 0.55, pt[2] + 1.2), 0.26, M_TXT_G)
 for gt in EV['gates']:
     x, z, t = gt['x'], gt['z'], gt['t']; ps = gt['pitches']; nb = len(ps)
     big = gt['kind'] == 'final'
@@ -656,9 +680,10 @@ for f in range(NF):
 key_series(neck, 'rotation_euler', 1, crow, 1e-3)
 for df, aa in ((-1, 0.1), (0, 1.0), (50, 1.0), (60, 0.2)):
     comb.color = (1.0, 0.1, 0.05, aa); comb.keyframe_insert('color', index=3, frame=max(0, int(round(RT * FPS)) + df))
-ko = text('コケコッコー！', (bx_ + 0.3, 4.2, bz_ + 3.6), 0.34, M_TXT_G)
+ko = label('Cock-a-doodle-doo!', 'コケコッコー！', (bx_ + 0.3, 4.2, bz_ + 3.7), 0.32, M_TXT_G, k=0.65)
 ks = np.where((T > RT + 0.1) & (T < RT + 1.9), 1.0, 0.001)
-for c in range(3): key_series(ko, 'scale', c, ks, 1e-3)
+for o_ in ko:
+    for c in range(3): key_series(o_, 'scale', c, ks, 1e-3)
 # lanterns along the near path: each flute note of bars 17-20 lights one
 for ln in EV['wake']['lanterns']:
     x = ln['x']; zf = floor_z_at(x)
@@ -773,25 +798,28 @@ def sign(lines, x, y, z, w, h, plate=True):
         for xx in (x - w / 2 + 0.25, x + w / 2 - 0.25): rod((xx, y + 0.12, z - h / 2), (xx, y + 0.12, front_z_at(xx) - 0.1), 0.06, M_WOOD, 8)
     zz = z + h / 2 - 0.06
     for s_, size, mt in lines:
-        zz -= size * 1.25
-        text(s_, (x, y - 0.03 + 0.12 * (zz + size * 0.15 - z), zz + size * 0.15), size, mt)
+        zz -= size * 1.25 + (0.05 if zz < z + h / 2 - 0.1 else 0.0)        # a little air between the Latin lines
+        fit_w(text(s_, (x, y - 0.03 + 0.12 * (zz + size * 0.15 - z), zz + size * 0.15), size, mt), min(w - 0.35, 3.9))
 fx_ = lambda t, n='flute': float(np.interp(t, T, POS[n][:, 0])); fz_ = lambda t, n='flute': float(np.interp(t, T, POS[n][:, 2]))
-sign([('グリーグ「朝」', 0.62, M_TXT_G), ('ペール・ギュント組曲より', 0.32, M_TXT), ('ビー玉からくり × クラシック', 0.3, M_TXT_B)],
+sign([('MORNING MOOD', 0.5, M_TXT_G), ('Grieg – Peer Gynt Suite No. 1', 0.28, M_TXT), ('Marble Machine × Classical', 0.26, M_TXT_B),
+      ('グリーグ「朝」ペール・ギュント組曲より', 0.17, M_TXT)],
      0.9, -3.4, -2.6, 5.0, 2.05)
-sign([('朝の気分 Morning Mood', 0.36, M_TXT_G), ('夜明けの山の村', 0.32, M_TXT)], fx_(8.0) + 1.2, -3.4, fz_(8.0) - 2.7, 4.4, 1.25)
-sign([('ロープウェイ', 0.34, M_TXT_O), ('マーブルマシン', 0.3, M_TXT)], fx_(13.0, 'oboe') + 1.4, -3.4, fz_(13.0, "oboe") - 2.7, 3.2, 1.25)
-sign([('クラシック名曲', 0.36, M_TXT_G), ('エドヴァルド・グリーグ', 0.3, M_TXT)], fx_(18.0, 'oboe') + 1.3, -3.4, fz_(18.0, "oboe") - 2.7, 4.2, 1.25)
-sign([('ノルウェーの作曲家', 0.32, M_TXT), ('グリーグ 1875年作曲', 0.34, M_TXT_G)], fx_(23.5) + 1.3, -3.4, fz_(23.5) - 2.7, 3.8, 1.25)
-sign([('ビー玉 × 鉄琴 × からくり', 0.32, M_TXT_B), ('ペール・ギュント「朝」', 0.32, M_TXT_G)], fx_(28.5) + 1.3, -3.4, fz_(28.5) - 2.7, 4.6, 1.25)
+sign([('Sunrise in the Mountains', 0.3, M_TXT_G), ('Edvard Grieg · Classical', 0.24, M_TXT), ('朝の気分 夜明けの山の村', 0.15, M_TXT)], fx_(8.0) + 1.2, -3.4, fz_(8.0) - 2.7, 4.4, 1.25)
+sign([('Ropeway', 0.32, M_TXT_O), ('Marble Machine', 0.24, M_TXT), ('ロープウェイ マーブルマシン', 0.15, M_TXT)], fx_(13.0, 'oboe') + 1.4, -3.4, fz_(13.0, "oboe") - 2.7, 3.2, 1.25)
+sign([('Classical Music', 0.32, M_TXT_G), ('Edvard Grieg', 0.26, M_TXT), ('クラシック名曲 エドヴァルド・グリーグ', 0.15, M_TXT)], fx_(18.0, 'oboe') + 1.3, -3.4, fz_(18.0, "oboe") - 2.7, 4.2, 1.25)
+sign([('Grieg, 1875', 0.32, M_TXT_G), ('Norwegian composer', 0.24, M_TXT), ('ノルウェーの作曲家 グリーグ 1875年', 0.15, M_TXT)], fx_(23.5) + 1.3, -3.4, fz_(23.5) - 2.7, 3.8, 1.25)
+sign([('Satisfying Marble ASMR', 0.3, M_TXT_B), ('Peer Gynt – "Morning"', 0.25, M_TXT_G), ('ビー玉 × 鉄琴 × からくり', 0.15, M_TXT)], fx_(28.5) + 1.3, -3.4, fz_(28.5) - 2.7, 4.6, 1.25)
 # hook in the night sky (first seconds) and the closing greeting
-def sky_text(s, size, mt, t0, t1, loc):
-    o = text(s, loc, size, mt, rot=(math.pi / 2, 0, 0))
+def sky_text(s, size, mt, t0, t1, loc, jp=None, k=0.42, w=None):
+    os_ = label(s, jp, loc, size, mt, k=k, rot=(math.pi / 2, 0, 0), w=w)
     a = np.clip((T - t0) / 0.3, 0, 1) * np.clip((t1 - T) / 0.4, 0, 1)
-    for c in range(3): key_series(o, 'scale', c, np.maximum(0.001, a), 1e-3)
-    return o
-sky_text('玉が鳴るたび', 0.62, M_TXT, 0.0, 6.0, (1.0, 1.2, 5.6))
-sky_text('夜が明けていく', 0.62, M_TXT_G, 0.3, 6.0, (1.0, 1.2, 4.75))
-sky_text('おはよう！', 3.2, M_TXT_G, SUN['t_rise'] + 2.4, 99, (xs_sun, 40.0, twz + 3.2))
+    for o in os_:
+        k0 = o.scale[0]                                  # keep the fit-to-width factor
+        for c in range(3): key_series(o, 'scale', c, np.maximum(0.001, a * k0), 1e-3)
+    return os_
+sky_text('Every marble note', 0.66, M_TXT, 0.0, 6.0, (1.0, 1.2, 5.75), w=4.6)
+sky_text('brings the dawn', 0.66, M_TXT_G, 0.3, 6.0, (1.0, 1.2, 5.0), jp='玉が鳴るたび 夜が明けていく', k=0.42, w=4.6)
+sky_text('GOOD MORNING!', 3.2, M_TXT_G, SUN['t_rise'] + 2.4, 99, (xs_sun, 40.0, twz + 3.4), jp='おはよう！', k=0.45, w=15.0)
 
 # ---------------- final burst: petals + light rays ----------------
 cup_c = (np.array(EV['cups']['flute']) + np.array(EV['cups']['oboe'])) / 2

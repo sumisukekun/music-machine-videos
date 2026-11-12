@@ -39,6 +39,7 @@ try: sc.view_settings.view_transform = 'AgX'; sc.view_settings.look = 'AgX - Pun
 except Exception: pass
 sc.frame_start, sc.frame_end = 0, NF - 1
 FONT = bpy.data.fonts.load(f'{HERE}/jp_sub.otf')
+FONT_EN = bpy.data.fonts.load(f'{HERE}/en_bold.ttf')
 TXT_K = 2.75
 
 
@@ -177,9 +178,32 @@ def sphere(c, r, m, seg=(16, 8), name='sph'):
 
 
 def text(s, loc, size, m, rot=(math.pi / 2 - 0.3, 0, 0), align='CENTER', ext=0.02):
-    cu = bpy.data.curves.new('t', 'FONT'); cu.body = s; cu.font = FONT; cu.size = size * TXT_K; cu.extrude = ext
+    cu = bpy.data.curves.new('t', 'FONT'); cu.body = s; cu.font = FONT_EN if _latin(s) else FONT; cu.size = size * TXT_K * (EN_K if _latin(s) else 1.0); cu.extrude = ext
     cu.align_x = align; cu.align_y = 'CENTER'
     o = link(bpy.data.objects.new('txt', cu)); o.location = loc; o.rotation_euler = rot; o.data.materials.append(m); return o
+
+
+# English-first on-screen text (2026-11-12): Latin strings use DejaVu Sans Bold (en_bold.ttf, free DejaVu font license),
+# Japanese subtitles keep the Noto CJK subset.
+def _latin(s): return all(ord(c) < 0x2E80 for c in s)
+EN_K = 0.75                  # DejaVu renders ~1.45x taller than the CJK font at the same size: match the line heights
+
+
+def fit_w(o, w):
+    """shrink a text object uniformly so that it is at most w wide"""
+    bpy.context.view_layer.update()
+    if w and o.dimensions.x > w: k = w / o.dimensions.x; o.scale = (k, k, k)
+    return o
+
+
+def label(en, jp, loc, size, m, mj=None, k=0.5, w=None, **kw):
+    """English line at loc, a small Japanese line just below it (in the text plane). Returns [en_obj, jp_obj]."""
+    o = fit_w(text(en, loc, size, m, **kw), w)
+    if not jp: return [o]
+    R = o.rotation_euler.to_matrix()
+    d = R @ Vector((0, -(size * 0.62 + size * k * 0.62) * o.scale[0] / 1.0, 0))
+    o2 = fit_w(text(jp, tuple(Vector(loc) + d), size * k, mj or M_TXT, **kw), w)
+    return [o, o2]
 
 
 def pulse_alpha(times, decay=5.0, length=16, amp=1.0):
@@ -594,8 +618,8 @@ key_series(latch, 'location', 2, lz)
 ttop = trig['top']
 rope = rod((ttop[0] + 0.45, ttop[1], ttop[2] - 0.2), (cw0[0], 0.0, cw0[2] - 0.9), 0.02, M_ROPE, 6)
 rope.color = (1, 0.8, 0.3, 0)
-text('トレブシェット（投石機）', (piv[0] + 0.3, -1.0, piv[2] + 1.55), 0.22, M_TXT_G)
-text('ここを踏むと…', (ttop[0], ttop[1] - 0.55, ttop[2] + 0.75), 0.2, M_TXT_R)
+label('TREBUCHET', 'トレブシェット（投石機）', (piv[0] - 1.2, -1.0, piv[2] + 1.62), 0.26, M_TXT_G, k=0.6)
+label('Step here…', 'ここを踏むと…', (ttop[0], ttop[1] - 0.55, ttop[2] + 0.8), 0.22, M_TXT_R, k=0.6)
 # the toreros' final cups, the spectators' box seats
 fc = np.array(EV['final_cups'])
 for side, yo in (('red', -DYP), ('gold', DYP)):
@@ -639,7 +663,7 @@ for key_, lst in rows.items():
             o.matrix_world = Matrix.Translation(Vector(top)) @ Matrix.Diagonal((0.18, 0.18, 0.26, 1))
             flash(o, h['t'], pcol(h['pitch'], 0.2), None)
             rod(top - np.array([0, 0, 0.26]), top - np.array([0, 0, 0.8]), 0.02, M_POST, 6)
-text('観客席のウェーブ', ((cw_['x0'] + cw_['x1']) / 2, 3.0, cw_['z'] + 1.35), 0.3, M_TXT_G)
+label('CROWD WAVE', '観客席のウェーブ', ((cw_['x0'] + cw_['x1']) / 2, 3.0, cw_['z'] + 1.42), 0.32, M_TXT_G, k=0.55)
 
 # ---------------- finale: flower shower (petals and carnations from the stands) ----------------
 M_PET = objcol('petal', 0.5, emit=0.6)
@@ -671,19 +695,20 @@ def sign(lines, x, y, z, w, h, plate=True):
         for xx in (x - w / 2 + 0.2, x + w / 2 - 0.2): rod((xx, y + 0.1, z - h / 2), (xx, y + 0.1, floor_z_at(xx)), 0.05, M_GOLD, 8)
     zz = z + h / 2
     for s_, size, mt in lines:
-        zz -= size * 1.25
-        text(s_, (x, y - 0.03 + 0.31 * (zz + size * 0.15 - z), zz + size * 0.15), size, mt)
+        zz -= size * 1.25 + (0.05 if zz < z + h / 2 - 0.1 else 0.0)        # a little air between the Latin lines
+        fit_w(text(s_, (x, y - 0.03 + 0.31 * (zz + size * 0.15 - z), zz + size * 0.15), size, mt), w - 0.3)
 x_ = lambda t: float(np.interp(t, T, (POS['red'][:, 0] + POS['gold'][:, 0]) / 2))
 z_ = lambda t: float(np.interp(t, T, (POS['red'][:, 2] + POS['gold'][:, 2]) / 2))
-sign([('カルメン', 0.72, M_TXT_R), ('前奏曲（ビゼー 1875）', 0.34, M_TXT), ('オペラ × ビー玉からくり', 0.34, M_TXT_G)],
-     -0.4, -2.4, z_(T0) - 1.35, 5.0, 2.2)
-sign([('赤い闘牛士 vs 黒い牛', 0.34, M_TXT_G), ('逃げ切れる？', 0.42, M_TXT_R)], x_(5.4) + 1.6, -1.8, z_(5.4) - 0.95, 4.2, 1.3)
-sign([('ジョルジュ・ビゼー', 0.36, M_TXT_G), ('Carmen / Bizet', 0.3, M_TXT)], x_(10.2) + 1.6, -1.8, z_(10.2) - 0.95, 4.0, 1.3)
-sign([('闘牛場（プラサ・デ・トロス）', 0.28, M_TXT_G), ('スペイン・セビリア', 0.3, M_TXT)], x_(14.0) + 1.6, -1.8, z_(14.0) - 0.95, 4.4, 1.25)
-sign([('牛、乱入！', 0.5, M_TXT_R), ('闘牛の入場曲', 0.3, M_TXT)], x_(18.6) + 1.6, -1.8, z_(18.6) - 1.0, 3.6, 1.35)
-sign([('クラシック名曲', 0.38, M_TXT_G), ('オペラ『カルメン』', 0.32, M_TXT)], x_(23.4) + 1.6, -1.8, z_(23.4) - 0.95, 4.0, 1.3)
-sign([('ビゼー「カルメン」', 0.34, M_TXT_G), ('ビー玉マーブルマシン', 0.3, M_TXT)], x_(28.0) + 1.6, -1.8, z_(28.0) - 0.95, 4.2, 1.3)
-sign([('いざ、勝負！', 0.42, M_TXT_R)], x_(41.0) + 1.4, -1.8, z_(41.0) - 0.8, 3.0, 0.75)
+sign([('CARMEN – Bizet', 0.52, M_TXT_R), ('Prelude (1875) · Classical', 0.3, M_TXT), ('Opera × Marble Machine', 0.28, M_TXT_G),
+      ('カルメン 前奏曲（ビゼー）', 0.2, M_TXT)],
+     -0.4, -2.4, z_(T0) - 1.05, 5.0, 2.2)
+sign([('Toreros vs the Bull', 0.34, M_TXT_G), ('Will they escape?', 0.38, M_TXT_R), ('赤い闘牛士 vs 黒い牛 逃げ切れる？', 0.18, M_TXT)], x_(5.4) + 0.6, -1.8, z_(5.4) - 0.8, 4.2, 1.3)
+sign([('Georges Bizet', 0.4, M_TXT_G), ('Carmen – Prelude', 0.3, M_TXT), ('ジョルジュ・ビゼー「カルメン」', 0.18, M_TXT)], x_(10.2) + 0.6, -1.8, z_(10.2) - 0.8, 4.0, 1.3)
+sign([('Plaza de Toros', 0.38, M_TXT_G), ('Bullring · Seville, Spain', 0.28, M_TXT), ('闘牛場 スペイン・セビリア', 0.18, M_TXT)], x_(14.0) + 0.6, -1.8, z_(14.0) - 0.8, 4.4, 1.25)
+sign([('The bull breaks in!', 0.42, M_TXT_R), ('Bullfight entrance march', 0.26, M_TXT), ('牛、乱入！ 闘牛の入場曲', 0.18, M_TXT)], x_(18.6) + 0.6, -1.8, z_(18.6) - 0.85, 3.6, 1.35)
+sign([('Classical Music', 0.38, M_TXT_G), ('Opera "Carmen"', 0.3, M_TXT), ('クラシック名曲 オペラ『カルメン』', 0.18, M_TXT)], x_(23.4) + 0.6, -1.8, z_(23.4) - 0.8, 4.0, 1.3)
+sign([('Satisfying', 0.38, M_TXT_G), ('Marble Machine ASMR', 0.3, M_TXT), ('ビゼー「カルメン」ビー玉マーブルマシン', 0.18, M_TXT)], x_(28.0) + 0.6, -1.8, z_(28.0) - 0.8, 4.2, 1.3)
+sign([('SHOWDOWN!', 0.42, M_TXT_R), ('いざ、勝負！', 0.18, M_TXT)], x_(41.0) + 0.4, -1.8, z_(41.0) - 0.8, 3.0, 0.75)
 
 # ---------------- camera ----------------
 FOC = np.zeros((NF, 3)); WID = np.zeros(NF)

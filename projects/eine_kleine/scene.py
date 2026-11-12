@@ -40,6 +40,7 @@ try: sc.view_settings.view_transform = 'AgX'; sc.view_settings.look = 'AgX - Pun
 except Exception: pass
 sc.frame_start, sc.frame_end = 0, NF - 1
 FONT = bpy.data.fonts.load(f'{HERE}/jp_sub.otf'); FONT_S = bpy.data.fonts.load(f'{HERE}/jp_serif.otf')
+FONT_EN = bpy.data.fonts.load(f'{HERE}/en_bold.ttf'); FONT_ENS = bpy.data.fonts.load(f'{HERE}/en_serif_bold.ttf')
 TXT_K = 2.75                 # these fonts render at ~0.36 x nominal size per glyph: scale so that a glyph is ~size wide
 TXT_K = 2.75                 # this font renders at ~0.36 x nominal size per glyph: scale so that a glyph is ~size wide
 
@@ -176,8 +177,32 @@ def pulse_alpha(times, decay=5.0, length=16, amp=1.0):
 
 def text(s, loc, size, m, rot=(math.pi / 2 - 0.3, 0, 0), align='CENTER', ext=0.02, font=None):
     cu = bpy.data.curves.new('t', 'FONT'); cu.body = s; cu.font = font or FONT_S; cu.size = size * TXT_K; cu.extrude = ext
+    if _latin(s): cu.font = FONT_ENS if cu.font == FONT_S else FONT_EN; cu.size *= EN_K
     cu.align_x = align; cu.align_y = 'CENTER'
     o = link(bpy.data.objects.new('txt', cu)); o.location = loc; o.rotation_euler = rot; o.data.materials.append(m); return o
+
+
+# English-first on-screen text (2026-11-12): Latin strings use DejaVu Sans Bold (en_bold.ttf, free DejaVu font license),
+# Japanese subtitles keep the Noto CJK subset.
+def _latin(s): return all(ord(c) < 0x2E80 for c in s)
+EN_K = 0.75                  # DejaVu renders ~1.45x taller than the CJK font at the same size: match the line heights
+
+
+def fit_w(o, w):
+    """shrink a text object uniformly so that it is at most w wide"""
+    bpy.context.view_layer.update()
+    if w and o.dimensions.x > w: k = w / o.dimensions.x; o.scale = (k, k, k)
+    return o
+
+
+def label(en, jp, loc, size, m, mj=None, k=0.5, w=None, **kw):
+    """English line at loc, a small Japanese line just below it (in the text plane). Returns [en_obj, jp_obj]."""
+    o = fit_w(text(en, loc, size, m, **kw), w)
+    if not jp: return [o]
+    R = o.rotation_euler.to_matrix()
+    d = R @ Vector((0, -(size * 0.62 + size * k * 0.62) * o.scale[0] / 1.0, 0))
+    o2 = fit_w(text(jp, tuple(Vector(loc) + d), size * k, mj or M_TXT, **kw), w)
+    return [o, o2]
 
 
 def frame_from_n(n):
@@ -455,7 +480,7 @@ for R_ in EV['ramps']:
             cw, fe = candle((top[0], y0 + hw + 0.12, top[2] + 0.0), h=0.16, r=0.035)
             on = [(bar['t'], t_out(top[0])), (t_relight(top[0]), 1e9)] if R_['pass'] == 1 else [(bar['t'], 1e9)]
             CANDLES.append(dict(fl=fe, x=top[0], on=on, who='lamp'))
-    tag = 'シロフォン坂' if who == 'lamp' else 'ベースの線路'
+    tag = 'Xylophone Slope' if who == 'lamp' else 'Bass Track'
     if R_['pass'] == 1:
         q = p0 - r * nrm + d * (L * 0.3)
         text(tag, (q[0], y0 - 0.55, q[2] + (0.75 if who == 'lamp' else 1.2)), 0.26, M_TXT_G, font=FONT)
@@ -534,7 +559,7 @@ for el in EV['elev']:
     ch = rod((pin[0], pin[1], top), (pin[0], pin[1], pin[2] - RB + 0.2), 0.012, M_STEEL, 6)
     ang = np.array([-(Z[f] - Z[0]) / 0.32 for f in range(NF)])
     gear.rotation_mode = 'XYZ'; key_series(gear, 'rotation_euler', 1, ang, 1e-4)
-    text('リフト', (pin[0] - 0.75, pin[1] - 0.6, pin[2] + 0.2), 0.22, M_TXT_G, font=FONT)
+    text('Lift', (pin[0] - 0.75, pin[1] - 0.6, pin[2] + 0.2), 0.24, M_TXT_G, font=FONT)
 
 # ---------------- the gust: a window bursts open, wind streaks, every candle goes out ----------------
 xg = X_WIN_GUST; zfg = floor_z_at(xg)
@@ -679,7 +704,7 @@ rise = 2 * ARM * math.sin(TH0)
 pz = np.array([zplat0 + rise * min(1.0, max(0.0, (T[f] - tl_) / ss['t_swing'])) for f in range(NF)])
 key_series(plat, 'location', 2, pz)
 for gx in (PXs - cupc[0] - LPL / 2 - 0.08, PXs - cupc[0] + LPL / 2 + 0.08): rod((cupc[0] + gx, cupc[1], floor_z_at(cupc[0])), (cupc[0] + gx, cupc[1], zplat0 + rise + 0.3), 0.03, M_STEEL, 8)
-text('シーソー', (piv_[0] + 1.0, piv_[1] - 0.6, piv_[2] - 0.3), 0.24, M_TXT_G, font=FONT)
+text('Seesaw', (piv_[0] + 1.0, piv_[1] - 0.6, piv_[2] - 0.3), 0.26, M_TXT_G, font=FONT)
 for fc in EV['final_cups']:
     p = np.array(fc['cup']); col = pcol(DUO[-1][1][0], 0.3)
     o = obj(prim('bell', M_KEY, 24), 'duocup'); o.parent = plat; o.location = (p[0] - cupc[0], p[1] - cupc[1], p[2] - RP - zplat0); o.scale = (0.27, 0.27, -0.2)
@@ -815,12 +840,13 @@ def vis(o, a):
 M_HUDW = emis('hudw', (1.0, 0.97, 0.9), 3.0); M_HUDG = emis('hudg', (1.0, 0.75, 0.3), 4.0)
 M_HUDBG = mat('hudbg', (0.0, 0.0, 0.0), 1.0, **{'Alpha': 0.55})
 hook_a = np.array([1.0 if t < 3.6 else max(0.0, 1 - (t - 3.6) / 0.3) for t in T])
-h1 = hud_text('真っ暗な宮殿', 0, 0.86, 0.085, M_HUDW); vis(h1, hook_a)
-h2 = hud_text('ビー玉だけで全部ともせる？', 0, 0.74, 0.07, M_HUDG); vis(h2, hook_a)
+h1 = fit_w(hud_text('A pitch-dark palace', 0, 0.88, 0.092, M_HUDW), 0.9); vis(h1, hook_a * h1.scale[0])
+h2 = fit_w(hud_text('Can marbles light it all?', 0, 0.775, 0.085, M_HUDG), 0.9); vis(h2, hook_a * h2.scale[0])
+h3 = hud_text('真っ暗な宮殿 ビー玉だけで全部ともせる？', 0, 0.685, 0.036, M_HUDW); vis(h3, hook_a)
 hb_ = obj(prim('plane', M_HUDBG), 'hudbg'); hb_.parent = cam; hb_.location = (0, 0.8, -HUD_D - 0.01); hb_.scale = (1.3, 0.3, 1); vis(hb_, hook_a)
 # counter: '灯り' + 3 digits, digit glyph objects switched by scale
 cnt_a = np.array([0.0 if t < 3.6 else min(1.0, (t - 3.6) / 0.3) for t in T])
-lab = hud_text('灯り', -0.3, 0.9, 0.075, M_HUDG); vis(lab, cnt_a)
+lab = hud_text('LIGHTS', -0.185, 0.9, 0.07, M_HUDG, align='RIGHT'); vis(lab, cnt_a)
 cb_ = obj(prim('plane', M_HUDBG), 'cntbg'); cb_.parent = cam; cb_.location = (-0.12, 0.9, -HUD_D - 0.01); cb_.scale = (0.62, 0.16, 1); vis(cb_, cnt_a)
 DIG_X = [-0.14, -0.065, 0.01]
 for pos in range(3):
@@ -828,6 +854,7 @@ for pos in range(3):
     shown = CNT >= 10 ** (2 - pos) if pos < 2 else np.ones(NF, bool)
     for dgt in range(10):
         o = hud_text(str(dgt), DIG_X[pos], 0.9, 0.105, M_HUDW)
+        o.data.font = FONT; o.data.size = 0.105 * TXT_K          # keep the original digit glyphs (the slot spacing is made for them)
         vis(o, ((dv == dgt) & shown).astype(float) * cnt_a)
 tot = hud_text('/ 525', 0.17, 0.9, 0.06, M_HUDG); vis(tot, cnt_a * (T > FINAL + 0.9))
 
@@ -843,19 +870,20 @@ def banner(lines, x, w, h, zc):
     tot_h = sum(sz * 1.3 for _, sz, _, _ in lines); zz = zc + tot_h / 2
     for s_, size, mt, fnt in lines:
         zz -= size * 1.3
-        text(s_, (x, y - 0.03, zz + size * 0.62), size, mt, rot=(math.pi / 2, 0, 0), font=fnt)
+        fit_w(text(s_, (x, y - 0.03, zz + size * 0.62), size, mt, rot=(math.pi / 2, 0, 0), font=fnt), w - 0.4)
 x_ = lambda t: float(np.interp(t, T, POS['lamp'][:, 0]))
 bz_ = lambda t: float(np.interp(t, T, FOC[:, 2])) + 2.25
 S, J = FONT_S, FONT
-for tb, w_, h_, lines in ((5.2, 5.6, 2.5, [('アイネ・クライネ', 0.56, M_TXT_G, S), ('ナハトムジーク', 0.56, M_TXT_G, S), ('モーツァルト（1787）', 0.34, M_TXT, J)]),
-                          (11.0, 5.2, 1.7, [('クラシック × ビー玉からくり', 0.34, M_TXT_P, J), ('セレナーデ ト長調 K.525', 0.34, M_TXT, J)]),
-                          (16.8, 4.8, 1.7, [('夜の宮殿の舞踏会', 0.44, M_TXT_G, S), ('ビー玉が燭台をともす', 0.32, M_TXT, J)]),
-                          (22.6, 5.0, 1.7, [('モーツァルトの名曲', 0.4, M_TXT_G, J), ('弦楽合奏 第1楽章 アレグロ', 0.3, M_TXT, J)]),
-                          (28.4, 4.8, 1.7, [('月明かりのピアノ', 0.4, M_TXT_P, S), ('マーブルマシン', 0.36, M_TXT_G, J)])):
+for tb, w_, h_, lines in ((5.2, 5.6, 2.5, [('Eine kleine', 0.58, M_TXT_G, S), ('Nachtmusik', 0.58, M_TXT_G, S), ('Mozart (1787) · K.525', 0.32, M_TXT, J),
+                                             ('アイネ・クライネ・ナハトムジーク', 0.2, M_TXT, J)]),
+                          (11.0, 5.2, 1.7, [('Classical Music', 0.4, M_TXT_P, J), ('Satisfying Marble Machine', 0.3, M_TXT, J), ('クラシック × ビー玉からくり', 0.2, M_TXT, J)]),
+                          (16.8, 4.8, 1.7, [('Night Palace Ball', 0.44, M_TXT_G, S), ('Marbles light the candles', 0.28, M_TXT, J), ('夜の宮殿の舞踏会', 0.2, M_TXT, J)]),
+                          (22.6, 5.0, 1.7, [('Mozart Masterpiece', 0.4, M_TXT_G, J), ('Serenade in G · 1st mvt. Allegro', 0.26, M_TXT, J), ('モーツァルトの名曲 第1楽章', 0.2, M_TXT, J)]),
+                          (28.4, 4.8, 1.7, [('Moonlight Piano', 0.42, M_TXT_P, S), ('Marble Machine ASMR', 0.3, M_TXT_G, J), ('月明かりのピアノ マーブルマシン', 0.2, M_TXT, J)])):
     banner(lines, x_(tb) + 0.6, w_, h_, bz_(tb))
 # the answer under the chandelier
-k525 = text('モーツァルト K.525', (PXs, -1.3, cupc[2] - 0.9), 0.36, M_TXT_G, font=FONT_S)
-vis(k525, np.array([0.0 if t < FINAL + 0.9 else min(1.0, (t - FINAL - 0.9) / 0.3) for t in T]))
+k525 = label('Mozart K.525', 'モーツァルト', (PXs, -1.3, cupc[2] - 0.9), 0.4, M_TXT_G, k=0.5, font=FONT_S)
+for o_ in k525: vis(o_, np.array([0.0 if t < FINAL + 0.9 else min(1.0, (t - FINAL - 0.9) / 0.3) for t in T]))
 
 EV_OUT = dict(pieces=[dict(kind=p['kind'], t=p['t'], top=list(map(float, p['top'])), n=list(map(float, p['n'])), hw=p['hw'], hd=p['hd'], th=p['th'], ball=p['ball']) for p in PIECES],
               counter=dict(final=int(CNT[-1]), max=int(CNT.max()), gust=int(CNT[int(GUST * FPS)]), dark=int(CNT[int(DACAPO * FPS) - 1])))

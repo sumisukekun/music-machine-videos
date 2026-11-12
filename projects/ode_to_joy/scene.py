@@ -37,6 +37,7 @@ try: sc.view_settings.view_transform = 'AgX'; sc.view_settings.look = 'AgX - Pun
 except Exception: pass
 sc.frame_start, sc.frame_end = 0, NF - 1
 FONT = bpy.data.fonts.load(f'{HERE}/jp_sub.otf')
+FONT_EN = bpy.data.fonts.load(f'{HERE}/en_bold.ttf')
 TXT_K = 2.75
 
 
@@ -155,9 +156,32 @@ def sphere(c, r, m, seg=(16, 8), name='sph'):
 
 
 def text(s, loc, size, m, rot=(math.pi / 2 - 0.33, 0, 0), align='CENTER', ext=0.02):
-    cu = bpy.data.curves.new('t', 'FONT'); cu.body = s; cu.font = FONT; cu.size = size * TXT_K; cu.extrude = ext
+    cu = bpy.data.curves.new('t', 'FONT'); cu.body = s; cu.font = FONT_EN if _latin(s) else FONT; cu.size = size * TXT_K * (EN_K if _latin(s) else 1.0); cu.extrude = ext
     cu.align_x = align; cu.align_y = 'CENTER'
     o = link(bpy.data.objects.new('txt', cu)); o.location = loc; o.rotation_euler = rot; o.data.materials.append(m); return o
+
+
+# English-first on-screen text (2026-11-12): Latin strings use DejaVu Sans Bold (en_bold.ttf, free DejaVu font license),
+# Japanese subtitles keep the Noto CJK subset.
+def _latin(s): return all(ord(c) < 0x2E80 for c in s)
+EN_K = 0.75                  # DejaVu renders ~1.45x taller than the CJK font at the same size: match the line heights
+
+
+def fit_w(o, w):
+    """shrink a text object uniformly so that it is at most w wide"""
+    bpy.context.view_layer.update()
+    if w and o.dimensions.x > w: k = w / o.dimensions.x; o.scale = (k, k, k)
+    return o
+
+
+def label(en, jp, loc, size, m, mj=None, k=0.5, w=None, **kw):
+    """English line at loc, a small Japanese line just below it (in the text plane). Returns [en_obj, jp_obj]."""
+    o = fit_w(text(en, loc, size, m, **kw), w)
+    if not jp: return [o]
+    R = o.rotation_euler.to_matrix()
+    d = R @ Vector((0, -(size * 0.62 + size * k * 0.62) * o.scale[0] / 1.0, 0))
+    o2 = fit_w(text(jp, tuple(Vector(loc) + d), size * k, mj or M_TXT, **kw), w)
+    return [o, o2]
 
 
 def frame_from_n(n):
@@ -577,18 +601,19 @@ def sign(lines, x, y, z, w, h, plate=True):
     zz = z + h / 2
     for s_, size, mt in lines:
         zz -= size * 1.25
-        text(s_, (x, y - 0.03 + 0.344 * (zz + size * 0.15 - z), zz + size * 0.15), size, mt)
+        fit_w(text(s_, (x, y - 0.03 + 0.344 * (zz + size * 0.15 - z), zz + size * 0.15), size, mt), (w - 0.3) if plate else None)
 PS = POS['solo']
 def xs_(t): return float(np.interp(t, T, PS[:, 0]))
 def zs_(t): return float(np.interp(t, T, PS[:, 2]))
-sign([('ベートーヴェン', 0.42, M_TXT), ('交響曲第9番「歓喜の歌」', 0.33, M_TXT_G), ('第九 × ビー玉からくり', 0.3, M_TXT_R)],
+sign([('BEETHOVEN', 0.46, M_TXT), ('Symphony No. 9 "Ode to Joy"', 0.3, M_TXT_G), ('Classical × Marble Machine', 0.26, M_TXT_R),
+      ('ベートーヴェン 交響曲第9番「歓喜の歌」', 0.17, M_TXT)],
      xs_(0.5) + 0.5, -3.6, zs_(0.5) - 3.4, 4.3, 1.6)
-sign([('年末の大合唱', 0.5, M_TXT_G), ('クラシック名曲', 0.34, M_TXT)], xs_(7.0) - 0.3, -3.4, zs_(7.0) - 1.9, 3.6, 1.3)
-sign([('ビー玉マーブルマシン', 0.36, M_TXT_G), ('からくり装置で合唱', 0.32, M_TXT)], xs_(13.0) + 1.0, -3.6, zs_(13.0) - 2.2, 4.0, 1.3)
-sign([('第九 第4楽章', 0.4, M_TXT_G), ('歓喜の歌（Ode to Joy）', 0.27, M_TXT)], xs_(19.5) + 1.0, -3.6, zs_(19.5) - 2.4, 4.0, 1.25)
-sign([('年越しクラシック', 0.4, M_TXT_G), ('1人から何人に？', 0.36, M_TXT_R)], xs_(26.0) + 1.0, -3.6, zs_(26.0) - 2.4, 4.0, 1.3)
-sign([('観客席から', 0.26, M_TXT_G), ('飛び入り参加！', 0.26, M_TXT)], EV['join'][0]['perch'][0] - 1.2, EV['join'][0]['perch'][1] + 1.0, EV['join'][0]['perch'][2] + 0.9, 2.2, 0.8)
-sign([('ひな壇の大合唱団', 0.5, M_TXT_G)], XC, YR - 1.2, bel['z'] + bel['h_pipe'] + 5.0, 0.1, 0.8, plate=False)
+sign([("New Year's Eve Choir", 0.34, M_TXT_G), ('Classical Music', 0.3, M_TXT), ('年末の大合唱 クラシック名曲', 0.18, M_TXT)], xs_(7.0) + 1.5, -3.4, zs_(7.0) - 1.9, 3.6, 1.3)
+sign([('Satisfying Marble Machine', 0.32, M_TXT_G), ('A choir of marbles', 0.3, M_TXT), ('ビー玉マーブルマシンで合唱', 0.18, M_TXT)], xs_(13.0) + 1.0, -3.6, zs_(13.0) - 2.2, 4.0, 1.3)
+sign([('Symphony No. 9 – 4th mvt.', 0.32, M_TXT_G), ("Beethoven's Ode to Joy", 0.28, M_TXT), ('第九 第4楽章「歓喜の歌」', 0.18, M_TXT)], xs_(19.5) + 1.0, -3.6, zs_(19.5) - 2.4, 4.0, 1.25)
+sign([('How many will join?', 0.36, M_TXT_R), ('New Year classical', 0.28, M_TXT_G), ('1人から何人に？ 年越しクラシック', 0.18, M_TXT)], xs_(26.0) + 1.0, -3.6, zs_(26.0) - 2.4, 4.0, 1.3)
+sign([('Jumping in', 0.26, M_TXT_G), ('from the audience!', 0.22, M_TXT), ('観客席から飛び入り参加！', 0.14, M_TXT)], EV['join'][0]['perch'][0] - 1.2, EV['join'][0]['perch'][1] + 1.0, EV['join'][0]['perch'][2] + 0.9, 2.2, 0.8)
+sign([('THE GRAND CHOIR', 0.5, M_TXT_G), ('ひな壇の大合唱団', 0.26, M_TXT)], XC, YR - 1.2, bel['z'] + bel['h_pipe'] + 5.0, 0.1, 0.8, plate=False)
 
 # ---------------- hit rings (FX pool) for melody keys and bass bells ----------------
 NRING = 14
@@ -635,7 +660,7 @@ for b in range(NB):
         for k in range(3): key_series(o, 'scale', k, Sc * 0.09)
 # a 2027 banner of light above the riser after the last seat is taken
 t_last = max(r['t_seat'] for r in EV['rain'])
-bn = text('HAPPY NEW YEAR', (XC, YR - 1.6, bel['z'] + 2.3), 1.0, M_TXT_G, rot=(math.pi / 2 - 0.2, 0, 0))
+bn = text('HAPPY NEW YEAR', (XC, YR - 1.6, bel['z'] + 2.3), 1.05, M_TXT_G, rot=(math.pi / 2 - 0.2, 0, 0))
 bn.scale = (0.001,) * 3; bn.keyframe_insert('scale', frame=int(t_last * FPS))
 bn.scale = (1, 1, 1); bn.keyframe_insert('scale', frame=int(t_last * FPS) + 8)
 
@@ -676,18 +701,19 @@ pl_ = box((0, 0, -0.02), (hh_ * 9 / 16 * 0.62, hh_ * 0.075, 0.02), M_PLATE, name
 for sgn in (1, -1):
     gb_ = box((0, sgn * hh_ * 0.0375, -0.01), (hh_ * 9 / 16 * 0.64, hh_ * 0.006, 0.02), M_GOLD, name='hudgold'); gb_.parent = hud
 ts_h = hh_ * 0.034
-t1 = text('合唱団', (-hh_ * 9 / 16 * 0.2, 0, 0), ts_h, M_TXT, rot=(0, 0, 0)); t1.parent = hud
-t2 = text('人', (hh_ * 9 / 16 * 0.215, 0, 0), ts_h, M_TXT, rot=(0, 0, 0)); t2.parent = hud
+DW = ts_h * 0.95                                     # digit slot spacing (DejaVu digits)
+X_LBL = hh_ * 9 / 16 * 0.105 - DW - 0.75 * ts_h      # right edge of the label, a little left of the first digit
+t1 = fit_w(text('CHOIR:', (X_LBL, ts_h * 0.26, 0), ts_h * 1.2, M_TXT, rot=(0, 0, 0), align='RIGHT'), X_LBL + hh_ * 9 / 16 * 0.29); t1.parent = hud
+t2 = text('合唱団', (X_LBL, -ts_h * 0.64, 0), ts_h * 0.45, M_TXT, rot=(0, 0, 0), align='RIGHT'); t2.parent = hud
 cnt = EV['count']
 ctimes = np.array([c[0] for c in cnt]); cvals = np.array([c[1] for c in cnt])
 CV = np.array([cvals[max(0, np.searchsorted(ctimes, t, 'right') - 1)] for t in T])
-DW = ts_h * 0.62
 for slot in range(3):
     for dgt in range(10):
-        o = text(str(dgt), (hh_ * 9 / 16 * 0.105 + (slot - 1) * DW, 0, 0), ts_h * 1.25, M_TXT_G, rot=(0, 0, 0)); o.parent = hud
+        o = text(str(dgt), (hh_ * 9 / 16 * 0.105 + (slot - 1) * DW, 0, 0), ts_h * 1.3, M_TXT_G, rot=(0, 0, 0)); o.parent = hud
         vis = np.zeros(NF)
         for f in range(NF):
-            v = int(CV[f]); s_ = f'{v:3d}'
+            v = int(CV[f]); s_ = f'{v:<3d}'                # left-aligned right after 'CHOIR'
             vis[f] = 1.0 if s_[slot] == str(dgt) else 0.0
         if not vis.any(): o.hide_render = True; continue
         for k in range(3): key_series(o, 'scale', k, np.maximum(0.001, vis))
