@@ -1,0 +1,207 @@
+rows: 189
+strike_time_err_max_s: 0.0
+contact_gap_at_note_time_max: 0.0
+contact_gap_at_nearest_frame_max: 0.228
+contact_gap_at_nearest_frame_mean: 0.013
+keys: 193
+key_strikes: 735
+bounce_e_max: 0.959
+speed_out_over_in_max: 0.998
+inflight_speed_ratio_violations: False
+key_collisions: 8
+key_collision_worst: 0.028
+examples: [('GIANT1', 20.858, 'pedal', ['D2'], 0.028), ('T1', 22.625, 'bar', ['C#3', 'C#4'], 0.015), ('DROP', 47.85, 'bar', ['A3'], 0.012), ('DROP', 48.083, 'bar', ['C#4'], 0.013), ('DROP', 48.492, 'bar', ['E4'], 0.014), ('DROP', 48.408, 'bar', ['G4'], 0.012), ('DROP', 48.175, 'wall', ['F4'], 0.018), ('DROP', 49.325, 'bar', ['E4'], 0.014)]
+main_marbles_min_clearance: 0.01
+closest_pair: ('C3', 'C4', 17.02)
+rain_min_clearance: 0.005
+
+row  time    pitches        role    bar pos   note
+  0   1.250  A4 A5          call1     1 0.000 mordent A
+  1   1.360  G4 G5          call1     1 0.000 mordent G
+  2   1.470  A4 A5          call1     1 0.000 A (fermata)
+  3   4.045  G4 G5          call1     1 0.625 run
+  4   4.105  F4 F5          call1     1 0.688 run
+  5   4.165  E4 E5          call1     1 0.750 run
+  6   4.225  D4 D5          call1     1 0.812 run
+  7   4.285  C#4 C#5        call1     1 0.875 run
+  8   4.405  D4 D5          call1     1 1.000 run
+  9   5.850  A3 A4          call2     1 2.000 mordent A
+ 10   5.960  G3 G4          call2     1 2.000 mordent G
+ 11   6.070  A3 A4          call2     1 2.000 A (fermata)
+ 12   8.650  E3 E4          call2     1 2.625 run
+ 13   8.735  F3 F4          call2     1 2.750 run
+ 14   8.820  C#3 C#4        call2     1 2.875 run
+ 15   8.905  D3 D4          call2     1 3.000 run
+ 16  10.500  A2 A3          call3     2 0.000 mordent A
+ 17  10.620  G2 G3          call3     2 0.000 mordent G
+ 18  10.740  A2 A3          call3     2 0.000 A (fermata)
+ 19  13.420  G2 G3          call3     2 0.625 run
+ 20  13.485  F2 F3          call3     2 0.688 run
+ 21  13.550  E2 E3          call3     2 0.750 run
+ 22  13.615  D2 D3          call3     2 0.812 run
+ 23  13.680  C#2 C#3        call3     2 0.875 run
+ 24  13.810  D2 D3          call3     2 1.000 run
+ 25  15.250  D2             ped       2 2.000 pedal D
+ 26  16.500  C#3            chord     2 3.000 dim7 (rolled)
+ 27  16.630  E3             chord     2 3.000 dim7 (rolled)
+ 28  16.760  G3             chord     2 3.000 dim7 (rolled)
+ 29  16.890  A#3            chord     2 3.000 dim7 (rolled)
+ 30  17.020  C#4            chord     2 3.000 dim7 (rolled)
+ 31  17.150  E4             chord     2 3.000 dim7 (rolled)
+ 32  19.000  D3             dmaj      3 1.000 D major
+ 33  19.000  A3             dmaj      3 1.000 D major
+ 34  19.000  D4             dmaj      3 1.000 D major
+ 35  19.312  E3             inner     3 1.250 E
+ 36  19.625  F#3            inner     3 1.500 F#
+ 37  21.600  C#3 C#4        trio      3 3.750 
+ 38  21.800  D3 D4          trio      4 0.000 
+ 39  21.933  E3 E4          trio      4 0.167 
+ 40  22.067  C#3 C#4        trio      4 0.333 
+ 41  22.200  D3 D4          trio      4 0.500 
+ 42  22.333  E3 E4          trio      4 0.667 
+ 43  22.467  C#3 C#4        trio      4 0.833 
+ 44  22.600  D3 D4          trio      4 1.000 
+ 45  22.733  E3 E4          trio      4 1.167 
+ 46  22.867  C#3 C#4        trio      4 1.333 
+ 47  23.000  D3 D4          trio      4 1.500 
+ 48  23.200  E3 E4          trio      4 1.750 
+ 49  23.400  F3 F4          trio      4 2.000 
+ 50  23.533  G3 G4          trio      4 2.167 
+ 51  23.667  E3 E4          trio      4 2.333 
+ 52  23.800  F3 F4          trio      4 2.500 
+ 53  23.933  G3 G4          trio      4 2.667 
+ 54  24.067  E3 E4          trio      4 2.833 
+ 55  24.200  F3 F4          trio      4 3.000 
+ 56  24.333  G3 G4          trio      4 3.167 
+ 57  24.467  E3 E4          trio      4 3.333 
+ 58  24.600  F3 F4          trio      4 3.500 
+ 59  24.800  G3 G4          trio      4 3.750 
+ 60  25.000  A3 A4          trio      5 0.000 
+ 61  25.133  A#3 A#4        trio      5 0.167 
+ 62  25.267  G3 G4          trio      5 0.333 
+ 63  25.400  A3 A4          trio      5 0.500 
+ 64  25.533  A#3 A#4        trio      5 0.667 
+ 65  25.667  G3 G4          trio      5 0.833 
+ 66  25.800  A3 A4          trio      5 1.000 
+ 67  25.933  A#3 A#4        trio      5 1.167 
+ 68  26.067  G3 G4          trio      5 1.333 
+ 69  26.200  A3 A4          trio      5 1.500 
+ 70  28.350  C#4 C#5        trio      5 3.750 
+ 71  28.550  D4 D5          trio      6 0.000 
+ 72  28.683  E4 E5          trio      6 0.167 
+ 73  28.817  C#4 C#5        trio      6 0.333 
+ 74  28.950  D4 D5          trio      6 0.500 
+ 75  29.083  E4 E5          trio      6 0.667 
+ 76  29.217  C#4 C#5        trio      6 0.833 
+ 77  29.350  D4 D5          trio      6 1.000 
+ 78  29.483  E4 E5          trio      6 1.167 
+ 79  29.617  C#4 C#5        trio      6 1.333 
+ 80  29.750  D4 D5          trio      6 1.500 
+ 81  29.950  E4 E5          trio      6 1.750 
+ 82  30.150  F4 F5          trio      6 2.000 
+ 83  30.283  G4 G5          trio      6 2.167 
+ 84  30.417  E4 E5          trio      6 2.333 
+ 85  30.550  F4 F5          trio      6 2.500 
+ 86  30.683  G4 G5          trio      6 2.667 
+ 87  30.817  E4 E5          trio      6 2.833 
+ 88  30.950  F4 F5          trio      6 3.000 
+ 89  31.083  G4 G5          trio      6 3.167 
+ 90  31.217  E4 E5          trio      6 3.333 
+ 91  31.350  F4 F5          trio      6 3.500 
+ 92  31.550  G4 G5          trio      6 3.750 
+ 93  31.750  A4 A5          trio      7 0.000 
+ 94  31.883  A#4 A#5        trio      7 0.167 
+ 95  32.017  G4 G5          trio      7 0.333 
+ 96  32.150  A4 A5          trio      7 0.500 
+ 97  32.283  A#4 A#5        trio      7 0.667 
+ 98  32.417  G4 G5          trio      7 0.833 
+ 99  32.550  A4 A5          trio      7 1.000 
+100  32.683  A#4 A#5        trio      7 1.167 
+101  32.817  G4 G5          trio      7 1.333 
+102  32.950  A4 A5          trio      7 1.500 
+103  35.100  A4 A5          trio      7 3.750 
+104  35.300  G4 G5          trio      8 0.000 
+105  35.433  A#4 A#5        trio      8 0.167 
+106  35.567  E4 E5          trio      8 0.333 
+107  35.700  G4 G5          trio      8 0.500 
+108  35.833  A#4 A#5        trio      8 0.667 
+109  35.967  E4 E5          trio      8 0.833 
+110  36.100  F4 F5          trio      8 1.000 
+111  36.233  A4 A5          trio      8 1.167 
+112  36.367  D4 D5          trio      8 1.333 
+113  36.500  F4 F5          trio      8 1.500 
+114  36.633  A4 A5          trio      8 1.667 
+115  36.767  D4 D5          trio      8 1.833 
+116  36.900  E4 E5          trio      8 2.000 
+117  37.033  G4 G5          trio      8 2.167 
+118  37.167  C4 C5          trio      8 2.333 
+119  37.300  E4 E5          trio      8 2.500 
+120  37.433  G4 G5          trio      8 2.667 
+121  37.567  C4 C5          trio      8 2.833 
+122  37.700  D4 D5          trio      8 3.000 
+123  37.833  F4 F5          trio      8 3.167 
+124  37.967  A#3 A#4        trio      8 3.333 
+125  38.100  D4 D5          trio      8 3.500 
+126  38.233  F4 F5          trio      8 3.667 
+127  38.367  A#3 A#4        trio      8 3.833 
+128  38.500  C4 C5          trio      9 0.000 
+129  38.633  E4 E5          trio      9 0.167 
+130  38.767  A3 A4          trio      9 0.333 
+131  38.900  C4 C5          trio      9 0.500 
+132  39.033  E4 E5          trio      9 0.667 
+133  39.167  A3 A4          trio      9 0.833 
+134  39.300  A#3 A#4        trio      9 1.000 
+135  39.433  D4 D5          trio      9 1.167 
+136  39.567  G3 G4          trio      9 1.333 
+137  39.700  A#3 A#4        trio      9 1.500 
+138  39.833  D4 D5          trio      9 1.667 
+139  39.967  G3 G4          trio      9 1.833 
+140  40.100  A3 A4          trio      9 2.000 
+141  40.233  C4 C5          trio      9 2.167 
+142  40.367  F3 F4          trio      9 2.333 
+143  40.500  A3 A4          trio      9 2.500 
+144  40.633  C4 C5          trio      9 2.667 
+145  40.767  F3 F4          trio      9 2.833 
+146  40.900  G3 G4          trio      9 3.000 
+147  41.033  A#3 A#4        trio      9 3.167 
+148  41.167  E3 E4          trio      9 3.333 
+149  41.300  G3 G4          trio      9 3.500 
+150  41.433  A#3 A#4        trio      9 3.667 
+151  41.567  E3 E4          trio      9 3.833 
+152  41.700  F3 F4          trio     10 0.000 
+153  41.833  A3 A4          trio     10 0.167 
+154  41.967  D3 D4          trio     10 0.333 
+155  42.100  F3 F4          trio     10 0.500 
+156  42.233  A3 A4          trio     10 0.667 
+157  42.367  D3 D4          trio     10 0.833 
+158  42.500  E3 E4          trio     10 1.000 
+159  42.633  G3 G4          trio     10 1.167 
+160  42.767  C#3 C#4        trio     10 1.333 
+161  42.900  E3 E4          trio     10 1.500 
+162  43.033  G3 G4          trio     10 1.667 
+163  43.167  C#3 C#4        trio     10 1.833 
+164  43.360  D2             ped      10 2.000 pedal D
+165  44.410  C#3 C#4        chord2   10 3.000 dim7
+166  44.410  E3 E4          chord2   10 3.000 dim7
+167  44.410  G3 G4          chord2   10 3.000 dim7
+168  44.410  A#3 A#4        chord2   10 3.000 dim7
+169  46.763  A4             solo     11 1.125 
+170  46.875  G4             solo     11 1.250 
+171  46.987  F4             solo     11 1.375 
+172  47.100  E4             solo     11 1.500 
+173  47.212  D4             solo     11 1.625 
+174  47.325  C#4            solo     11 1.750 
+175  47.438  B3             solo     11 1.875 
+176  47.550  C#4            solo     11 2.000 
+177  47.775  A3             solo     11 2.250 
+178  48.000  C#4            solo     11 2.500 
+179  48.225  E4             solo     11 2.750 
+180  48.337  G4             solo     11 2.875 
+181  48.450  G4             solo     11 3.000 trill
+182  48.562  F4             solo     11 3.000 trill
+183  48.675  G4             solo     11 3.000 trill
+184  48.788  F4             solo     11 3.000 trill
+185  48.900  G4             solo     11 3.000 trill
+186  49.013  F4             solo     11 3.000 trill
+187  49.125  E4             solo     11 3.750 
+188  49.530  D2 D3 D4 F4 D5 F5 final    12 0.000 final chord (D2 D3 D4 F4 + D5 F5 couplers)
