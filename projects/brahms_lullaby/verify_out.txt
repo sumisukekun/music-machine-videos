@@ -1,0 +1,22 @@
+events {'V': 79, 'RH': 87, 'LH': 74}
+events_wrong_or_missing []
+final_chord_struck ['D#5', 'G5', 'A#5']
+pitched_hits_not_in_score []
+sheep (25, [2, 3])
+contact_gap_nearest_frame_max_m 0.069
+contact_gap_mean_m 0.021
+contact_gap_worst [(0.069, 'pink', 'key', 1.783), (0.069, 'blue', 'key', 1.783), (0.068, 'pink', 'key', 5.117)]
+contact_gap_exact_time_max_m 0.0
+collisions {}
+collision_examples {}
+collision_worst_pen_m 0.0
+min_ball_surface_gap (0.215, 'pink', 'blue', 49.3)
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) 1.4
+worst_ratio_at ('star', np.float64(18.57), np.float64(0.58), np.float64(0.82))
+mechanism_speed_change_per_frame_max_mps (0.0, None)
+bounce_speed_out_over_in_max 0.9954
+restitution_range (0.234, 0.97)
+contact_tilt_max_deg 33.8
+cradles 28
+sheep_counter_final 25
