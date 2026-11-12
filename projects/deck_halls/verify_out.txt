@@ -1,0 +1,20 @@
+melody_notes 136
+melody_missing_or_wrong []
+melody_struck_twice []
+bass_notes 32
+bass_missing_or_wrong []
+melody_vs_source_mismatch 0
+bass_vs_source_mismatch 0
+contact_gap_nearest_frame(max,mean) {'key': (0.046, 0.007), 'bell': (0.061, 0.015), 'bass': (0.0, 0.0), 'trigger': (0.0, 0.0), 'bassfinal': (0.0, 0.0)}
+collisions {}
+collision_examples {}
+collision_worst_pen 0.0
+min_ball_surface_gap (0.022, ('orn66', 'orn67', 63.63))
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) (np.float64(1.446), ('orn42', np.float64(39.53), np.float64(0.52), np.float64(0.76)))
+flight_speed_ratio_max(v>1.5) (np.float64(1.154), ('orn19', np.float64(21.9), np.float64(1.51), np.float64(1.75)))
+mechanism_accel_max (4.66, ('holly', np.float64(30.13)))
+bounce_speed_out_over_in_max 0.9751
+restitution_range (0.181, 0.969)
+key_tilt_max_deg 38.5
+video_length_s 69.5

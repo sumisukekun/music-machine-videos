@@ -1,0 +1,188 @@
+  0   2.000s bar  1 beat 1    C5  frame    60  holly holly:key
+  1   2.750s bar  1 beat 2.5  A#4  frame    82  holly holly:key
+  2   3.000s bar  1 beat 3    A4  frame    90  holly holly:key
+  3   3.500s bar  1 beat 4    G4  frame   105  holly holly:key
+  4   4.000s bar  2 beat 1    F4  frame   120  holly holly:key
+  5   4.500s bar  2 beat 2    G4  frame   135  holly holly:key
+  6   5.000s bar  2 beat 3    A4  frame   150  holly holly:key
+  7   5.500s bar  2 beat 4    F4  frame   165  holly holly:key
+  8   6.000s bar  3 beat 1    G4  frame   180  orn   orn0:bell
+  9   6.250s bar  3 beat 1.5  A4  frame   188  orn   orn1:bell
+ 10   6.500s bar  3 beat 2    A#4  frame   195  orn   orn2:bell
+ 11   6.750s bar  3 beat 2.5  G4  frame   202  orn   orn3:bell
+ 12   7.000s bar  3 beat 3    A4  frame   210  orn   orn4:bell
+ 13   7.750s bar  3 beat 4.5  G4  frame   232  orn   orn5:bell
+ 14   8.000s bar  4 beat 1    F4  frame   240  orn   orn6:bell
+ 15   8.500s bar  4 beat 2    E4  frame   255  orn   orn7:bell
+ 16   9.000s bar  4 beat 3    F4  frame   270  orn   orn8:bell
+ 17  10.000s bar  5 beat 1    C5  frame   300  holly holly:key
+ 18  10.750s bar  5 beat 2.5  A#4  frame   322  holly holly:key
+ 19  11.000s bar  5 beat 3    A4  frame   330  holly holly:key
+ 20  11.500s bar  5 beat 4    G4  frame   345  holly holly:key
+ 21  12.000s bar  6 beat 1    F4  frame   360  holly holly:key
+ 22  12.500s bar  6 beat 2    G4  frame   375  holly holly:key
+ 23  13.000s bar  6 beat 3    A4  frame   390  holly holly:key
+ 24  13.500s bar  6 beat 4    F4  frame   405  holly holly:key
+ 25  14.000s bar  7 beat 1    G4  frame   420  orn   orn9:bell
+ 26  14.250s bar  7 beat 1.5  A4  frame   428  orn   orn10:bell
+ 27  14.500s bar  7 beat 2    A#4  frame   435  orn   orn11:bell
+ 28  14.750s bar  7 beat 2.5  G4  frame   442  orn   orn12:bell
+ 29  15.000s bar  7 beat 3    A4  frame   450  orn   orn13:bell
+ 30  15.750s bar  7 beat 4.5  G4  frame   472  orn   orn14:bell
+ 31  16.000s bar  8 beat 1    F4  frame   480  orn   orn15:bell
+ 32  16.500s bar  8 beat 2    E4  frame   495  orn   orn16:bell
+ 33  17.000s bar  8 beat 3    F4  frame   510  orn   orn17:bell
+ 34  18.000s bar  9 beat 1    G4  frame   540  holly holly:key
+ 35  18.750s bar  9 beat 2.5  A4  frame   562  holly holly:key
+ 36  19.000s bar  9 beat 3    A#4  frame   570  holly holly:key
+ 37  19.500s bar  9 beat 4    G4  frame   585  holly holly:key
+ 38  20.000s bar 10 beat 1    A4  frame   600  holly holly:key
+ 39  20.750s bar 10 beat 2.5  A#4  frame   622  holly holly:key
+ 40  21.000s bar 10 beat 3    C5  frame   630  holly holly:key
+ 41  21.500s bar 10 beat 4    G4  frame   645  holly holly:key
+ 42  22.000s bar 11 beat 1    A4  frame   660  orn   orn18:bell
+ 43  22.250s bar 11 beat 1.5  B4  frame   668  orn   orn19:bell
+ 44  22.500s bar 11 beat 2    C5  frame   675  orn   orn20:bell
+ 45  23.000s bar 11 beat 3    D5  frame   690  orn   orn21:bell
+ 46  23.250s bar 11 beat 3.5  E5  frame   698  orn   orn22:bell
+ 47  23.500s bar 11 beat 4    F5  frame   705  orn   orn23:bell
+ 48  24.000s bar 12 beat 1    E5  frame   720  orn   orn24:bell
+ 49  24.500s bar 12 beat 2    D5  frame   735  orn   orn25:bell
+ 50  25.000s bar 12 beat 3    C5  frame   750  orn   orn26:bell
+ 51  26.000s bar 13 beat 1    C5  frame   780  holly holly:key
+ 52  26.750s bar 13 beat 2.5  A#4  frame   802  holly holly:key
+ 53  27.000s bar 13 beat 3    A4  frame   810  holly holly:key
+ 54  27.500s bar 13 beat 4    G4  frame   825  holly holly:key
+ 55  28.000s bar 14 beat 1    F4  frame   840  holly holly:key
+ 56  28.500s bar 14 beat 2    G4  frame   855  holly holly:key
+ 57  29.000s bar 14 beat 3    A4  frame   870  holly holly:key
+ 58  29.500s bar 14 beat 4    F4  frame   885  holly holly:key
+ 59  30.000s bar 15 beat 1    D5  frame   900  orn   orn27:bell
+ 60  30.250s bar 15 beat 1.5  D5  frame   908  orn   orn28:bell
+ 61  30.500s bar 15 beat 2    D5  frame   915  orn   orn29:bell
+ 62  30.750s bar 15 beat 2.5  D5  frame   922  orn   orn30:bell
+ 63  31.000s bar 15 beat 3    C5  frame   930  orn   orn31:bell
+ 64  31.750s bar 15 beat 4.5  A#4  frame   952  orn   orn32:bell
+ 65  32.000s bar 16 beat 1    A4  frame   960  orn   orn33:bell
+ 66  32.500s bar 16 beat 2    G4  frame   975  orn   orn34:bell
+ 67  33.000s bar 16 beat 3    F4  frame   990  orn   orn35:bell
+ 68  34.000s bar 17 beat 1    C5  frame  1020  holly holly:key
+ 69  34.750s bar 17 beat 2.5  A#4  frame  1042  holly holly:key
+ 70  35.000s bar 17 beat 3    A4  frame  1050  holly holly:key
+ 71  35.500s bar 17 beat 4    G4  frame  1065  holly holly:key
+ 72  36.000s bar 18 beat 1    F4  frame  1080  holly holly:key
+ 73  36.500s bar 18 beat 2    G4  frame  1095  holly holly:key
+ 74  37.000s bar 18 beat 3    A4  frame  1110  holly holly:key
+ 75  37.500s bar 18 beat 4    F4  frame  1125  holly holly:key
+ 76  38.000s bar 19 beat 1    G4  frame  1140  orn   orn36:bell
+ 77  38.250s bar 19 beat 1.5  A4  frame  1148  orn   orn37:bell
+ 78  38.500s bar 19 beat 2    A#4  frame  1155  orn   orn38:bell
+ 79  38.750s bar 19 beat 2.5  G4  frame  1162  orn   orn39:bell
+ 80  39.000s bar 19 beat 3    A4  frame  1170  orn   orn40:bell
+ 81  39.750s bar 19 beat 4.5  G4  frame  1192  orn   orn41:bell
+ 82  40.000s bar 20 beat 1    F4  frame  1200  orn   orn42:bell
+ 83  40.500s bar 20 beat 2    E4  frame  1215  orn   orn43:bell
+ 84  41.000s bar 20 beat 3    F4  frame  1230  orn   orn44:bell
+ 85  42.000s bar 21 beat 1    C5  frame  1260  holly holly:key
+ 86  42.750s bar 21 beat 2.5  A#4  frame  1282  holly holly:key
+ 87  43.000s bar 21 beat 3    A4  frame  1290  holly holly:key
+ 88  43.500s bar 21 beat 4    G4  frame  1305  holly holly:key
+ 89  44.000s bar 22 beat 1    F4  frame  1320  holly holly:key
+ 90  44.500s bar 22 beat 2    G4  frame  1335  holly holly:key
+ 91  45.000s bar 22 beat 3    A4  frame  1350  holly holly:key
+ 92  45.500s bar 22 beat 4    F4  frame  1365  holly holly:key
+ 93  46.000s bar 23 beat 1    G4  frame  1380  orn   orn45:bell
+ 94  46.250s bar 23 beat 1.5  A4  frame  1388  orn   orn46:bell
+ 95  46.500s bar 23 beat 2    A#4  frame  1395  orn   orn47:bell
+ 96  46.750s bar 23 beat 2.5  G4  frame  1402  orn   orn48:bell
+ 97  47.000s bar 23 beat 3    A4  frame  1410  orn   orn49:bell
+ 98  47.750s bar 23 beat 4.5  G4  frame  1432  orn   orn50:bell
+ 99  48.000s bar 24 beat 1    F4  frame  1440  orn   orn51:bell
+100  48.500s bar 24 beat 2    E4  frame  1455  orn   orn52:bell
+101  49.000s bar 24 beat 3    F4  frame  1470  orn   orn53:bell
+102  50.000s bar 25 beat 1    G4  frame  1500  holly holly:key
+103  50.750s bar 25 beat 2.5  A4  frame  1522  holly holly:key
+104  51.000s bar 25 beat 3    A#4  frame  1530  holly holly:key
+105  51.500s bar 25 beat 4    G4  frame  1545  holly holly:key
+106  52.000s bar 26 beat 1    A4  frame  1560  holly holly:key
+107  52.750s bar 26 beat 2.5  A#4  frame  1582  holly holly:key
+108  53.000s bar 26 beat 3    C5  frame  1590  holly holly:key
+109  53.500s bar 26 beat 4    G4  frame  1605  holly holly:key
+110  54.000s bar 27 beat 1    A4  frame  1620  orn   orn54:bell
+111  54.250s bar 27 beat 1.5  B4  frame  1628  orn   orn55:bell
+112  54.500s bar 27 beat 2    C5  frame  1635  orn   orn56:bell
+113  55.000s bar 27 beat 3    D5  frame  1650  orn   orn57:bell
+114  55.250s bar 27 beat 3.5  E5  frame  1658  orn   orn58:bell
+115  55.500s bar 27 beat 4    F5  frame  1665  orn   orn59:bell
+116  56.000s bar 28 beat 1    E5  frame  1680  orn   orn60:bell
+117  56.500s bar 28 beat 2    D5  frame  1695  orn   orn61:bell
+118  57.000s bar 28 beat 3    C5  frame  1710  orn   orn62:bell
+119  58.000s bar 29 beat 1    C5  frame  1740  holly holly:key
+120  58.750s bar 29 beat 2.5  A#4  frame  1762  holly holly:key
+121  59.000s bar 29 beat 3    A4  frame  1770  holly holly:key
+122  59.500s bar 29 beat 4    G4  frame  1785  holly holly:key
+123  60.000s bar 30 beat 1    F4  frame  1800  holly holly:key
+124  60.500s bar 30 beat 2    G4  frame  1815  holly holly:key
+125  61.000s bar 30 beat 3    A4  frame  1830  holly holly:key
+126  61.500s bar 30 beat 4    F4  frame  1845  holly holly:key
+127  62.000s bar 31 beat 1    D5  frame  1860  orn   orn63:bell
+128  62.250s bar 31 beat 1.5  D5  frame  1868  orn   orn64:bell
+129  62.500s bar 31 beat 2    D5  frame  1875  orn   orn65:bell
+130  62.750s bar 31 beat 2.5  D5  frame  1882  orn   orn66:bell
+131  63.000s bar 31 beat 3    C5  frame  1890  orn   orn67:bell
+132  63.750s bar 31 beat 4.5  A#4  frame  1912  orn   orn68:bell
+133  64.000s bar 32 beat 1    A4  frame  1920  orn   orn69:bell
+134  64.560s bar 32 beat 2    G4  frame  1937  orn   orn70:bell
+135  65.200s bar 32 beat 3    F4  frame  1956  orn   orn71:bell
+bass  34.000s bar 17 beat 1 F3
+bass  35.000s bar 17 beat 3 F3
+bass  36.000s bar 18 beat 1 D3
+bass  37.000s bar 18 beat 3 F3
+bass  38.000s bar 19 beat 1 C3
+bass  39.000s bar 19 beat 3 F3
+bass  40.000s bar 20 beat 1 C3
+bass  41.000s bar 20 beat 3 F3
+bass  42.000s bar 21 beat 1 F3
+bass  43.000s bar 21 beat 3 F3
+bass  44.000s bar 22 beat 1 D3
+bass  45.000s bar 22 beat 3 F3
+bass  46.000s bar 23 beat 1 C3
+bass  47.000s bar 23 beat 3 F3
+bass  48.000s bar 24 beat 1 C3
+bass  49.000s bar 24 beat 3 F3
+bass  50.000s bar 25 beat 1 C3
+bass  51.000s bar 25 beat 3 E3
+bass  52.000s bar 26 beat 1 F3
+bass  53.000s bar 26 beat 3 F3
+bass  54.000s bar 27 beat 1 F3
+bass  55.000s bar 27 beat 3 F3
+bass  56.000s bar 28 beat 1 G3
+bass  57.000s bar 28 beat 3 C3
+bass  58.000s bar 29 beat 1 F3
+bass  59.000s bar 29 beat 3 F3
+bass  60.000s bar 30 beat 1 D3
+bass  61.000s bar 30 beat 3 F3
+bass  62.000s bar 31 beat 1 A#2
+bass  63.000s bar 31 beat 3 A2
+bass  64.000s bar 32 beat 1 C3
+bass  65.200s bar 32 beat 3 F3
+melody_notes 136
+melody_missing_or_wrong []
+melody_struck_twice []
+bass_notes 32
+bass_missing_or_wrong []
+melody_vs_source_mismatch 0
+bass_vs_source_mismatch 0
+contact_gap_nearest_frame(max,mean) {'key': (0.046, 0.007), 'bell': (0.061, 0.015), 'bass': (0.0, 0.0), 'trigger': (0.0, 0.0), 'bassfinal': (0.0, 0.0)}
+collisions {}
+collision_examples {}
+collision_worst_pen 0.0
+min_ball_surface_gap (0.022, ('orn66', 'orn67', 63.63))
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) (np.float64(1.446), ('orn42', np.float64(39.53), np.float64(0.52), np.float64(0.76)))
+flight_speed_ratio_max(v>1.5) (np.float64(1.154), ('orn19', np.float64(21.9), np.float64(1.51), np.float64(1.75)))
+mechanism_accel_max (4.66, ('holly', np.float64(30.13)))
+bounce_speed_out_over_in_max 0.9751
+restitution_range (0.181, 0.969)
+key_tilt_max_deg 38.5
+video_length_s 69.5
