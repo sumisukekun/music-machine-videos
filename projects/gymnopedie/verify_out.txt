@@ -1,0 +1,161 @@
+melody_onsets 48
+melody_mismatch []
+bass_onsets 29
+bass_mismatch []
+chord_onsets 28
+chord_mismatch []
+hammer_dt [0.76, 1.52]
+contact_gap_nearest_frame_max_m 0.09
+contact_gap_mean_m 0.031
+contact_gap_worst [(0.0903181389521927, 'pearl', 'key', 15.48), (0.08786902646198422, 'night', 'bass', 4.08), (0.08060770041722004, 'night', 'bass', 49.68)]
+contact_gap_exact_time_max_m 0.0
+collisions {}
+collision_examples {}
+collision_worst_pen_m 0.0
+hammer_guide_min_gap_m 0.082
+min_ball_surface_gap (0.545, 10.82)
+pearl_core_min_gap_m 0.867
+night_core_min_gap_m 0.088
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) 1.325
+worst_ratio_at ('pearl', np.float64(26.37), np.float64(0.51), np.float64(0.68))
+mechanism_speed_change_per_frame_max_mps 0.165
+mechanism_worst ('pearl', np.float64(35.17), np.float64(3.04), np.float64(3.21))
+bounce_speed_out_over_in_max 0.9884
+restitution_range (0.222, 0.949)
+key_tilt_max_deg 33.9
+chute_lip_speeds [1.113, 2.838, 1.942]
+duration_s 74.24
+  1.800s frame    54 bass   score G2                 struck G2                 by night
+  2.560s frame    77 chord  score B3+D4+F#4          struck B3+D4+F#4          by hammer
+  4.080s frame   122 bass   score D2                 struck D2                 by night
+  4.840s frame   145 chord  score A3+C#4+F#4         struck A3+C#4+F#4         by hammer
+  6.360s frame   191 bass   score G2                 struck G2                 by night
+  7.120s frame   214 chord  score B3+D4+F#4          struck B3+D4+F#4          by hammer
+  7.120s frame   214 melody score F#5                struck F#5                by pearl
+  7.880s frame   236 melody score A5                 struck A5                 by pearl
+  8.640s frame   259 bass   score D2                 struck D2                 by night
+  8.640s frame   259 melody score G5                 struck G5                 by pearl
+  9.400s frame   282 chord  score A3+C#4+F#4         struck A3+C#4+F#4         by hammer
+  9.400s frame   282 melody score F#5                struck F#5                by pearl
+ 10.160s frame   305 melody score C#5                struck C#5                by pearl
+ 10.920s frame   328 bass   score G2                 struck G2                 by night
+ 10.920s frame   328 melody score B4                 struck B4                 by pearl
+ 11.680s frame   350 chord  score B3+D4+F#4          struck B3+D4+F#4          by hammer
+ 11.680s frame   350 melody score C#5                struck C#5                by pearl
+ 12.440s frame   373 melody score D5                 struck D5                 by pearl
+ 13.200s frame   396 bass   score D2                 struck D2                 by night
+ 13.200s frame   396 melody score A4                 struck A4                 by pearl
+ 13.960s frame   419 chord  score A3+C#4+F#4         struck A3+C#4+F#4         by hammer
+ 15.480s frame   464 bass   score F#2                struck F#2                by night
+ 15.480s frame   464 melody score C#5                struck C#5                by pearl
+ 16.240s frame   487 chord  score A3+C#4+F#4         struck A3+C#4+F#4         by hammer
+ 17.760s frame   533 bass   score B1                 struck B1                 by night
+ 17.760s frame   533 melody score F#5                struck F#5                by pearl
+ 18.520s frame   556 chord  score B3+D4+F#4          struck B3+D4+F#4          by hammer
+ 20.040s frame   601 bass   score E2                 struck E2                 by night
+ 20.040s frame   601 melody score E4                 struck E4                 by pearl
+ 20.800s frame   624 chord  score G3+B3              struck G3+B3              by hammer
+ 22.320s frame   670 bass   score E2                 struck E2                 by night
+ 23.080s frame   692 chord  score B3+D4+G4           struck B3+D4+G4           by hammer
+ 24.600s frame   738 bass   score D2                 struck D2                 by night
+ 25.360s frame   761 chord  score F3+A3+D4           struck F3+A3+D4           by hammer
+ 26.880s frame   806 bass   score A1                 struck A1                 by night
+ 26.880s frame   806 melody score A4                 struck A4                 by pearl
+ 27.640s frame   829 chord  score A3+C4+E4           struck A3+C4+E4           by hammer
+ 27.640s frame   829 melody score B4                 struck B4                 by pearl
+ 28.400s frame   852 melody score C5                 struck C5                 by pearl
+ 29.160s frame   875 bass   score D2                 struck D2                 by night
+ 29.160s frame   875 melody score E5                 struck E5                 by pearl
+ 29.920s frame   898 chord  score G3+B3+E4           struck G3+B3+E4           by hammer
+ 29.920s frame   898 melody score D5                 struck D5                 by pearl
+ 30.680s frame   920 melody score B4                 struck B4                 by pearl
+ 31.440s frame   943 bass   score D2                 struck D2                 by night
+ 31.440s frame   943 melody score D5                 struck D5                 by pearl
+ 32.200s frame   966 chord  score D3+G3+B3+E4        struck D3+G3+B3+E4        by hammer
+ 32.200s frame   966 melody score C5                 struck C5                 by pearl
+ 32.960s frame   989 melody score B4                 struck B4                 by pearl
+ 33.720s frame  1012 bass   score D2                 struck D2                 by night
+ 33.720s frame  1012 melody score D5                 struck D5                 by pearl
+ 34.480s frame  1034 chord  score C3+E3+A3+D4        struck C3+E3+A3+D4        by hammer
+ 36.000s frame  1080 bass   score D2                 struck D2                 by night
+ 36.760s frame  1103 chord  score C3+F#3+A3+D4       struck C3+F#3+A3+D4       by hammer
+ 37.520s frame  1126 melody score D5                 struck D5                 by pearl
+ 38.280s frame  1148 bass   score D2                 struck D2                 by night
+ 38.280s frame  1148 melody score E5                 struck E5                 by pearl
+ 39.040s frame  1171 chord  score A3+C4+F4           struck A3+C4+F4           by hammer
+ 39.040s frame  1171 melody score F5                 struck F5                 by pearl
+ 39.800s frame  1194 melody score G5                 struck G5                 by pearl
+ 40.560s frame  1217 bass   score D2                 struck D2                 by night
+ 40.560s frame  1217 melody score A5                 struck A5                 by pearl
+ 41.320s frame  1240 chord  score A3+C4+E4           struck A3+C4+E4           by hammer
+ 41.320s frame  1240 melody score C5                 struck C5                 by pearl
+ 42.080s frame  1262 melody score D5                 struck D5                 by pearl
+ 42.840s frame  1285 bass   score D2                 struck D2                 by night
+ 42.840s frame  1285 melody score E5                 struck E5                 by pearl
+ 43.600s frame  1308 chord  score D3+G3+B3+E4        struck D3+G3+B3+E4        by hammer
+ 43.600s frame  1308 melody score D5                 struck D5                 by pearl
+ 44.360s frame  1331 melody score B4                 struck B4                 by pearl
+ 45.120s frame  1354 bass   score D2                 struck D2                 by night
+ 45.120s frame  1354 melody score D5                 struck D5                 by pearl
+ 45.880s frame  1376 chord  score C3+E3+A3+D4        struck C3+E3+A3+D4        by hammer
+ 47.400s frame  1422 bass   score D2                 struck D2                 by night
+ 48.160s frame  1445 chord  score C3+F#3+A3+D4       struck C3+F#3+A3+D4       by hammer
+ 48.920s frame  1468 melody score D5                 struck D5                 by pearl
+ 49.680s frame  1490 bass   score E2                 struck E2                 by night
+ 49.680s frame  1490 melody score G5                 struck G5                 by pearl
+ 50.440s frame  1513 chord  score B3+E4+G4           struck B3+E4+G4           by hammer
+ 51.960s frame  1559 bass   score F#2                struck F#2                by night
+ 51.960s frame  1559 melody score F#5                struck F#5                by pearl
+ 52.720s frame  1582 chord  score A3+C#4+F#4         struck A3+C#4+F#4         by hammer
+ 54.240s frame  1627 bass   score B1                 struck B1                 by night
+ 54.240s frame  1627 melody score B4                 struck B4                 by pearl
+ 55.000s frame  1650 chord  score B3+D4+F#4          struck B3+D4+F#4          by hammer
+ 55.000s frame  1650 melody score A4                 struck A4                 by pearl
+ 55.760s frame  1673 melody score B4                 struck B4                 by pearl
+ 56.520s frame  1696 bass   score E2                 struck E2                 by night
+ 56.520s frame  1696 melody score C#5                struck C#5                by pearl
+ 57.280s frame  1718 chord  score C#4+E4+A4          struck C#4+E4+A4          by hammer
+ 57.280s frame  1718 melody score D5                 struck D5                 by pearl
+ 58.040s frame  1741 melody score E5                 struck E5                 by pearl
+ 58.800s frame  1764 bass   score E2                 struck E2                 by night
+ 58.800s frame  1764 melody score C#5                struck C#5                by pearl
+ 59.560s frame  1787 chord  score A3+C#4+F#4+A4      struck A3+C#4+F#4+A4      by hammer
+ 59.560s frame  1787 melody score D5                 struck D5                 by pearl
+ 60.320s frame  1810 melody score E5                 struck E5                 by pearl
+ 61.080s frame  1832 bass   score E2                 struck E2                 by night
+ 61.080s frame  1832 melody score F#4                struck F#4                by pearl
+ 61.840s frame  1855 chord  score B2+A3+D4           struck B2+A3+D4           by hammer
+ 62.600s frame  1878 chord  score E3+B3+D4+G4        struck E3+B3+D4+G4        by hammer
+ 63.360s frame  1901 bass   score A2+G3              struck A2+G3              by night
+ 63.360s frame  1901 melody score C4+E4+A4+C5        struck C4+E4+A4+C5        by pearl
+ 65.640s frame  1969 bass   score D2+A2+D3           struck D2+A2+D3           by night
+ 65.640s frame  1969 melody score D4+F#4+A4+D5       struck D4+F#4+A4+D5       by pearl
+melody_onsets 48
+melody_mismatch []
+bass_onsets 29
+bass_mismatch []
+chord_onsets 28
+chord_mismatch []
+hammer_dt [0.76, 1.52]
+contact_gap_nearest_frame_max_m 0.09
+contact_gap_mean_m 0.031
+contact_gap_worst [(0.0903181389521927, 'pearl', 'key', 15.48), (0.08786902646198422, 'night', 'bass', 4.08), (0.08060770041722004, 'night', 'bass', 49.68)]
+contact_gap_exact_time_max_m 0.0
+collisions {}
+collision_examples {}
+collision_worst_pen_m 0.0
+hammer_guide_min_gap_m 0.082
+min_ball_surface_gap (0.545, 10.82)
+pearl_core_min_gap_m 0.867
+night_core_min_gap_m 0.088
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) 1.325
+worst_ratio_at ('pearl', np.float64(26.37), np.float64(0.51), np.float64(0.68))
+mechanism_speed_change_per_frame_max_mps 0.165
+mechanism_worst ('pearl', np.float64(35.17), np.float64(3.04), np.float64(3.21))
+bounce_speed_out_over_in_max 0.9884
+restitution_range (0.222, 0.949)
+key_tilt_max_deg 33.9
+chute_lip_speeds [1.113, 2.838, 1.942]
+duration_s 74.24
