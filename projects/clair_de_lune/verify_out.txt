@@ -1,0 +1,24 @@
+notes_in_score 168
+notes_struck 168
+missing []
+extra_sounding_hits []
+final_chord ['Ab3', 'Ab4', 'Db2', 'Db3', 'Db4', 'F4', 'F5']
+contact_gap_nearest_frame_max_m 0.087
+contact_gap_mean_m 0.017
+contact_gap_worst [(0.087, 'silver', 'slide2land', 27.35), (0.087, 'gold', 'slide2land', 27.35), (0.086, 'silver', 'lotus', 25.55)]
+contact_gap_exact_time_max_m 0.0
+collisions {}
+collision_examples {}
+collision_worst_pen_m 0.0
+min_ball_surface_gap (0.268, 'silver', 'gold', 49.85)
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) 1.35
+worst_ratio_at ('silver', np.float64(2.5), np.float64(0.52), np.float64(0.71))
+mechanism_speed_change_per_frame_max_mps (0.198, ('silver', 16.9))
+bounce_speed_out_over_in_max 1.0
+restitution_range (0.225, 0.949)
+key_tilt_max_deg 29.6
+slides(kind,deg,v0,v1,L) [('slide1', 4.0, 1.28, 1.8, 4.9), ('slide2', 4.0, 1.34, 1.86, 5.1)]
+channel_speed(v0,v) (0.664, 1.197)
+seesaw_launch_mps 3.9
+shishi_throw_mps 4.8
