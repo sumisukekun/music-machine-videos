@@ -1,0 +1,19 @@
+events {'mel': 241, 'acc': 269, 'bass': 140}
+events_wrong_or_missing []
+pitched_hits_not_in_score []
+contact_gap_nearest_frame_max_m 0.072
+contact_gap_mean_m 0.015
+contact_gap_worst [(0.072, 'A', 'key', 57.38), (0.071, 'bass', 'key', 27.22), (0.07, 'A', 'roofland', 34.18)]
+contact_gap_exact_time_max_m 0.0
+collisions {}
+collision_examples {}
+collision_worst_pen_m 0.0
+min_ball_surface_gap (0.008, 'A', 'B', 59.74)
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) 1.4
+worst_ratio_at ('bass', np.float64(1.0), np.float64(0.58), np.float64(0.82))
+rolling_speed_change_per_frame_max_mps (0.03, ('train', 0.03))
+bounce_speed_out_over_in_max 1.0
+restitution_range (0.223, 0.97)
+key_tilt_max_deg 33.2
+ramps(who,kind,t0,deg,crr,v0,v1,L,k_land) [('A', 'roof', 11.27, 3.3, 0.025, 1.27, 1.56, 3.6, 0.9), ('A', 'roof', 23.74, 2.31, 0.025, 1.4, 1.54, 7.6, 0.9), ('A', 'roof', 34.18, 5.45, 0.025, 1.05, 1.65, 2.7, 0.9), ('A', 'roof', 37.08, 1.9, 0.025, 1.52, 1.51, 2.2, 0.9), ('A', 'roof', 39.4, 3.97, 0.025, 1.08, 1.52, 3.4, 0.9), ('A', 'xylo', 42.3, 5.33, 0.067, 1.55, 1.55, 3.4, 0.9), ('A', 'roof', 45.49, 0.63, 0.025, 1.97, 1.84, 2.2, 0.9), ('A', 'roof', 49.84, 5.45, 0.025, 1.08, 1.5, 1.8, 0.9), ('B', 'roof', 6.63, 2.69, 0.025, 1.26, 1.55, 6.9, 0.9), ('B', 'roof', 13.59, 2.51, 0.025, 1.41, 1.55, 4.7, 0.9), ('B', 'roof', 28.67, 2.83, 0.025, 1.25, 1.54, 5.6, 0.9), ('B', 'roof', 33.02, 2.7, 0.025, 1.48, 1.6, 2.9, 0.9), ('B', 'roof', 35.92, 3.25, 0.025, 1.41, 1.55, 1.9, 0.9), ('B', 'roof', 38.53, 5.39, 0.025, 1.32, 1.61, 1.4, 0.9), ('B', 'xylo', 39.84, 5.33, 0.067, 1.55, 1.55, 8.7, 0.85), ('B', 'roof', 49.84, 5.45, 0.025, 1.13, 1.6, 2.1, 0.9), ('B', 'roof', 56.08, 5.45, 0.025, 1.14, 1.44, 1.3, 0.9), ('bass', 'xylo', 19.1, 5.33, 0.067, 1.55, 1.55, 10.3, 0.82), ('bass', 'xylo', 33.02, 5.33, 0.067, 1.55, 1.55, 28.3, 0.9)]
