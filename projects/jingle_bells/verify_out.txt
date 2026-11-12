@@ -1,0 +1,17 @@
+melody_notes 202
+melody_missing_or_wrong []
+notes_by_both 173
+notes_red_only 29
+bass_on_grid True
+stabs_on_grid True
+contact_gap_nearest_frame_max_m 0.054
+contact_gap_mean_m 0.026
+contact_gap_exact_time_max_m 0.0
+e(min,max) (0.049, 0.95)
+speed_out/in_max 0.9978
+snowbank_friction_ratio [np.float64(0.703)]
+flight_accel_err_max 0.0
+flight_speed_ratio_per_frame_max 1.047
+path_speed_change_per_frame_max_mps 0.306
+key_collisions [('green', 'green', 33.77, 0.005)]
+key_collision_count 1
