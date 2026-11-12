@@ -1,0 +1,29 @@
+score_notes 268
+note_onsets 188
+strikes 241
+onsets_wrong_or_missing []
+strikes_not_in_score []
+notes_by_role {'bass': 53, 'tri': 179, 'mel': 24, 'chord': 12}
+contact_gap_nearest_frame_max 0.0
+contact_gap_mean 0.0
+contact_gap_worst [(0.0, 'bass23', 'bowl', 56.57), (0.0, 'trioC', 'pad', 1.47), (0.0, 'trioC', 'pad', 25.47)]
+contact_gap_exact_time_max 0.0
+piece_surface_vs_contact_max 0.0
+piano_key_contact_err 0.0
+collisions {}
+collision_examples {}
+collision_worst_pen 0.0
+min_ball_surface_gap (0.247, 'bass16', 'bass17', 44.88)
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) (np.float64(1.286), 'trioC', np.float64(1.0), np.float64(0.58))
+free_bounces 198
+bounce_speed_out_over_in_max 0.9697
+restitution_range (0.207, 0.969)
+contact_tilt_max_deg 22.8
+mechanism_launches 15
+every_launch_has_a_bass_marble_landing_at_that_instant True
+static_piece_overlaps []
+static_piece_overlap_count 0
+pieces 241
+pieces_never_struck []
+duration_s 72.3
