@@ -1,0 +1,19 @@
+notes 130
+notes_without_visible_hit []
+owner_mismatch []
+hit_time_error_max_s 3e-06
+melody_vs_source_mismatch []
+contact_gap_nearest_frame_max_m 0.042
+contact_gap_mean_m 0.002
+key_collisions {}
+key_collision_examples {}
+key_collision_worst_pen_m 0.0
+ring_clearance_min_m(ball surface to ring tube) {'W': (0.047, 14.35), 'K': (0.079, 24.7)}
+ball_ball_surface_gap_min_m (0.026, 48.87)
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>1) 1.222
+worst_ratio_at ('W', np.float64(48.83), np.float64(1.05), np.float64(1.28))
+bounce_speed_out_over_in_max(keys, plates, levers) 0.989
+restitution_range(keys) (0.3, 0.95)
+wing_keys(spring launch) (29, 3.2)
+key_tilt_max_deg 31.5
