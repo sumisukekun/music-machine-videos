@@ -1,0 +1,24 @@
+events {'fairy': 115, 'mint': 78, 'cocoa': 107, 'rain': 184}
+events_wrong_or_missing []
+final_chord_struck ['E3', 'E4', 'E4', 'B4', 'E5', 'G5', 'B5', 'E6']
+pitched_hits_not_in_score []
+pearls_one_note_each True
+contact_gap_nearest_frame_max_m 0.132
+contact_gap_mean_m 0.026
+contact_gap_worst [(0.132, 'pt045', 'snow', 59.983), (0.109, 'pt028', 'snow', 59.211), (0.108, 'pt050', 'snow', 60.214)]
+contact_gap_exact_time_max_m 5e-06
+collisions {'pearl->key': 1, 'cocoa->roll': 1}
+collision_examples {'pearl->key': [('pt038', 58.913, 0.018, 'piece_t', 53.914)], 'cocoa->roll': [('cocoa', 41.708, 0.018, 'piece_t', 41.914)]}
+collision_worst_pen_m 0.018
+min_surface_gap_main_marbles (0.44, 'fairy', 'pt041', 58.17)
+min_surface_gap_sugar_pearls (-0.023, 'pc122', 'pc123', 35.95)
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) 1.467
+worst_ratio_at ('pc102', np.float64(33.37), np.float64(0.5), np.float64(0.73))
+mechanism_speed_change_per_frame_max_mps (0.086, ('cocoa', 48.77))
+bounce_speed_out_over_in_max 1.0
+restitution_range (0.235, 0.97)
+contact_tilt_max_deg 33.3
+ramps (11, 'slopes deg', [10, 22, 25, 31])
+cups 11
+lights_counter_final 298
