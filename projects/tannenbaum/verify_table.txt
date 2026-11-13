@@ -1,0 +1,190 @@
+  0   2.600s verse1 bar  1 beat 1     C4  frame    78  star  stella:key
+  1   3.180s verse1 bar  2 beat 1     F4  frame    95  star  stella:key
+  2   3.615s verse1 bar  2 beat 1.75  F4  frame   108  star  stella:key
+  3   3.760s verse1 bar  2 beat 2     F4  frame   113  star  stella:rollkey
+  4   4.630s verse1 bar  2 beat 3.5   G4  frame   139  star  stella:key
+  5   4.920s verse1 bar  3 beat 1     A4  frame   148  star  stella:key
+  6   5.355s verse1 bar  3 beat 1.75  A4  frame   161  star  stella:key
+  7   5.500s verse1 bar  3 beat 2     A4  frame   165  star  stella:rollkey
+  8   6.370s verse1 bar  3 beat 3.5   A4  frame   191  star  stella:key
+  9   6.660s verse1 bar  4 beat 1     G4  frame   200  orn   orn0:bell
+ 10   6.950s verse1 bar  4 beat 1.5   A4  frame   208  orn   orn1:bell
+ 11   7.240s verse1 bar  4 beat 2     A#4  frame   217  orn   orn2:bell
+ 12   7.820s verse1 bar  4 beat 3     E4  frame   235  orn   orn3:bell
+ 13   8.400s verse1 bar  5 beat 1     G4  frame   252  orn   orn4:bell
+ 14   8.980s verse1 bar  5 beat 2     F4  frame   269  orn   orn5:bell
+ 15   9.850s verse1 bar  5 beat 3.5   C5  frame   296  star  stella:key
+ 16  10.140s verse1 bar  6 beat 1     C5  frame   304  star  stella:key
+ 17  10.430s verse1 bar  6 beat 1.5   A4  frame   313  star  stella:key
+ 18  10.720s verse1 bar  6 beat 2     D5  frame   322  star  stella:rollkey
+ 19  11.590s verse1 bar  6 beat 3.5   C5  frame   348  star  stella:key
+ 20  11.880s verse1 bar  7 beat 1     C5  frame   356  star  stella:key
+ 21  12.315s verse1 bar  7 beat 1.75  A#4  frame   369  star  stella:key
+ 22  12.460s verse1 bar  7 beat 2     A#4  frame   374  star  stella:rollkey
+ 23  13.330s verse1 bar  7 beat 3.5   A#4  frame   400  star  stella:key
+ 24  13.620s verse1 bar  8 beat 1     A#4  frame   409  orn   orn6:bell
+ 25  13.910s verse1 bar  8 beat 1.5   G4  frame   417  orn   orn7:bell
+ 26  14.200s verse1 bar  8 beat 2     C5  frame   426  orn   orn8:bell
+ 27  15.070s verse1 bar  8 beat 3.5   A#4  frame   452  orn   orn9:bell
+ 28  15.360s verse1 bar  9 beat 1     A#4  frame   461  orn   orn10:bell
+ 29  15.795s verse1 bar  9 beat 1.75  A4  frame   474  orn   orn11:bell
+ 30  15.940s verse1 bar  9 beat 2     A4  frame   478  orn   orn12:bell
+ 31  16.520s verse1 bar  9 beat 3     C4  frame   496  star  stella:key
+ 32  17.100s verse1 bar 10 beat 1     F4  frame   513  star  stella:key
+ 33  17.535s verse1 bar 10 beat 1.75  F4  frame   526  star  stella:key
+ 34  17.680s verse1 bar 10 beat 2     F4  frame   530  star  stella:rollkey
+ 35  18.550s verse1 bar 10 beat 3.5   G4  frame   556  star  stella:key
+ 36  18.840s verse1 bar 11 beat 1     A4  frame   565  star  stella:key
+ 37  19.275s verse1 bar 11 beat 1.75  A4  frame   578  star  stella:key
+ 38  19.420s verse1 bar 11 beat 2     A4  frame   583  star  stella:rollkey
+ 39  20.290s verse1 bar 11 beat 3.5   A4  frame   609  star  stella:key
+ 40  20.580s verse1 bar 12 beat 1     G4  frame   617  orn   orn13:bell
+ 41  20.870s verse1 bar 12 beat 1.5   A4  frame   626  orn   orn14:bell
+ 42  21.160s verse1 bar 12 beat 2     A#4  frame   635  orn   orn15:bell
+ 43  21.740s verse1 bar 12 beat 3     E4  frame   652  orn   orn16:bell
+ 44  22.320s verse1 bar 13 beat 1     G4  frame   670  orn   orn17:bell
+ 45  22.900s verse1 bar 13 beat 2     F4  frame   687  orn   orn18:bell
+ 46  23.480s verse2 bar  1 beat 1     C4  frame   704  star  stella:key
+ 47  24.060s verse2 bar  2 beat 1     F4  frame   722  star  stella:key
+ 48  24.495s verse2 bar  2 beat 1.75  F4  frame   735  star  stella:key
+ 49  24.640s verse2 bar  2 beat 2     F4  frame   739  star  stella:rollkey
+ 50  25.510s verse2 bar  2 beat 3.5   G4  frame   765  star  stella:key
+ 51  25.800s verse2 bar  3 beat 1     A4  frame   774  star  stella:key
+ 52  26.235s verse2 bar  3 beat 1.75  A4  frame   787  star  stella:key
+ 53  26.380s verse2 bar  3 beat 2     A4  frame   791  star  stella:rollkey
+ 54  27.250s verse2 bar  3 beat 3.5   A4  frame   818  star  stella:key
+ 55  27.540s verse2 bar  4 beat 1     G4  frame   826  orn   orn19:bell
+ 56  27.830s verse2 bar  4 beat 1.5   A4  frame   835  orn   orn20:bell
+ 57  28.120s verse2 bar  4 beat 2     A#4  frame   844  orn   orn21:bell
+ 58  28.700s verse2 bar  4 beat 3     E4  frame   861  orn   orn22:bell
+ 59  29.280s verse2 bar  5 beat 1     G4  frame   878  orn   orn23:bell
+ 60  29.860s verse2 bar  5 beat 2     F4  frame   896  orn   orn24:bell
+ 61  30.730s verse2 bar  5 beat 3.5   C5  frame   922  star  stella:key
+ 62  31.020s verse2 bar  6 beat 1     C5  frame   931  star  stella:key
+ 63  31.310s verse2 bar  6 beat 1.5   A4  frame   939  star  stella:key
+ 64  31.600s verse2 bar  6 beat 2     D5  frame   948  star  stella:rollkey
+ 65  32.470s verse2 bar  6 beat 3.5   C5  frame   974  star  stella:key
+ 66  32.760s verse2 bar  7 beat 1     C5  frame   983  star  stella:key
+ 67  33.195s verse2 bar  7 beat 1.75  A#4  frame   996  star  stella:key
+ 68  33.340s verse2 bar  7 beat 2     A#4  frame  1000  star  stella:rollkey
+ 69  34.210s verse2 bar  7 beat 3.5   A#4  frame  1026  star  stella:key
+ 70  34.500s verse2 bar  8 beat 1     A#4  frame  1035  orn   orn25:bell
+ 71  34.790s verse2 bar  8 beat 1.5   G4  frame  1044  orn   orn26:bell
+ 72  35.080s verse2 bar  8 beat 2     C5  frame  1052  orn   orn27:bell
+ 73  35.950s verse2 bar  8 beat 3.5   A#4  frame  1078  orn   orn28:bell
+ 74  36.240s verse2 bar  9 beat 1     A#4  frame  1087  orn   orn29:bell
+ 75  36.675s verse2 bar  9 beat 1.75  A4  frame  1100  orn   orn30:bell
+ 76  36.820s verse2 bar  9 beat 2     A4  frame  1105  orn   orn31:bell
+ 77  37.400s verse2 bar  9 beat 3     C4  frame  1122  star  stella:key
+ 78  37.980s verse2 bar 10 beat 1     F4  frame  1139  star  stella:key
+ 79  38.415s verse2 bar 10 beat 1.75  F4  frame  1152  star  stella:key
+ 80  38.560s verse2 bar 10 beat 2     F4  frame  1157  star  stella:rollkey
+ 81  39.430s verse2 bar 10 beat 3.5   G4  frame  1183  star  stella:key
+ 82  39.720s verse2 bar 11 beat 1     A4  frame  1192  star  stella:key
+ 83  40.155s verse2 bar 11 beat 1.75  A4  frame  1205  star  stella:key
+ 84  40.300s verse2 bar 11 beat 2     A4  frame  1209  star  stella:rollkey
+ 85  41.170s verse2 bar 11 beat 3.5   A4  frame  1235  star  stella:key
+ 86  41.460s verse2 bar 12 beat 1     G4  frame  1244  orn   orn32:bell
+ 87  41.750s verse2 bar 12 beat 1.5   A4  frame  1252  orn   orn33:bell
+ 88  42.040s verse2 bar 12 beat 2     A#4  frame  1261  orn   orn34:bell
+ 89  42.620s verse2 bar 12 beat 3     E4  frame  1279  orn   orn35:bell
+ 90  43.200s verse2 bar 13 beat 1     G4  frame  1296  orn   orn36:bell
+ 91  43.780s verse2 bar 13 beat 2     F4  frame  1313  orn   orn37:bell
+ 92  44.360s verse3 bar  1 beat 1     C4  frame  1331  star  stella:key
+ 93  44.940s verse3 bar  2 beat 1     F4  frame  1348  star  stella:key
+ 94  45.375s verse3 bar  2 beat 1.75  F4  frame  1361  star  stella:key
+ 95  45.520s verse3 bar  2 beat 2     F4  frame  1366  star  stella:rollkey
+ 96  46.390s verse3 bar  2 beat 3.5   G4  frame  1392  star  stella:key
+ 97  46.680s verse3 bar  3 beat 1     A4  frame  1400  star  stella:key
+ 98  47.115s verse3 bar  3 beat 1.75  A4  frame  1413  star  stella:key
+ 99  47.260s verse3 bar  3 beat 2     A4  frame  1418  star  stella:rollkey
+100  48.130s verse3 bar  3 beat 3.5   A4  frame  1444  star  stella:key
+101  48.420s verse3 bar  4 beat 1     G4  frame  1453  orn   orn38:bell
+102  48.710s verse3 bar  4 beat 1.5   A4  frame  1461  orn   orn39:bell
+103  49.000s verse3 bar  4 beat 2     A#4  frame  1470  orn   orn40:bell
+104  49.580s verse3 bar  4 beat 3     E4  frame  1487  orn   orn41:bell
+105  50.160s verse3 bar  5 beat 1     G4  frame  1505  orn   orn42:bell
+106  50.740s verse3 bar  5 beat 2     F4  frame  1522  orn   orn43:bell
+107  51.610s verse3 bar  5 beat 3.5   C5  frame  1548  star  stella:key
+108  51.900s verse3 bar  6 beat 1     C5  frame  1557  star  stella:key
+109  52.190s verse3 bar  6 beat 1.5   A4  frame  1566  star  stella:key
+110  52.480s verse3 bar  6 beat 2     D5  frame  1574  star  stella:rollkey
+111  53.350s verse3 bar  6 beat 3.5   C5  frame  1600  star  stella:key
+112  53.640s verse3 bar  7 beat 1     C5  frame  1609  star  stella:key
+113  54.075s verse3 bar  7 beat 1.75  A#4  frame  1622  star  stella:key
+114  54.220s verse3 bar  7 beat 2     A#4  frame  1627  star  stella:rollkey
+115  55.090s verse3 bar  7 beat 3.5   A#4  frame  1653  star  stella:key
+116  55.380s verse3 bar  8 beat 1     A#4  frame  1661  orn   orn44:bell
+117  55.670s verse3 bar  8 beat 1.5   G4  frame  1670  orn   orn45:bell
+118  55.960s verse3 bar  8 beat 2     C5  frame  1679  orn   orn46:bell
+119  56.830s verse3 bar  8 beat 3.5   A#4  frame  1705  orn   orn47:bell
+120  57.120s verse3 bar  9 beat 1     A#4  frame  1714  orn   orn48:bell
+121  57.555s verse3 bar  9 beat 1.75  A4  frame  1727  orn   orn49:bell
+122  57.700s verse3 bar  9 beat 2     A4  frame  1731  orn   orn50:bell
+123  58.280s verse3 bar  9 beat 3     C4  frame  1748  star  stella:key
+124  58.860s verse3 bar 10 beat 1     F4  frame  1766  star  stella:key
+125  59.295s verse3 bar 10 beat 1.75  F4  frame  1779  star  stella:key
+126  59.440s verse3 bar 10 beat 2     F4  frame  1783  star  stella:rollkey
+127  60.310s verse3 bar 10 beat 3.5   G4  frame  1809  star  stella:key
+128  60.600s verse3 bar 11 beat 1     A4  frame  1818  star  stella:key
+129  61.035s verse3 bar 11 beat 1.75  A4  frame  1831  star  stella:key
+130  61.180s verse3 bar 11 beat 2     A4  frame  1835  star  stella:rollkey
+131  62.050s verse3 bar 11 beat 3.5   A4  frame  1862  star  stella:key
+132  62.340s verse3 bar 12 beat 1     G4  frame  1870  orn   orn51:bell
+133  62.630s verse3 bar 12 beat 1.5   A4  frame  1879  orn   orn52:bell
+134  62.920s verse3 bar 12 beat 2     A#4  frame  1888  orn   orn53:bell
+135  63.500s verse3 bar 12 beat 3     E4  frame  1905  orn   orn54:bell
+136  64.080s verse3 bar 13 beat 1     G4  frame  1922  orn   orn55:bell
+137  64.780s verse3 bar 13 beat 2     F4  frame  1943  top   stella:top
+bass  24.060s verse2 bar  2 beat 1 A3 frame   722
+bass  25.800s verse2 bar  3 beat 1 F3 frame   774
+bass  27.540s verse2 bar  4 beat 1 A#3 frame   826
+bass  29.280s verse2 bar  5 beat 1 C3 frame   878
+bass  29.860s verse2 bar  5 beat 2 F3 frame   896
+bass  31.020s verse2 bar  6 beat 1 F3 frame   931
+bass  32.760s verse2 bar  7 beat 1 D3 frame   983
+bass  34.500s verse2 bar  8 beat 1 G3 frame  1035
+bass  36.240s verse2 bar  9 beat 1 C3 frame  1087
+bass  37.980s verse2 bar 10 beat 1 A3 frame  1139
+bass  39.720s verse2 bar 11 beat 1 F3 frame  1192
+bass  41.460s verse2 bar 12 beat 1 A#3 frame  1244
+bass  43.200s verse2 bar 13 beat 1 C3 frame  1296
+bass  43.780s verse2 bar 13 beat 2 F3 frame  1313
+bass  44.940s verse3 bar  2 beat 1 A3 frame  1348
+bass  46.680s verse3 bar  3 beat 1 F3 frame  1400
+bass  48.420s verse3 bar  4 beat 1 A#3 frame  1453
+bass  50.160s verse3 bar  5 beat 1 C3 frame  1505
+bass  50.740s verse3 bar  5 beat 2 F3 frame  1522
+bass  51.900s verse3 bar  6 beat 1 F3 frame  1557
+bass  53.640s verse3 bar  7 beat 1 D3 frame  1609
+bass  55.380s verse3 bar  8 beat 1 G3 frame  1661
+bass  57.120s verse3 bar  9 beat 1 C3 frame  1714
+bass  58.860s verse3 bar 10 beat 1 A3 frame  1766
+bass  60.600s verse3 bar 11 beat 1 F3 frame  1818
+bass  62.340s verse3 bar 12 beat 1 A#3 frame  1870
+bass  64.080s verse3 bar 13 beat 1 C3 frame  1922
+bass  64.780s verse3 bar 13 beat 2 F3 frame  1943
+melody_notes 138
+melody_missing_or_wrong []
+melody_struck_twice []
+bass_notes 28
+bass_missing_or_wrong []
+melody_vs_source_mismatch 0
+melody_per_verse [46, 46, 46]
+bass_vs_source_mismatch 0
+melody_off_16th_grid_max_s 0.0
+contact_gap_nearest_frame(max,mean) {'key': (0.038, 0.014), 'rollkey': (0.016, 0.008), 'bell': (0.047, 0.019), 'bass': (0.032, 0.015), 'trigger': (0.032, 0.032), 'bassfinal': (0.032, 0.032)}
+collisions {}
+collision_examples {}
+collision_worst_pen 0.0
+min_ball_surface_gap (0.034, ('orn49', 'orn50', 57.96))
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) (np.float64(1.461), ('orn16', np.float64(21.33), np.float64(0.51), np.float64(0.74)))
+flight_speed_ratio_max(v>1.5) (np.float64(1.155), ('orn1', np.float64(6.8), np.float64(1.51), np.float64(1.74)))
+mechanism_accel_max (62.12, ('snow5', np.float64(43.1)))
+mechanism_accel_max_by_ball(machines move Stella; snowball = plank after the slam) {'stella': (13.13, np.float64(63.77)), 'snowball': (62.12, np.float64(43.1))}
+bounce_speed_out_over_in_max 0.972
+restitution_range (0.3, 0.963)
+key_tilt_max_deg 39.4
+catapult_launch_speed [6.74, 6.74]
+video_length_s 69.37
