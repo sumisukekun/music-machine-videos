@@ -1,0 +1,20 @@
+melody_notes 156
+melody_missing_or_wrong []
+melody_struck_twice []
+bass_notes 36
+bass_missing_or_wrong []
+melody_vs_source_mismatch 0
+bass_vs_chord_mismatch 0
+contact_gap_nearest_frame(max,mean) {'key': (0.024, 0.012), 'door': (0.03, 0.013), 'great': (0.052, 0.052), 'bell': (0.063, 0.024), 'bass': (0.061, 0.033), 'drum': (0.076, 0.076)}
+collisions {'pudding->pudding:bass': 1}
+collision_examples {'pudding->pudding:bass': [(60.829, 0.007)]}
+collision_worst_pen 0.007
+min_ball_surface_gap (0.03, ('snow42', 'snow43', 0.0))
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) (np.float64(1.461), ('snow21', np.float64(20.83), np.float64(0.51), np.float64(0.74)))
+flight_speed_ratio_max(v>1.5) (np.float64(1.155), ('snow0', np.float64(11.63), np.float64(1.5), np.float64(1.74)))
+mechanism_accel_max (7.86, ('snow14', np.float64(19.53)))
+bounce_speed_out_over_in_max 0.9772
+restitution_range (0.317, 0.97)
+key_tilt_max_deg 34.8
+video_length_s 67.07

@@ -1,0 +1,212 @@
+  0   2.000s bar  0 beat 3    D4  frame    60  carol carol:key
+  1   2.420s bar  1 beat 1    G4  frame    73  carol carol:key
+  2   2.840s bar  1 beat 2    G4  frame    85  carol carol:key
+  3   3.050s bar  1 beat 2.5  A4  frame    92  carol carol:key
+  4   3.260s bar  1 beat 3    G4  frame    98  carol carol:key
+  5   3.470s bar  1 beat 3.5  F#4  frame   104  carol carol:key
+  6   3.680s bar  2 beat 1    E4  frame   110  carol carol:key
+  7   4.100s bar  2 beat 2    E4  frame   123  carol carol:door
+  8   4.520s bar  2 beat 3    E4  frame   136  carol carol:key
+  9   4.940s bar  3 beat 1    A4  frame   148  carol carol:key
+ 10   5.360s bar  3 beat 2    A4  frame   161  carol carol:key
+ 11   5.570s bar  3 beat 2.5  B4  frame   167  carol carol:key
+ 12   5.780s bar  3 beat 3    A4  frame   173  carol carol:key
+ 13   5.990s bar  3 beat 3.5  G4  frame   180  carol carol:key
+ 14   6.200s bar  4 beat 1    F#4  frame   186  carol carol:key
+ 15   6.620s bar  4 beat 2    D4  frame   199  carol carol:door
+ 16   7.040s bar  4 beat 3    D4  frame   211  carol carol:key
+ 17   7.460s bar  5 beat 1    B4  frame   224  carol carol:key
+ 18   7.880s bar  5 beat 2    B4  frame   236  carol carol:key
+ 19   8.090s bar  5 beat 2.5  C5  frame   243  carol carol:key
+ 20   8.300s bar  5 beat 3    B4  frame   249  carol carol:key
+ 21   8.510s bar  5 beat 3.5  A4  frame   255  carol carol:key
+ 22   8.720s bar  6 beat 1    G4  frame   262  carol carol:key
+ 23   9.140s bar  6 beat 2    E4  frame   274  carol carol:door
+ 24   9.560s bar  6 beat 3    D4  frame   287  carol carol:key
+ 25   9.770s bar  6 beat 3.5  D4  frame   293  carol carol:key
+ 26   9.980s bar  7 beat 1    E4  frame   299  carol carol:key
+ 27  10.400s bar  7 beat 2    A4  frame   312  carol carol:key
+ 28  10.820s bar  7 beat 3    F#4  frame   325  carol carol:key
+ 29  11.240s bar  8 beat 1    G4  frame   337  carol carol:door
+ 30  12.080s bar  8 beat 3    D4  frame   362  snow  snow0:bell
+ 31  12.500s bar  9 beat 1    G4  frame   375  snow  snow1:bell
+ 32  12.920s bar  9 beat 2    G4  frame   388  snow  snow2:bell
+ 33  13.340s bar  9 beat 3    G4  frame   400  snow  snow3:bell
+ 34  13.760s bar 10 beat 1    F#4  frame   413  snow  snow4:bell
+ 35  14.600s bar 10 beat 3    F#4  frame   438  snow  snow5:bell
+ 36  15.020s bar 11 beat 1    G4  frame   451  snow  snow6:bell
+ 37  15.440s bar 11 beat 2    F#4  frame   463  snow  snow7:bell
+ 38  15.860s bar 11 beat 3    E4  frame   476  snow  snow8:bell
+ 39  16.280s bar 12 beat 1    D4  frame   488  snow  snow9:bell
+ 40  17.120s bar 12 beat 3    A4  frame   514  snow  snow10:bell
+ 41  17.540s bar 13 beat 1    B4  frame   526  snow  snow11:bell
+ 42  17.960s bar 13 beat 2    A4  frame   539  snow  snow12:bell
+ 43  18.380s bar 13 beat 3    G4  frame   551  snow  snow13:bell
+ 44  18.800s bar 14 beat 1    D5  frame   564  snow  snow14:bell
+ 45  19.220s bar 14 beat 2    D4  frame   577  snow  snow15:bell
+ 46  19.640s bar 14 beat 3    D4  frame   589  snow  snow16:bell
+ 47  19.850s bar 14 beat 3.5  D4  frame   596  snow  snow17:bell
+ 48  20.060s bar 15 beat 1    E4  frame   602  snow  snow18:bell
+ 49  20.480s bar 15 beat 2    A4  frame   614  snow  snow19:bell
+ 50  20.900s bar 15 beat 3    F#4  frame   627  snow  snow20:bell
+ 51  21.320s bar 16 beat 1    G4  frame   640  snow  snow21:bell
+ 52  22.160s bar 16 beat 3    D4  frame   665  carol carol:key
+ 53  22.580s bar 17 beat 1    G4  frame   677  carol carol:key
+ 54  23.000s bar 17 beat 2    G4  frame   690  carol carol:key
+ 55  23.210s bar 17 beat 2.5  A4  frame   696  carol carol:key
+ 56  23.420s bar 17 beat 3    G4  frame   703  carol carol:key
+ 57  23.630s bar 17 beat 3.5  F#4  frame   709  carol carol:key
+ 58  23.840s bar 18 beat 1    E4  frame   715  carol carol:key
+ 59  24.260s bar 18 beat 2    E4  frame   728  carol carol:door
+ 60  24.680s bar 18 beat 3    E4  frame   740  carol carol:key
+ 61  25.100s bar 19 beat 1    A4  frame   753  carol carol:key
+ 62  25.520s bar 19 beat 2    A4  frame   766  carol carol:key
+ 63  25.730s bar 19 beat 2.5  B4  frame   772  carol carol:key
+ 64  25.940s bar 19 beat 3    A4  frame   778  carol carol:key
+ 65  26.150s bar 19 beat 3.5  G4  frame   784  carol carol:key
+ 66  26.360s bar 20 beat 1    F#4  frame   791  carol carol:key
+ 67  26.780s bar 20 beat 2    D4  frame   803  carol carol:door
+ 68  27.200s bar 20 beat 3    D4  frame   816  carol carol:key
+ 69  27.620s bar 21 beat 1    B4  frame   829  carol carol:key
+ 70  28.040s bar 21 beat 2    B4  frame   841  carol carol:key
+ 71  28.250s bar 21 beat 2.5  C5  frame   848  carol carol:key
+ 72  28.460s bar 21 beat 3    B4  frame   854  carol carol:key
+ 73  28.670s bar 21 beat 3.5  A4  frame   860  carol carol:key
+ 74  28.880s bar 22 beat 1    G4  frame   866  carol carol:key
+ 75  29.300s bar 22 beat 2    E4  frame   879  carol carol:door
+ 76  29.720s bar 22 beat 3    D4  frame   892  carol carol:key
+ 77  29.930s bar 22 beat 3.5  D4  frame   898  carol carol:key
+ 78  30.140s bar 23 beat 1    E4  frame   904  carol carol:key
+ 79  30.560s bar 23 beat 2    A4  frame   917  carol carol:key
+ 80  30.980s bar 23 beat 3    F#4  frame   929  carol carol:key
+ 81  31.400s bar 24 beat 1    G4  frame   942  carol carol:door
+ 82  32.240s bar 24 beat 3    D4  frame   967  snow  snow22:bell
+ 83  32.660s bar 25 beat 1    G4  frame   980  snow  snow23:bell
+ 84  33.080s bar 25 beat 2    G4  frame   992  snow  snow24:bell
+ 85  33.500s bar 25 beat 3    G4  frame  1005  snow  snow25:bell
+ 86  33.920s bar 26 beat 1    F#4  frame  1018  snow  snow26:bell
+ 87  34.760s bar 26 beat 3    F#4  frame  1043  snow  snow27:bell
+ 88  35.180s bar 27 beat 1    G4  frame  1055  snow  snow28:bell
+ 89  35.600s bar 27 beat 2    F#4  frame  1068  snow  snow29:bell
+ 90  36.020s bar 27 beat 3    E4  frame  1081  snow  snow30:bell
+ 91  36.440s bar 28 beat 1    D4  frame  1093  snow  snow31:bell
+ 92  37.280s bar 28 beat 3    A4  frame  1118  snow  snow32:bell
+ 93  37.700s bar 29 beat 1    B4  frame  1131  snow  snow33:bell
+ 94  38.120s bar 29 beat 2    A4  frame  1144  snow  snow34:bell
+ 95  38.540s bar 29 beat 3    G4  frame  1156  snow  snow35:bell
+ 96  38.960s bar 30 beat 1    D5  frame  1169  snow  snow36:bell
+ 97  39.380s bar 30 beat 2    D4  frame  1181  snow  snow37:bell
+ 98  39.800s bar 30 beat 3    D4  frame  1194  snow  snow38:bell
+ 99  40.010s bar 30 beat 3.5  D4  frame  1200  snow  snow39:bell
+100  40.220s bar 31 beat 1    E4  frame  1207  snow  snow40:bell
+101  40.640s bar 31 beat 2    A4  frame  1219  snow  snow41:bell
+102  41.060s bar 31 beat 3    F#4  frame  1232  snow  snow42:bell
+103  41.480s bar 32 beat 1    G4  frame  1244  snow  snow43:bell
+104  42.320s bar 32 beat 3    D4  frame  1270  carol carol:key
+105  42.740s bar 33 beat 1    G4  frame  1282  carol carol:key
+106  43.160s bar 33 beat 2    G4  frame  1295  carol carol:key
+107  43.370s bar 33 beat 2.5  A4  frame  1301  carol carol:key
+108  43.580s bar 33 beat 3    G4  frame  1307  carol carol:key
+109  43.790s bar 33 beat 3.5  F#4  frame  1314  carol carol:key
+110  44.000s bar 34 beat 1    E4  frame  1320  carol carol:key
+111  44.420s bar 34 beat 2    E4  frame  1333  carol carol:door
+112  44.840s bar 34 beat 3    E4  frame  1345  carol carol:key
+113  45.260s bar 35 beat 1    A4  frame  1358  carol carol:key
+114  45.680s bar 35 beat 2    A4  frame  1370  carol carol:key
+115  45.890s bar 35 beat 2.5  B4  frame  1377  carol carol:key
+116  46.100s bar 35 beat 3    A4  frame  1383  carol carol:key
+117  46.310s bar 35 beat 3.5  G4  frame  1389  carol carol:key
+118  46.520s bar 36 beat 1    F#4  frame  1396  carol carol:key
+119  46.940s bar 36 beat 2    D4  frame  1408  carol carol:door
+120  47.360s bar 36 beat 3    D4  frame  1421  carol carol:key
+121  47.780s bar 37 beat 1    B4  frame  1433  carol carol:key
+122  48.200s bar 37 beat 2    B4  frame  1446  carol carol:key
+123  48.410s bar 37 beat 2.5  C5  frame  1452  carol carol:key
+124  48.620s bar 37 beat 3    B4  frame  1459  carol carol:key
+125  48.830s bar 37 beat 3.5  A4  frame  1465  carol carol:key
+126  49.040s bar 38 beat 1    G4  frame  1471  carol carol:key
+127  49.460s bar 38 beat 2    E4  frame  1484  carol carol:door
+128  49.880s bar 38 beat 3    D4  frame  1496  carol carol:key
+129  50.090s bar 38 beat 3.5  D4  frame  1503  carol carol:key
+130  50.300s bar 39 beat 1    E4  frame  1509  carol carol:key
+131  50.720s bar 39 beat 2    A4  frame  1522  carol carol:key
+132  51.140s bar 39 beat 3    F#4  frame  1534  carol carol:key
+133  51.560s bar 40 beat 1    G4  frame  1547  carol carol:door
+134  52.400s bar 40 beat 3    D4  frame  1572  snow  snow44:bell
+135  52.820s bar 41 beat 1    G4  frame  1585  snow  snow45:bell
+136  53.240s bar 41 beat 2    G4  frame  1597  snow  snow46:bell
+137  53.660s bar 41 beat 3    G4  frame  1610  snow  snow47:bell
+138  54.080s bar 42 beat 1    F#4  frame  1622  snow  snow48:bell
+139  54.920s bar 42 beat 3    F#4  frame  1648  snow  snow49:bell
+140  55.340s bar 43 beat 1    G4  frame  1660  snow  snow50:bell
+141  55.760s bar 43 beat 2    F#4  frame  1673  snow  snow51:bell
+142  56.180s bar 43 beat 3    E4  frame  1685  snow  snow52:bell
+143  56.600s bar 44 beat 1    D4  frame  1698  snow  snow53:bell
+144  57.440s bar 44 beat 3    A4  frame  1723  snow  snow54:bell
+145  57.860s bar 45 beat 1    B4  frame  1736  snow  snow55:bell
+146  58.280s bar 45 beat 2    A4  frame  1748  snow  snow56:bell
+147  58.700s bar 45 beat 3    G4  frame  1761  snow  snow57:bell
+148  59.120s bar 46 beat 1    D5  frame  1774  snow  snow58:bell
+149  59.540s bar 46 beat 2    D4  frame  1786  snow  snow59:bell
+150  59.960s bar 46 beat 3    D4  frame  1799  snow  snow60:bell
+151  60.170s bar 46 beat 3.5  D4  frame  1805  snow  snow61:bell
+152  60.380s bar 47 beat 1    E4  frame  1811  snow  snow62:bell
+153  60.830s bar 47 beat 2    A4  frame  1825  snow  snow63:bell
+154  61.330s bar 47 beat 3    F#4  frame  1840  snow  snow64:bell
+155  61.880s bar 48 beat 1    G4  frame  1856  carol carol:great
+bass  22.580s bar 17 beat 1 G2  chord G
+bass  23.840s bar 18 beat 1 C3  chord C
+bass  25.100s bar 19 beat 1 A2  chord A
+bass  26.360s bar 20 beat 1 D3  chord D
+bass  27.620s bar 21 beat 1 B2  chord B7
+bass  28.880s bar 22 beat 1 E3  chord Em
+bass  30.140s bar 23 beat 1 C3  chord C
+bass  30.560s bar 23 beat 2 D3  chord D
+bass  31.400s bar 24 beat 1 G2  chord G
+bass  32.660s bar 25 beat 1 G2  chord G
+bass  33.920s bar 26 beat 1 D3  chord D
+bass  35.180s bar 27 beat 1 E3  chord Em
+bass  36.440s bar 28 beat 1 D3  chord D
+bass  37.700s bar 29 beat 1 G2  chord G
+bass  38.960s bar 30 beat 1 B2  chord G/B
+bass  40.220s bar 31 beat 1 C3  chord C
+bass  40.640s bar 31 beat 2 D3  chord D
+bass  41.480s bar 32 beat 1 G2  chord G
+bass  42.740s bar 33 beat 1 G2  chord G
+bass  44.000s bar 34 beat 1 C3  chord C
+bass  45.260s bar 35 beat 1 A2  chord A
+bass  46.520s bar 36 beat 1 D3  chord D
+bass  47.780s bar 37 beat 1 B2  chord B7
+bass  49.040s bar 38 beat 1 E3  chord Em
+bass  50.300s bar 39 beat 1 C3  chord C
+bass  50.720s bar 39 beat 2 D3  chord D
+bass  51.560s bar 40 beat 1 G2  chord G
+bass  52.820s bar 41 beat 1 G2  chord G
+bass  54.080s bar 42 beat 1 D3  chord D
+bass  55.340s bar 43 beat 1 E3  chord Em
+bass  56.600s bar 44 beat 1 D3  chord D
+bass  57.860s bar 45 beat 1 G2  chord G
+bass  59.120s bar 46 beat 1 B2  chord G/B
+bass  60.380s bar 47 beat 1 C3  chord C
+bass  60.830s bar 47 beat 2 D3  chord D
+bass  61.880s bar 48 beat 1 G2  chord G
+melody_notes 156
+melody_missing_or_wrong []
+melody_struck_twice []
+bass_notes 36
+bass_missing_or_wrong []
+melody_vs_source_mismatch 0
+bass_vs_chord_mismatch 0
+contact_gap_nearest_frame(max,mean) {'key': (0.024, 0.012), 'door': (0.03, 0.013), 'great': (0.052, 0.052), 'bell': (0.063, 0.024), 'bass': (0.061, 0.033), 'drum': (0.076, 0.076)}
+collisions {'pudding->pudding:bass': 1}
+collision_examples {'pudding->pudding:bass': [(60.829, 0.007)]}
+collision_worst_pen 0.007
+min_ball_surface_gap (0.03, ('snow42', 'snow43', 0.0))
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>0.5) (np.float64(1.461), ('snow21', np.float64(20.83), np.float64(0.51), np.float64(0.74)))
+flight_speed_ratio_max(v>1.5) (np.float64(1.155), ('snow0', np.float64(11.63), np.float64(1.5), np.float64(1.74)))
+mechanism_accel_max (7.86, ('snow14', np.float64(19.53)))
+bounce_speed_out_over_in_max 0.9772
+restitution_range (0.317, 0.97)
+key_tilt_max_deg 34.8
+video_length_s 67.07
