@@ -1,0 +1,26 @@
+events {'cap': 97, 's2': 37, 's3': 37, 'drum': 81, 'shell': 66, 'king': 34, 'm2': 14, 'm3': 14, 'rat': 101, 'army': 154}
+events_wrong_or_missing []
+pitched_hits_not_in_score []
+pellets_one_note_each True
+final_chord_struck ['G1', 'G2', 'B3', 'D4', 'G4']
+contact_gap_nearest_frame_max_m 0.133
+contact_gap_mean_m 0.026
+contact_gap_worst [(0.133, 's024', 'trough', 49.45), (0.125, 's056', 'trough', 53.016), (0.124, 's047', 'trough', 52.116)]
+contact_gap_exact_time_max_m 1e-06
+collisions {'pellet->pkey': 8, 'drum->cup': 1, 'rat->cup': 1}
+collision_examples {'pellet->pkey': [('a018', 22.021, 0.013, 'piece_t', 22.436, 'a019'), ('a054', 34.362, 0.028, 'piece_t', 34.596, 'a056'), ('a099', 39.442, 0.022, 'piece_t', 39.096, 'a096')], 'drum->cup': [('drum', 14.9, 0.01, 'piece_t', 15.096, 'drum')], 'rat->cup': [('rat', 22.746, 0.01, 'piece_t', 22.942, 'rat')]}
+collision_worst_pen_m 0.028
+min_surface_gap_main_marbles (0.063, 's3', 'drum', 2.65)
+min_surface_gap_pellets (0.007, 'a060', 'a064', 34.44)
+flight_accel_error_max 0.0
+flight_speed_ratio_max(v>1.0) 1.228
+worst_ratio_at ('rat', np.float64(16.97), np.float64(1.02), np.float64(1.26))
+mechanism_speed_change_per_frame_max_mps (0.228, ('drum', 15.1))
+bounce_speed_out_over_in_max 0.998
+restitution_range (0.283, 0.969)
+contact_tilt_max_deg 33.1
+ramps (2, 'slopes deg', [8])
+cup_landings_speed_out_over_in_max 0.941
+cups 12
+score_counter_final {'S': 318, 'M': 317}
+score_before_final_chord {'S': 314, 'M': 317}

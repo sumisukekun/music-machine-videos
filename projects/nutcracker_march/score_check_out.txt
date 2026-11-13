@@ -1,0 +1,11 @@
+notes checked 761 ok 761 not in source 0
+  cap      97 events, parts ['cl1', 'vn1']
+  s2       37 events, parts ['hn1', 'vn2']
+  s3       37 events, parts ['cl2', 'vn2']
+  drum     81 events, parts ['bn1', 'cb', 'tu1', 'vc']
+  shell    66 events, parts ['fl1', 'va', 'vc', 'vn1', 'vn2']
+  king     34 events, parts ['bn1', 'cl1', 'cl2', 'tp1', 'tp2']
+  m2       14 events, parts ['tb1']
+  m3       14 events, parts ['tb2']
+  rat     101 events, parts ['cb', 'tb2', 'tu1', 'tu2', 'va', 'vc']
+  army    154 events, parts ['fl1', 'vn1']
